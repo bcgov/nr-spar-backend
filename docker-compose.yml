@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  backend:
+    container_name: spar-api
+    image: spar-api:latest
+    environment:
+      NR_SPAR_BACKEND_VERSION: ${NR_SPAR_BACKEND_VERSION}
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: ${DATABASE_PORT}
+      SERVICE_NAME: ${SERVICE_NAME}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      KEYCLOAK_REALM_URL: ${KEYCLOAK_REALM_URL}
+    hostname: spar-api
+    dns: 142.22.202.100
+    ports:
+      - "8090:8090"
+    build:
+      context: .
+      dockerfile: Dockerfile

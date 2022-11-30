@@ -1,0 +1,700 @@
+{
+	"info": {
+		"_postman_id": "4cd8a8d1-1dd6-47ba-8dc9-45f8e4621a07",
+		"name": "starting-api test collection",
+		"description": "## Description\nThis collection contains the API tests of the starting API.\n## Coverage\nThe aim is to have a coverage of 100%, every request on the API should have a mathcing test in this collection.\n## What to test\n- Status code\n- Response body field validation\n- Response time (1s avg)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23598385"
+	},
+	"item": [
+		{
+			"name": "User endpoint test",
+			"item": [
+				{
+					"name": "Create user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"JSON body is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.firstName).to.eql('John');",
+									"    pm.expect(jsonData.lastName).to.eql('Doe');",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let baseUrl = \"https://\" + pm.environment.get(\"apiAddr\") + \"/users/John/Doe\";",
+									"let options = { method: 'DELETE',",
+									"  url: baseUrl,",
+									"  header: {",
+									"      'Authorization': 'Bearer ' + pm.environment.get(\"authToken\")",
+									"  }",
+									"};",
+									"pm.sendRequest(options, function(err, res) {",
+									"    console.info(\"Removing the user first to avoid false positives\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{apiAddr}}/api/users",
+							"protocol": "https",
+							"host": [
+								"{{apiAddr}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "Create a new user by sending a JSON with first and last name values."
+					},
+					"response": []
+				},
+				{
+					"name": "Create user that already exists",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"JSON body is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.errorMessage).to.eql('User already registered!');",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{apiAddr}}/api/users",
+							"protocol": "https",
+							"host": [
+								"{{apiAddr}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "Create a new user by sending a JSON with first and last name with a existent user."
+					},
+					"response": []
+				},
+				{
+					"name": "Create user with invalid data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"JSON body is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.errorMessage).to.include('validation problem');",
+									"});",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"\",\n    \"lastName\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{apiAddr}}/api/users",
+							"protocol": "https",
+							"host": [
+								"{{apiAddr}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "Create a new user by sending a JSON with empty first and last name values."
+					},
+					"response": []
+				},
+				{
+					"name": "Find user by first name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"JSON body is valid\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    jsonData.forEach(obj => pm.expect(obj.firstName).to.eql(\"John\"));",
+									"    jsonData.forEach(obj => pm.expect(obj.lastName).to.eql(\"Doe\"));",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{apiAddr}}/api/users/find-all-by-first-name/John",
+							"protocol": "https",
+							"host": [
+								"{{apiAddr}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"find-all-by-first-name",
+								"John"
+							]
+						},
+						"description": "Search for a existing user, with a valid first name."
+					},
+					"response": []
+				},
+				{
+					"name": "Find user by first name that is not registered",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", () => {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"JSON body is valid\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.errorMessage).to.include(\"not registered\");",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{apiAddr}}/api/users/find-all-by-first-name/Jane",
+							"protocol": "https",
+							"host": [
+								"{{apiAddr}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"find-all-by-first-name",
+								"Jane"
+							]
+						},
+						"description": "Try to find an user with a first name that does not exist."
+					},
+					"response": []
+				},
+				{
+					"name": "Find user by last name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"JSON body is valid\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    jsonData.forEach(obj => pm.expect(obj.firstName).to.eql(\"John\"));",
+									"    jsonData.forEach(obj => pm.expect(obj.lastName).to.eql(\"Doe\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{apiAddr}}/api/users/find-all-by-last-name/Doe",
+							"protocol": "https",
+							"host": [
+								"{{apiAddr}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"find-all-by-last-name",
+								"Doe"
+							]
+						},
+						"description": "Search for a existing user, with a valid last name."
+					},
+					"response": []
+				},
+				{
+					"name": "Find user by last name that is not registered",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"JSON body is valid\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.include(\"Not Found\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Host",
+								"type": "text",
+								"value": "nr-spar-backend-test-spar-api.apps.silver.devops.gov.bc.ca"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiAddr}}/api/users/find-all-by-last-name/Doer",
+							"protocol": "https",
+							"host": [
+								"{{apiAddr}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"find-all-by-last-name",
+								"Doer"
+							]
+						},
+						"description": "Try to find an user with a first name that does not exist."
+					},
+					"response": []
+				},
+				{
+					"name": "Find user by first and last name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"JSON body is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.firstName).to.eql('John');",
+									"    pm.expect(jsonData.lastName).to.eql('Doe');",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{apiAddr}}/api/users/find/John/Doe",
+							"protocol": "https",
+							"host": [
+								"{{apiAddr}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"find",
+								"John",
+								"Doe"
+							]
+						},
+						"description": "Search for a existing user, with a valid first and last name."
+					},
+					"response": []
+				},
+				{
+					"name": "Find user by first and last name that is not registered",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"JSON body is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.errorMessage).to.include(\"not registered\");",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{apiAddr}}/api/users/find/Jane/Doer",
+							"protocol": "https",
+							"host": [
+								"{{apiAddr}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"find",
+								"Jane",
+								"Doer"
+							]
+						},
+						"description": "Search for a non-existing user, with a invalid first and last name."
+					},
+					"response": []
+				},
+				{
+					"name": "Find all users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"JSON body is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    let flag = false;",
+									"    ",
+									"    jsonData.forEach(obj => {",
+									"        if (obj.firstName === \"John\" && obj.lastName === \"Doe\")",
+									"            flag = true;",
+									"    });",
+									"    if (!flag)",
+									"        pm.expect.fail(\"User not found on the list\");",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{apiAddr}}/api/users/find-all",
+							"protocol": "https",
+							"host": [
+								"{{apiAddr}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"find-all"
+							]
+						},
+						"description": "Returns a list of existing users."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"JSON body is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.firstName).to.eql('John');",
+									"    pm.expect(jsonData.lastName).to.eql('Doe');",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://{{apiAddr}}/api/users/John/Doe",
+							"protocol": "https",
+							"host": [
+								"{{apiAddr}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"John",
+								"Doe"
+							]
+						},
+						"description": "Delete an user using the fields first and last name values."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user that does not exist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"JSON body is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.errorMessage).to.include(\"not registered\");",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://{{apiAddr}}/api/users/Jane/Doer",
+							"protocol": "https",
+							"host": [
+								"{{apiAddr}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"Jane",
+								"Doer"
+							]
+						},
+						"description": "Delete an user that was deleted before."
+					},
+					"response": []
+				}
+			],
+			"description": "Group all tests related to the `/user` API endpoint. "
+		},
+		{
+			"name": "Version check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"JSON body is valid\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql('OK');",
+							"    pm.expect(jsonData.release).to.include(pm.environment.get(\"releaseVer\"));",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Host",
+						"value": "{{apiAddr}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{apiAddr}}/check",
+					"protocol": "https",
+					"host": [
+						"{{apiAddr}}"
+					],
+					"path": [
+						"check"
+					]
+				},
+				"description": "Returns the API status, environment and version."
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{authToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"let authServer = pm.environment.get(\"authServer\");",
+					"let authClient = pm.environment.get(\"authClient\");",
+					"let authSecret = pm.environment.get(\"authSecret\");",
+					"",
+					"let options = {",
+					"    url: authServer,",
+					"    method: 'POST',",
+					"    header: {",
+					"        'Accept': 'application/json',",
+					"        'Content-Type': 'application/x-www-form-urlencoded',",
+					"    },",
+					"    body: {",
+					"        mode: 'urlencoded',",
+					"        urlencoded: [",
+					"            { key: 'grant_type', value: 'client_credentials' },",
+					"            { key: 'client_id', value: authClient },",
+					"            { key: 'client_secret', value: authSecret }",
+					"        ]",
+					"    }",
+					"}",
+					"",
+					"pm.sendRequest(options, (err, res) => {",
+					"    let jsonData = res.json();",
+					"    pm.environment.set(\"authToken\", jsonData.access_token);",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Response time is less than 1s\", () => {",
+					"  pm.expect(pm.response.responseTime).to.be.below(1000);",
+					"});"
+				]
+			}
+		}
+	]
+}
