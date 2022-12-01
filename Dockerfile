@@ -10,13 +10,9 @@ ENV LANG en_CA.UTF-8
 ENV LANGUAGE en_CA.UTF-8
 ENV LC_ALL en_CA.UTF-8
 
-COPY InstallCert.java .
-
 COPY ./target/backend-start-api.jar /usr/share/service/service.jar
 COPY dockerfile-entrypoint.sh /usr/share/service/dockerfile-entrypoint.sh
-RUN chmod -R g+w . && \
-    chmod g+x dockerfile-entrypoint.sh && \
-    chmod g+w ${JAVA_HOME}/lib/security/cacerts
+RUN chmod g+x dockerfile-entrypoint.sh
 
 EXPOSE 8090
 
