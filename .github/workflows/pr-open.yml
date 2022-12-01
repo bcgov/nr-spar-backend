@@ -362,7 +362,7 @@ jobs:
             -p ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }} \
             -p DATABASE_HOST=${{ secrets.DATABASE_HOST }} \
             -p DATABASE_PORT=${{ secrets.DATABASE_PORT }} \
-            -p SERVICE_NAME=${{ secrets.SERVICE_NAME }} \
+            -p DATABASE_NAME=${{ secrets.DATABASE_NAME }} \
             -p DATABASE_USER=${{ secrets.DATABASE_USER }} \
             -p DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
             -p KEYCLOAK_REALM_URL=${{ secrets.KEYCLOAK_REALM_URL }} \

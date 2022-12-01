@@ -46,8 +46,8 @@ parameters:
   - name: DATABASE_PORT
     description: The port to be used for the connection to the database
     required: true
-  - name: SERVICE_NAME
-    description: The datanase's name
+  - name: DATABASE_NAME
+    description: The database's name
     required: true
   - name: DATABASE_USER
     description: User for the database connection
@@ -116,8 +116,8 @@ objects:
                   value: ${DATABASE_HOST}
                 - name: DATABASE_PORT
                   value: ${DATABASE_PORT}
-                - name: SERVICE_NAME
-                  value: ${SERVICE_NAME}
+                - name: DATABASE_NAME
+                  value: ${DATABASE_NAME}
                 - name: DATABASE_USER
                   value: ${DATABASE_USER}
                 - name: DATABASE_PASSWORD

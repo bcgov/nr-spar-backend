@@ -227,7 +227,7 @@ jobs:
             -p NR_SPAR_BACKEND_VERSION=test-${{ env.NR_SPAR_BACKEND_VERSION }} \
             -p DATABASE_HOST=${{ secrets.DATABASE_HOST }} \
             -p DATABASE_PORT=${{ secrets.DATABASE_PORT }} \
-            -p SERVICE_NAME=${{ secrets.SERVICE_NAME }} \
+            -p DATABASE_NAME=${{ secrets.DATABASE_NAME }} \
             -p DATABASE_USER=${{ secrets.DATABASE_USER }} \
             -p DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
             -p ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }} \
@@ -414,7 +414,7 @@ jobs:
             -p NR_SPAR_BACKEND_VERSION=prod-${{ env.NR_SPAR_BACKEND_VERSION }} \
             -p DATABASE_HOST=${{ secrets.DATABASE_HOST }} \
             -p DATABASE_PORT=${{ secrets.DATABASE_PORT }} \
-            -p SERVICE_NAME=${{ secrets.SERVICE_NAME }} \
+            -p DATABASE_NAME=${{ secrets.DATABASE_NAME }} \
             -p DATABASE_USER=${{ secrets.DATABASE_USER }} \
             -p DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
             -p ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }} \
