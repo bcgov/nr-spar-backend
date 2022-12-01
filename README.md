@@ -1,7 +1,7 @@
 [![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999)](https://github.com/bcgov/nr-spar-backend)
 ![Coverage](.github/badges/jacoco.svg)
 ![Branches](.github/badges/branches.svg)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bcgov_nr-spar-backend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=bcgov_nr-backend-starting-api)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bcgov_nr-spar-backend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=bcgov_nr-spar-backend)
 
 # Natural Resources SPAR Back-End API
 
@@ -44,6 +44,7 @@ and deploy it.
 - Database
   - Remote Oracle with secure connection
   - PostgreSQL
+  - Flyway
 - DevOps
   - Docker
   - Docker Composer
@@ -62,7 +63,7 @@ access configuration:
 
 - `DATABASE_HOST`
 - `DATABASE_PORT`
-- `SERVICE_NAME` (the database's name)
+- `DATABASE_NAME`
 - `DATABASE_USER`
 - `DATABASE_PASSWORD`
 
@@ -82,7 +83,7 @@ Note that you'll need these environment variables:
 NR_SPAR_BACKEND_VERSION=local
 DATABASE_HOST=<host>
 DATABASE_PORT=<port>
-SERVICE_NAME=<service-name>
+DATABASE_NAME=<database-name>
 DATABASE_USER=<user>
 DATABASE_PASSWORD=<pass>
 KEYCLOAK_REALM_URL=<realm-server-address>
