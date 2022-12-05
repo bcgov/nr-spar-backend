@@ -9,8 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ca.bc.gov</groupId>
-	<artifactId>backend-start-api</artifactId>
-	<version>0.6.0</version>
+	<artifactId>nr-spar-backend</artifactId>
+	<version>0.0.1</version>
 	<name>backend-start-api</name>
 	<description>Starting backend API project</description>
 
