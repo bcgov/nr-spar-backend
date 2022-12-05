@@ -11,9 +11,7 @@ ENV LANGUAGE en_CA.UTF-8
 ENV LC_ALL en_CA.UTF-8
 
 COPY ./target/backend-start-api.jar /usr/share/service/service.jar
-COPY dockerfile-entrypoint.sh /usr/share/service/dockerfile-entrypoint.sh
-RUN chmod g+x dockerfile-entrypoint.sh
 
 EXPOSE 8090
 
-ENTRYPOINT ["/usr/share/service/dockerfile-entrypoint.sh"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/usr/share/service/service.jar"]
