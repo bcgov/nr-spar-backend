@@ -42,19 +42,19 @@ parameters:
     required: true
   - name: DATABASE_HOST
     description: Where the database is hosted
-    required: true
+    required: false
   - name: DATABASE_PORT
     description: The port to be used for the connection to the database
-    required: true
+    required: false
   - name: DATABASE_NAME
     description: The database's name
-    required: true
+    required: false
   - name: DATABASE_USER
     description: User for the database connection
-    required: true
+    required: false
   - name: DATABASE_PASSWORD
     description: Password for the database connection
-    required: true
+    required: false
   - name: KEYCLOAK_REALM_URL
     description: Keycloak realm address
     required: true
