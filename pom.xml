@@ -9,8 +9,8 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ca.bc.gov</groupId>
-    <artifactId>backend-start-api</artifactId>
-    <version>0.6.0</version>
+	<artifactId>nr-spar-backend</artifactId>
+	<version>0.0.1</version>
     <name>backend-start-api</name>
     <description>Starting backend API project</description>
 
@@ -110,7 +110,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>runtime</scope>
+			<scope>test</scope>
         </dependency>
 
         <!-- Testing -->
@@ -341,7 +341,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.4</version>
+						<version>10.5.0</version>
                     </dependency>
                 </dependencies>
                 <configuration>
