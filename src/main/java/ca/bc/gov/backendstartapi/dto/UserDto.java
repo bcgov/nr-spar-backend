@@ -5,12 +5,11 @@ import ca.bc.gov.backendstartapi.util.Empty;
 import ca.bc.gov.backendstartapi.util.ObjectUtil;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Objects;
 
 /** This class represents a User data transition object. */
 @Getter
@@ -52,7 +51,6 @@ public class UserDto implements BaseResponse, Empty {
 
   @Override
   public boolean isEmpty() {
-    return ObjectUtil.isEmptyOrNull(firstName)
-        && ObjectUtil.isEmptyOrNull(lastName);
+    return ObjectUtil.isEmptyOrNull(firstName) && ObjectUtil.isEmptyOrNull(lastName);
   }
 }
