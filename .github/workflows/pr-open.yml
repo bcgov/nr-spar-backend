@@ -360,6 +360,11 @@ jobs:
           oc process -f .github/openshift/deploy.backend.yml -p ZONE=${{ env.ZONE }} \
             -p NR_SPAR_BACKEND_VERSION=${{ env.NR_SPAR_BACKEND_VERSION }} \
             -p ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }} \
+            -p DATABASE_HOST=${{ secrets.DATABASE_HOST }} \
+            -p DATABASE_PORT=${{ secrets.DATABASE_PORT }} \
+            -p DATABASE_NAME=${{ secrets.DATABASE_NAME }} \
+            -p DATABASE_USER=${{ secrets.DATABASE_USER }} \
+            -p DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
             -p KEYCLOAK_REALM_URL=${{ secrets.KEYCLOAK_REALM_URL }} \
             -p PROMOTE=${{ github.repository }}:${{ env.ZONE }}-spar-api | oc apply -f -
 
