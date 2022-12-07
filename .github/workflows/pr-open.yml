@@ -346,7 +346,10 @@ jobs:
           oc project ${{ secrets.OC_NAMESPACE }}
 
           # Database uses a default build
-          # oc process -f .github/openshift/deploy.database.yml -p ZONE=${{ env.ZONE }} | oc apply -f -
+          oc process -f .github/openshift/deploy.database.yml
+            -p ZONE=${{ env.ZONE }} \
+            -p DATABASE_PASSWORD==${{ secrets.DATABASE_PASSWORD }} \
+            | oc apply -f -
 
           # Clean previous image, if rebuilding
           if [ ${{ needs.build-spar-api.outputs.build == 'true' }} ]
@@ -360,11 +363,12 @@ jobs:
           oc process -f .github/openshift/deploy.backend.yml -p ZONE=${{ env.ZONE }} \
             -p NR_SPAR_BACKEND_VERSION=${{ env.NR_SPAR_BACKEND_VERSION }} \
             -p ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }} \
+            -p DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
             -p KEYCLOAK_REALM_URL=${{ secrets.KEYCLOAK_REALM_URL }} \
             -p PROMOTE=${{ github.repository }}:${{ env.ZONE }}-spar-api | oc apply -f -
 
           # Follow any active rollouts (see deploymentconfigs)
-          #oc rollout status dc/${{ env.NAME }}-${{ env.ZONE }}-database -w
+          oc rollout status dc/${{ env.NAME }}-${{ env.ZONE }}-database -w
           oc rollout status dc/${{ env.NAME }}-${{ env.ZONE }}-spar-api -w
       - name: DEV Deployment update
         uses: mshick/add-pr-comment@v1
@@ -412,4 +416,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: API test report
-          path: testArtifacts 
+          path: testArtifacts

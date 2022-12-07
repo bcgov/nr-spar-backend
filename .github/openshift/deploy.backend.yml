@@ -40,6 +40,9 @@ parameters:
   - name: ALLOWED_ORIGINS
     description: Sets all the allowed request origins
     required: true
+  - name: DATABASE_PASSWORD
+    description: Password for the database connection
+    required: true
   - name: KEYCLOAK_REALM_URL
     description: Keycloak realm address
     required: true
@@ -97,6 +100,8 @@ objects:
                   value: ${NR_SPAR_BACKEND_VERSION}
                 - name: ALLOWED_ORIGINS
                   value: ${ALLOWED_ORIGINS}
+                - name: DATABASE_PASSWORD
+                  value: ${DATABASE_PASSWORD}
                 - name: KEYCLOAK_REALM_URL
                   value: ${KEYCLOAK_REALM_URL}
               ports:
