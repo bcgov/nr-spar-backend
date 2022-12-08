@@ -10,9 +10,7 @@ ENV LANG en_CA.UTF-8
 ENV LANGUAGE en_CA.UTF-8
 ENV LC_ALL en_CA.UTF-8
 
-COPY InstallCert.java .
-
-COPY ./target/backend-start-api.jar /usr/share/service/service.jar
+COPY ./target/nr-spar-backend.jar /usr/share/service/service.jar
 COPY dockerfile-entrypoint.sh /usr/share/service/dockerfile-entrypoint.sh
 RUN chmod -R g+w . && \
     chmod g+x dockerfile-entrypoint.sh && \
