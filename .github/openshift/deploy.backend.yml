@@ -40,21 +40,6 @@ parameters:
   - name: ALLOWED_ORIGINS
     description: Sets all the allowed request origins
     required: true
-  - name: DATABASE_HOST
-    description: Where the database is hosted
-    required: true
-  - name: DATABASE_PORT
-    description: The port to be used for the connection to the database
-    required: true
-  - name: SERVICE_NAME
-    description: The datanase's name
-    required: true
-  - name: DATABASE_USER
-    description: User for the database connection
-    required: true
-  - name: DATABASE_PASSWORD
-    description: Password for the database connection
-    required: true
   - name: KEYCLOAK_REALM_URL
     description: Keycloak realm address
     required: true
@@ -112,16 +97,6 @@ objects:
                   value: ${NR_SPAR_BACKEND_VERSION}
                 - name: ALLOWED_ORIGINS
                   value: ${ALLOWED_ORIGINS}
-                - name: DATABASE_HOST
-                  value: ${DATABASE_HOST}
-                - name: DATABASE_PORT
-                  value: ${DATABASE_PORT}
-                - name: SERVICE_NAME
-                  value: ${SERVICE_NAME}
-                - name: DATABASE_USER
-                  value: ${DATABASE_USER}
-                - name: DATABASE_PASSWORD
-                  value: ${DATABASE_PASSWORD}
                 - name: KEYCLOAK_REALM_URL
                   value: ${KEYCLOAK_REALM_URL}
               ports:
