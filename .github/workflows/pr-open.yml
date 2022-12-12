@@ -346,7 +346,7 @@ jobs:
           oc project ${{ secrets.OC_NAMESPACE }}
 
           # Database uses a default build
-          oc process -f .github/openshift/deploy.database.yml
+          oc process -f .github/openshift/deploy.database.yml \
             -p ZONE=${{ env.ZONE }} \
             -p DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
             -p PROMOTE=${{ github.repository }}:${{ env.ZONE }}-database \
