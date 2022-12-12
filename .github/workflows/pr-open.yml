@@ -332,6 +332,8 @@ jobs:
       - tests
       - build-spar-api
     runs-on: ubuntu-latest
+    environment:
+      name: dev
     if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main'
     timeout-minutes: 15
     env:
