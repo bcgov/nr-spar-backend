@@ -348,7 +348,8 @@ jobs:
           # Database uses a default build
           oc process -f .github/openshift/deploy.database.yml
             -p ZONE=${{ env.ZONE }} \
-            -p DATABASE_PASSWORD==${{ secrets.DATABASE_PASSWORD }} \
+            -p DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
+            -p PROMOTE=${{ github.repository }}:${{ env.ZONE }}-database \
             | oc apply -f -
 
           # Clean previous image, if rebuilding
