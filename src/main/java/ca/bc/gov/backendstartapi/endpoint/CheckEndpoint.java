@@ -22,6 +22,7 @@ public class CheckEndpoint {
    */
   @GetMapping(value = "/check", produces = MediaType.APPLICATION_JSON_VALUE)
   public CheckVo check() {
-    return CheckVo.builder().message("OK").release(nrSparBackendVersion).build();
+    log.info("nrSparBackendVersion: {}", nrSparBackendVersion);
+    return new CheckVo("OK", nrSparBackendVersion);
   }
 }
