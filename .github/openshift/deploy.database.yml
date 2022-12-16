@@ -114,7 +114,7 @@ objects:
                 claimName: ${NAME}-${ZONE}-${COMPONENT}
           containers:
             - name: ${NAME}
-              image: ${NAME}-${ZONE}-${COMPONENT}:${IMAGE_TAG}
+              image: ${PROMOTE}
               ports:
                 - containerPort: 5432
                   protocol: TCP
