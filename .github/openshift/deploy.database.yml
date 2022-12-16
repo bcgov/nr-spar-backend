@@ -32,10 +32,10 @@ parameters:
     required: true
     value: 1Gi
   - name: REGISTRY
-    value: image-registry.openshift-image-registry.svc:5000
+    value: docker.io
   - name: PROMOTE
     description: Image (namespace/name:tag) to promote/import
-    value: docker.io/postgis/postgis:15-3.3
+    value: postgis/postgis:15-3.3
 objects:
   - apiVersion: v1
     kind: Secret
