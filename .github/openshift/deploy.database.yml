@@ -163,19 +163,6 @@ objects:
               volumeMounts:
                 - name: ${NAME}-${ZONE}-${COMPONENT}
                   mountPath: "/var/lib/pgsql/data"
-              livenessProbe:
-                initialDelaySeconds: 60
-                tcpSocket:
-                  port: 5432
-                timeoutSeconds: 10
-              readinessProbe:
-                exec:
-                  command:
-                    - /bin/bash
-                    - -c
-                    - pg_isready -h localhost -p 5432
-                initialDelaySeconds: 20
-                timeoutSeconds: 15
               terminationMessagePath: "/dev/termination-log"
               terminationMessagePolicy: File
               imagePullPolicy: Always
