@@ -327,7 +327,7 @@ jobs:
 
 
   # Only for Pull Requests
-  build-spar-database:
+  build-database:
     name: Database Image Build (Only PR)
     env:
       COMPONENT: database
@@ -374,6 +374,7 @@ jobs:
       - security
       - tests
       - build-spar-api
+      - build-database
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main'
     timeout-minutes: 15
