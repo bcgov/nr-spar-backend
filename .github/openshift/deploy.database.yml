@@ -29,7 +29,7 @@ parameters:
     displayName: Database Volume Capacity
     name: DB_PVC_SIZE
     required: true
-    value: 500MB
+    value: 500Me
   - name: REGISTRY
     value: ghcr.io
   - name: PROMOTE
