@@ -43,6 +43,9 @@ parameters:
   - name: KEYCLOAK_REALM_URL
     description: Keycloak realm address
     required: true
+  - name: DATABASE_PASSWORD
+    description: Password for the PostgreSQL connection user.
+    required: true
 objects:
   - apiVersion: v1
     kind: ImageStream
@@ -99,6 +102,8 @@ objects:
                   value: ${ALLOWED_ORIGINS}
                 - name: KEYCLOAK_REALM_URL
                   value: ${KEYCLOAK_REALM_URL}
+                - name: DATABASE_PASSWORD
+                  value: ${DATABASE_PASSWORD}
               ports:
                 - containerPort: 8090
                   protocol: TCP

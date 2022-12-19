@@ -22,7 +22,7 @@ concurrency:
 jobs:
   # For every commit and pull request
   validate:
-    name: Code validation (Commits and PR)
+    name: Code validation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -56,9 +56,68 @@ jobs:
           path: target/site/checkstyle.html
           retention-days: 5
 
+  # Only for Pull Requests
+  pr-validation:
+    name: Label Validation (Only PR)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main'
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Pull request size and stability labels
+        uses: actions/labeler@v4
+        continue-on-error: true
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Conventional Label
+        uses: bcoe/conventional-release-labels@v1
+        continue-on-error: true
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ignored_types: '["chore","pr"]'
+          type_labels: '{"feat": "feature", "fix": "fix", "bug": "fix", "doc": "documentation", "ci": "ci", "chore": "chore", "breaking": "breaking", "BREAKING CHANGE": "breaking"}'
+
+      - name: Checkout branch
+        uses: actions/checkout@v3
+        with:
+          ref: refs/heads/${{ github.head_ref }}
+
+      - name: Conventional Changelog Update
+        continue-on-error: true
+        uses: TriPSs/conventional-changelog-action@v3
+        id: changelog
+        with:
+          github-token: ${{ github.token }}
+          output-file: 'CHANGELOG.md'
+          skip-version-file: 'true'
+          skip-commit: 'true'
+          git-push: 'false'
+          git-branch: refs/heads/${{ github.head_ref }}
+
+      - name: Checkout pr
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Comment PR
+        continue-on-error: true
+        uses: thollander/actions-comment-pull-request@v1
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        with:
+          message: |
+            # Current changelog
+
+            ${{ steps.changelog.outputs.clean_changelog }}
+          comment_includes: '# Current changelog'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   # For every commit and pull request
   tests:
-    name: Code tests (Commits and PR)
+    name: Code tests
     runs-on: ubuntu-latest
     needs:
       - validate
@@ -138,7 +197,7 @@ jobs:
 
   # For every commit and pull request
   security:
-    name: Security checks (Commits and PR)
+    name: Security checks
     runs-on: ubuntu-latest
     permissions:
       security-events: write
@@ -182,7 +241,7 @@ jobs:
 
   # For every commit and pull request
   codeql:
-    name: Semantic Code Analysis (Commits and PR)
+    name: Semantic Code Analysis
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -215,65 +274,6 @@ jobs:
         uses: github/codeql-action/analyze@v2
 
   # Only for Pull Requests
-  pr-validation:
-    name: Label Validation (Only PR)
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main'
-    permissions:
-      contents: read
-      pull-requests: write
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Pull request size and stability labels
-        uses: actions/labeler@v4
-        continue-on-error: true
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: Conventional Label
-        uses: bcoe/conventional-release-labels@v1
-        continue-on-error: true
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          ignored_types: '["chore","pr"]'
-          type_labels: '{"feat": "feature", "fix": "fix", "bug": "fix", "doc": "documentation", "ci": "ci", "chore": "chore", "breaking": "breaking", "BREAKING CHANGE": "breaking"}'
-
-      - name: Checkout branch
-        uses: actions/checkout@v3
-        with:
-          ref: refs/heads/${{ github.head_ref }}
-
-      - name: Conventional Changelog Update
-        continue-on-error: true
-        uses: TriPSs/conventional-changelog-action@v3
-        id: changelog
-        with:
-          github-token: ${{ github.token }}
-          output-file: 'CHANGELOG.md'
-          skip-version-file: 'true'
-          skip-commit: 'true'
-          git-push: 'false'
-          git-branch: refs/heads/${{ github.head_ref }}
-
-      - name: Checkout pr
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Comment PR
-        continue-on-error: true
-        uses: thollander/actions-comment-pull-request@v1
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
-        with:
-          message: |
-            # Current changelog
-
-            ${{ steps.changelog.outputs.clean_changelog }}
-          comment_includes: '# Current changelog'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  # Only for Pull Requests
   build-spar-api:
     name: API Image Build (Only PR)
     env:
@@ -283,8 +283,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main'
     needs:
-      - security
       - tests
+      - security
       - codeql
     permissions:
       contents: read
@@ -377,9 +377,6 @@ jobs:
   deploy-dev:
     name: DEV Deployment (Only PR)
     needs:
-      - security
-      - tests
-      - build-spar-api
       - build-database
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main'
@@ -397,7 +394,7 @@ jobs:
 
           # Database uses a default build
           oc process -f .github/openshift/deploy.database.yml \
-            -p DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+            -p DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
             -p PROMOTE=${{ github.repository }}:${{ env.ZONE }}-database \
             -p ZONE=${{ env.ZONE }} | oc apply -f -
 
@@ -414,6 +411,7 @@ jobs:
             -p NR_SPAR_BACKEND_VERSION=${{ env.NR_SPAR_BACKEND_VERSION }} \
             -p ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }} \
             -p KEYCLOAK_REALM_URL=${{ secrets.KEYCLOAK_REALM_URL }} \
+            -p DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
             -p PROMOTE=${{ github.repository }}:${{ env.ZONE }}-spar-api | oc apply -f -
 
           # Follow any active rollouts (see deploymentconfigs)
