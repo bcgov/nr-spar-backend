@@ -275,7 +275,7 @@ jobs:
 
   # Only for Pull Requests
   build-spar-api:
-    name: Image Build (Only PR)
+    name: API Image Build (Only PR)
     env:
       COMPONENT: spar-api
       ZONE: ${{ github.event.number }}
@@ -324,6 +324,49 @@ jobs:
           # Clean previous image
           oc delete is ${{ env.NAME }}-${{ env.ZONE }}-${{ env.COMPONENT }} || true
 
+
+
+  # Only for Pull Requests
+  build-spar-database:
+    name: Database Image Build (Only PR)
+    env:
+      COMPONENT: database
+      ZONE: ${{ github.event.number }}
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main'
+    needs:
+      - build-spar-api
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout repository
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: DatabaseDockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ github.repository }}:${{ env.ZONE }}-${{ env.COMPONENT }}
+
+      - name: Clear any previous OpenShift image
+        run: |
+          # Login to OpenShift and select project
+          oc login --token=${{ secrets.OC_TOKEN }} --server=${{ secrets.OC_SERVER }}
+          oc project ${{ secrets.OC_NAMESPACE }}
+
+          # Clean previous image
+          oc delete is ${{ env.NAME }}-${{ env.ZONE }}-${{ env.COMPONENT }} || true
+
   # Only for Pull Requests
   deploy-dev:
     name: DEV Deployment (Only PR)
@@ -346,7 +389,10 @@ jobs:
           oc project ${{ secrets.OC_NAMESPACE }}
 
           # Database uses a default build
-          # oc process -f .github/openshift/deploy.database.yml -p ZONE=${{ env.ZONE }} | oc apply -f -
+          oc process -f .github/openshift/deploy.database.yml \
+            -p DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+            -p PROMOTE=${{ github.repository }}:${{ env.ZONE }}-database \
+            -p ZONE=${{ env.ZONE }} | oc apply -f -
 
           # Clean previous image, if rebuilding
           if [ ${{ needs.build-spar-api.outputs.build == 'true' }} ]
@@ -364,7 +410,7 @@ jobs:
             -p PROMOTE=${{ github.repository }}:${{ env.ZONE }}-spar-api | oc apply -f -
 
           # Follow any active rollouts (see deploymentconfigs)
-          #oc rollout status dc/${{ env.NAME }}-${{ env.ZONE }}-database -w
+          oc rollout status dc/${{ env.NAME }}-${{ env.ZONE }}-database -w
           oc rollout status dc/${{ env.NAME }}-${{ env.ZONE }}-spar-api -w
       - name: DEV Deployment update
         uses: mshick/add-pr-comment@v1
