@@ -29,12 +29,12 @@ parameters:
     displayName: Database Volume Capacity
     name: DB_PVC_SIZE
     required: true
-    value: 500M
+    value: 256Mi
   - name: REGISTRY
     value: ghcr.io
   - name: PROMOTE
     description: Image (namespace/name:tag) to promote/import
-    value: bcgov/nr-spar-database:prod-database
+    required: true
 objects:
   - apiVersion: v1
     kind: Secret
@@ -161,7 +161,7 @@ objects:
                       key: database-user
               volumeMounts:
                 - name: ${NAME}-${ZONE}-${COMPONENT}
-                  mountPath: "/var/lib/pgsql/data"
+                  mountPath: "/var/lib/postgresql"
               livenessProbe:
                 initialDelaySeconds: 60
                 tcpSocket:
