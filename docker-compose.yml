@@ -1,14 +1,48 @@
 version: '3.9'
 
 services:
-  backend:
-    container_name: spar-api
-    image: spar-api:latest
+  database:
+    container_name: database
+    image: spar:backend-dev
     environment:
-      NR_SPAR_BACKEND_VERSION: ${NR_SPAR_BACKEND_VERSION}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    hostname: database
+    restart: always
+    volumes:
+      - /pgdata
+    build:
+      context: .
+      dockerfile: DatabaseDockerfile
+    healthcheck:
+      test: [ "CMD-SHELL", "psql -q -U $POSTGRES_USER -d $POSTGRES_DB -c 'SELECT 1'" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    container_name: backend
+    image: spar:database-dev
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      NR_SPAR_BACKEND_VERSION: development
       KEYCLOAK_REALM_URL: ${KEYCLOAK_REALM_URL}
-    hostname: spar-api
-    dns: 142.22.202.100
+      POSTGRES_HOST: database
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8090/check" ]
+      interval: 1m30s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
+    hostname: backend
+    links:
+      - database
     ports:
       - "8090:8090"
     build:

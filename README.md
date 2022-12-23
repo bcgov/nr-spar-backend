@@ -69,12 +69,16 @@ tests, please take a moment and check out our [CONTRIBUTING](CONTRIBUTING.md) gu
 ## Quick look
 
 But if all you want is to take a quick look on the running service, you can do it by
-using Docker.
+using Docker or Docker Composer.
 
 Note that you'll need these environment variables:
 ```
-NR_SPAR_BACKEND_VERSION=local
-KEYCLOAK_REALM_URL=<realm-server-address>
+export NR_SPAR_BACKEND_VERSION=local
+export KEYCLOAK_REALM_URL=https://dev.loginproxy.gov.bc.ca/auth/realms/standard
+export POSTGRES_HOST=localhost
+export POSTGRES_USER=some-user
+export POSTGRES_PASSWORD=some-secret
+export POSTGRES_DB=some-name
 ```
 
 Build the package:
@@ -82,21 +86,33 @@ Build the package:
 ./mvnw --no-transfer-progress --update-snapshots package
 ```
 
-Build the Docker image:
+If Docker Compose is an option, with one command you get it up and running:
 ```
-docker build -t bcgov/nr-spar-backend-test-spar-api:latest .
+docker-compose -p "spar" -f ./docker-compose.yml up --build --force-recreate --no-deps
 ```
 
-Then run with:
+You can clean and remove the images with
 ```
+docker-compose -p "spar" -f ./docker-compose.yml down --remove-orphans
+```
+
+But if not, You can build the Docker images:
+```
+docker build -t bcgov/nr-spar-backend-backend:dev .
+docker build -t bcgov/nr-spar-backend-database:dev . --file DatabaseDockerfile
+```
+
+Abd then run with:
+```
+docker run -t -i -p 5432:5432 \
+  -e POSTGRES_USER=${POSTGRES_USER} \
+  -e POSTGRES_DB=${POSTGRES_DB} \
+  -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+  -t bcgov/nr-spar-backend-database:dev
+
 docker run -t -i -p 8090:8090 \
-  -e KEYCLOAK_REALM_URL=https://dev.loginproxy.gov.bc.ca/auth/realms/standard \
-  -t bcgov/nr-spar-backend-test-spar-api:latest
-```
-
-However, if you have docker-compose you can do:
-```
-docker-compose --env-file .env -f ./docker-compose.yml up --build --force-recreate --no-deps
+  -e KEYCLOAK_REALM_URL=${KEYCLOAK_REALM_URL} \
+  -t bcgov/nr-spar-backend-backend:dev
 ```
 
 ## Getting help

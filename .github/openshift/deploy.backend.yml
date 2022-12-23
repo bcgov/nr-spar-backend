@@ -102,8 +102,23 @@ objects:
                   value: ${ALLOWED_ORIGINS}
                 - name: KEYCLOAK_REALM_URL
                   value: ${KEYCLOAK_REALM_URL}
-                - name: DATABASE_PASSWORD
-                  value: ${DATABASE_PASSWORD}
+                - name: POSTGRESQL_HOST
+                  value: ${NAME}-${ZONE}-database
+                - name: POSTGRES_DB
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${NAME}-${ZONE}-database
+                      key: database-name
+                - name: POSTGRES_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${NAME}-${ZONE}-database
+                      key: database-password
+                - name: POSTGRES_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${NAME}-${ZONE}-database
+                      key: database-user
               ports:
                 - containerPort: 8090
                   protocol: TCP
