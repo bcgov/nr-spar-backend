@@ -397,13 +397,21 @@ jobs:
             -p DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
             -p PROMOTE=${{ github.repository }}:${{ env.ZONE }}-database \
             -p ZONE=${{ env.ZONE }} | oc apply -f -
+          
+          # Clean previous image, if rebuilding - database
+          if [ ${{ needs.build-database.outputs.build == 'true' }} ]
+          then
+            # Clear stale images for import/replacement
+            oc delete is ${{ env.NAME }}-${{ env.ZONE }}-database || \
+              echo "No previously imported database images have been found"
+          fi
 
-          # Clean previous image, if rebuilding
+          # Clean previous image, if rebuilding - api
           if [ ${{ needs.build-spar-api.outputs.build == 'true' }} ]
           then
             # Clear stale images for import/replacement
             oc delete is ${{ env.NAME }}-${{ env.ZONE }}-spar-api || \
-              echo "No previously imported images have been found"
+              echo "No previously imported api images have been found"
           fi
 
           # Process and apply template

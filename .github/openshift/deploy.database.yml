@@ -157,7 +157,7 @@ objects:
                       key: database-user
               volumeMounts:
                 - name: ${NAME}-${ZONE}-${COMPONENT}
-                  mountPath: "/var/lib/postgresql"
+                  mountPath: "/var/lib/postgresql/data"
               terminationMessagePath: "/dev/termination-log"
               terminationMessagePolicy: File
               imagePullPolicy: Always
