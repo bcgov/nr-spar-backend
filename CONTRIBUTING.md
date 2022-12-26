@@ -75,7 +75,20 @@ root directory.
 In case you want to debug with remote JVM, you can do it with this command:
 `./mvnw spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005"`
 
-Note: TODO add here about database and running HOW-TOs.
+For the database you can get it up and running with Docker:
+
+```
+docker build -t spar-database:dev . --file DatabaseDockerfile
+```
+
+Then run it
+```
+docker run -t -i -p 5432:5432 \
+  -e POSTGRES_USER=${POSTGRES_USER} \
+  -e POSTGRES_DB=${POSTGRES_DB} \
+  -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+  -t spar-database:dev
+```
 
 ## Run tests
 

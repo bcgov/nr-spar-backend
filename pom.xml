@@ -109,6 +109,10 @@
 			<artifactId>postgresql</artifactId>
 			<version>42.5.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
 
 
 		<!-- Testing -->
@@ -159,6 +163,12 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<version>9.5.1</version>
 			</plugin>
 
 			<plugin>
