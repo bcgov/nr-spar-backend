@@ -102,7 +102,7 @@ objects:
                   value: ${ALLOWED_ORIGINS}
                 - name: KEYCLOAK_REALM_URL
                   value: ${KEYCLOAK_REALM_URL}
-                - name: POSTGRESQL_HOST
+                - name: POSTGRES_HOST
                   value: ${NAME}-${ZONE}-database
                 - name: POSTGRES_DB
                   valueFrom:
