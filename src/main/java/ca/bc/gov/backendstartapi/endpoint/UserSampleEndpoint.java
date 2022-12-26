@@ -1,8 +1,8 @@
 package ca.bc.gov.backendstartapi.endpoint;
 
-import ca.bc.gov.backendstartapi.dto.UserDto;
+import ca.bc.gov.backendstartapi.dto.UserSampleDto;
 import ca.bc.gov.backendstartapi.exception.UserNotFoundException;
-import ca.bc.gov.backendstartapi.repository.UserRepository;
+import ca.bc.gov.backendstartapi.repository.UserSampleRepository;
 import jakarta.validation.Valid;
 import java.util.Collection;
 import java.util.List;
@@ -25,13 +25,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/users")
 @Setter
-public class UserEndpoint {
+public class UserSampleEndpoint {
 
-  private UserRepository userRepository;
+  private UserSampleRepository userSampleRepository;
 
   @Autowired
-  public UserEndpoint(UserRepository userRepository) {
-    this.userRepository = userRepository;
+  public UserSampleEndpoint(UserSampleRepository userSampleRepository) {
+    this.userSampleRepository = userSampleRepository;
   }
 
   /**
@@ -44,8 +44,8 @@ public class UserEndpoint {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('user_write')")
-  public UserDto create(@Valid @RequestBody UserDto user) {
-    return userRepository.save(user);
+  public UserSampleDto create(@Valid @RequestBody UserSampleDto user) {
+    return userSampleRepository.save(user);
   }
 
   /**
@@ -58,8 +58,8 @@ public class UserEndpoint {
       value = "/find-all-by-first-name/{firstName}",
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('user_read')")
-  public List<UserDto> readByFirstName(@PathVariable("firstName") String firstName) {
-    List<UserDto> userList = userRepository.findAllByFirstName(firstName);
+  public List<UserSampleDto> readByFirstName(@PathVariable("firstName") String firstName) {
+    List<UserSampleDto> userList = userSampleRepository.findAllByFirstName(firstName);
     if (userList.isEmpty()) {
       throw new UserNotFoundException();
     }
@@ -76,8 +76,8 @@ public class UserEndpoint {
       value = "/find-all-by-last-name/{lastName}",
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('user_read')")
-  public List<UserDto> readByLastName(@PathVariable("lastName") String lastName) {
-    List<UserDto> userList = userRepository.findAllByLastName(lastName);
+  public List<UserSampleDto> readByLastName(@PathVariable("lastName") String lastName) {
+    List<UserSampleDto> userList = userSampleRepository.findAllByLastName(lastName);
     if (userList.isEmpty()) {
       throw new UserNotFoundException();
     }
@@ -93,9 +93,9 @@ public class UserEndpoint {
    */
   @GetMapping(value = "/find/{firstName}/{lastName}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('user_read')")
-  public UserDto readByUser(
+  public UserSampleDto readByUser(
       @PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName) {
-    Optional<UserDto> userDtoOp = userRepository.find(firstName, lastName);
+    Optional<UserSampleDto> userDtoOp = userSampleRepository.find(firstName, lastName);
     if (userDtoOp.isEmpty()) {
       throw new UserNotFoundException();
     }
@@ -110,8 +110,8 @@ public class UserEndpoint {
    */
   @GetMapping(value = "/find-all", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('user_read')")
-  public Collection<UserDto> readAllUsers() {
-    return userRepository.findAll();
+  public Collection<UserSampleDto> readAllUsers() {
+    return userSampleRepository.findAll();
   }
 
   /**
@@ -123,8 +123,8 @@ public class UserEndpoint {
    */
   @DeleteMapping(value = "/{firstName}/{lastName}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('user_write')")
-  public UserDto deleteUser(
+  public UserSampleDto deleteUser(
       @PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName) {
-    return userRepository.delete(new UserDto(firstName, lastName));
+    return userSampleRepository.delete(new UserSampleDto(firstName, lastName));
   }
 }

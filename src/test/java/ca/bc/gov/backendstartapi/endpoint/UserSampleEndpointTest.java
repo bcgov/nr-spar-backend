@@ -8,10 +8,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import ca.bc.gov.backendstartapi.dto.UserDto;
+import ca.bc.gov.backendstartapi.dto.UserSampleDto;
 import ca.bc.gov.backendstartapi.exception.UserExistsException;
 import ca.bc.gov.backendstartapi.exception.UserNotFoundException;
-import ca.bc.gov.backendstartapi.repository.UserRepository;
+import ca.bc.gov.backendstartapi.repository.UserSampleRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -40,15 +40,16 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation.class)
-class UserEndpointTest {
+class UserSampleEndpointTest {
 
   private static final String FIRST_NAME = "Ricardo";
   private static final String LAST_NAME = "Campos";
-  private static final UserDto USERDTO = new UserDto(FIRST_NAME, LAST_NAME);
+  private static final UserSampleDto USERDTO = new UserSampleDto(FIRST_NAME, LAST_NAME);
 
   private MockMvc mockMvc;
 
-  @Autowired UserRepository userRepository;
+  @Autowired
+  UserSampleRepository userSampleRepository;
 
   @Autowired private WebApplicationContext webApplicationContext;
 
@@ -58,11 +59,11 @@ class UserEndpointTest {
         MockMvcBuilders.webAppContextSetup(webApplicationContext).apply(springSecurity()).build();
   }
 
-  private String getUserDtoString(UserDto userDto) throws Exception {
+  private String getUserDtoString(UserSampleDto userSampleDto) throws Exception {
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
     ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-    return ow.writeValueAsString(userDto);
+    return ow.writeValueAsString(userSampleDto);
   }
 
   @Test
@@ -88,7 +89,7 @@ class UserEndpointTest {
   @DisplayName("Create user without firstName")
   @WithMockUser(roles = "user_write")
   void createWithoutFirstName() throws Exception {
-    UserDto userDtoPartial = new UserDto(null, LAST_NAME);
+    UserSampleDto userSampleDtoPartial = new UserSampleDto(null, LAST_NAME);
 
     mockMvc
         .perform(
@@ -96,7 +97,7 @@ class UserEndpointTest {
                 .with(csrf().asHeader())
                 .header("Content-Type", "application/json")
                 .accept(MediaType.APPLICATION_JSON)
-                .content(getUserDtoString(userDtoPartial)))
+                .content(getUserDtoString(userSampleDtoPartial)))
         .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
         .andExpect(jsonPath("$.errorMessage").value("1 field(s) with validation problems!"))
         .andExpect(jsonPath("$.fields[0].fieldName").value("firstName"))
@@ -109,7 +110,7 @@ class UserEndpointTest {
   @DisplayName("Create user without lastName")
   @WithMockUser(roles = "user_write")
   void createWithoutLastName() throws Exception {
-    UserDto userDtoPartial = new UserDto(FIRST_NAME, null);
+    UserSampleDto userSampleDtoPartial = new UserSampleDto(FIRST_NAME, null);
 
     mockMvc
         .perform(
@@ -117,7 +118,7 @@ class UserEndpointTest {
                 .with(csrf().asHeader())
                 .header("Content-Type", "application/json")
                 .accept(MediaType.APPLICATION_JSON)
-                .content(getUserDtoString(userDtoPartial)))
+                .content(getUserDtoString(userSampleDtoPartial)))
         .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
         .andExpect(jsonPath("$.errorMessage").value("1 field(s) with validation problems!"))
         .andExpect(jsonPath("$.fields[0].fieldName").value("lastName"))
@@ -130,7 +131,7 @@ class UserEndpointTest {
   @DisplayName("Create user with bellow minimum lastName size")
   @WithMockUser(roles = "user_write")
   void createSizeMin() throws Exception {
-    UserDto userDtoError = new UserDto(FIRST_NAME, "C");
+    UserSampleDto userSampleDtoError = new UserSampleDto(FIRST_NAME, "C");
 
     mockMvc
         .perform(
@@ -138,7 +139,7 @@ class UserEndpointTest {
                 .with(csrf().asHeader())
                 .header("Content-Type", "application/json")
                 .accept(MediaType.APPLICATION_JSON)
-                .content(getUserDtoString(userDtoError)))
+                .content(getUserDtoString(userSampleDtoError)))
         .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
         .andExpect(jsonPath("$.errorMessage").value("1 field(s) with validation problems!"))
         .andExpect(jsonPath("$.fields[0].fieldName").value("lastName"))
@@ -151,7 +152,7 @@ class UserEndpointTest {
   @DisplayName("Create user with above than maximum lastName size")
   @WithMockUser(roles = "user_write")
   void createSizeMax() throws Exception {
-    UserDto userDtoError = new UserDto("Ricardo", "CamposCamposCamposCampos");
+    UserSampleDto userSampleDtoError = new UserSampleDto("Ricardo", "CamposCamposCamposCampos");
 
     mockMvc
         .perform(
@@ -159,7 +160,7 @@ class UserEndpointTest {
                 .with(csrf().asHeader())
                 .header("Content-Type", "application/json")
                 .accept(MediaType.APPLICATION_JSON)
-                .content(getUserDtoString(userDtoError)))
+                .content(getUserDtoString(userSampleDtoError)))
         .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
         .andExpect(jsonPath("$.errorMessage").value("1 field(s) with validation problems!"))
         .andExpect(jsonPath("$.fields[0].fieldName").value("lastName"))
