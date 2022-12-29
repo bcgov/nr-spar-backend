@@ -42,8 +42,8 @@ and deploy it.
   - Mockito and Mock MVC
   - Automated tests with Postman and Newman
 - Database
-  - Remote Oracle with secure connection
   - PostgreSQL
+  - Versioning with [Flyway](https://flywaydb.org/)
 - DevOps
   - Docker
   - Docker Composer
