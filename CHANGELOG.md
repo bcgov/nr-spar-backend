@@ -1,3 +1,12 @@
+# [0.2.0](https://github.com/bcgov/nr-spar-backend/compare/v0.1.2...v0.2.0) (2022-12-30)
+
+
+### Features
+
+* add postgres database deploy workflow ([#12](https://github.com/bcgov/nr-spar-backend/issues/12)) ([034bb56](https://github.com/bcgov/nr-spar-backend/commit/034bb564b09c16fdbeea04023f350ad5ec337644))
+
+
+
 ## [0.1.2](https://github.com/bcgov/nr-spar-backend/compare/v0.1.1...v0.1.2) (2022-12-13)
 
 
