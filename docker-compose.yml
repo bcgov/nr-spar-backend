@@ -3,7 +3,7 @@ version: '3.9'
 services:
   database:
     container_name: database
-    image: spar:backend-dev
+    image: ghcr.io/bcgov/nr-spar-backend:test-spar-api
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -13,8 +13,8 @@ services:
     volumes:
       - /pgdata
     build:
-      context: .
-      dockerfile: DatabaseDockerfile
+      context: ./database
+      dockerfile: Dockerfile
     healthcheck:
       test: [ "CMD-SHELL", "psql -q -U $POSTGRES_USER -d $POSTGRES_DB -c 'SELECT 1'" ]
       interval: 10s
@@ -23,7 +23,7 @@ services:
 
   backend:
     container_name: backend
-    image: spar:database-dev
+    image: ghcr.io/bcgov/nr-spar-backend:test-database
     depends_on:
       database:
         condition: service_healthy
