@@ -3,9 +3,9 @@ kind: Template
 metadata:
   name: ${NAME}
   annotations:
-    description: "NR Backend Starting API"
-    tags: "nr-spar-backend"
-    iconClass: icon-java
+    description: "NR SPAR database"
+    tags: "nr-spar-backend,database"
+    iconClass: iconpostgresql
 labels:
   app: ${NAME}-${ZONE}
   app.kubernetes.io/part-of: ${NAME}-${ZONE}
@@ -22,20 +22,19 @@ parameters:
   - name: IMAGE_TAG
     description: Image tag to use
     value: latest
-  - description: Password for the PostgreSQL connection user.
-    from: "[a-zA-Z0-9]{16}"
-    generate: expression
-    name: DB_PASSWORD
+  - name: DATABASE_PASSWORD
+    description: Password for the PostgreSQL connection user.
+    required: true
   - description: Volume space available for data, e.g. 512Mi, 2Gi.
     displayName: Database Volume Capacity
     name: DB_PVC_SIZE
     required: true
-    value: 1Gi
+    value: 256Mi
   - name: REGISTRY
-    value: image-registry.openshift-image-registry.svc:5000
+    value: ghcr.io
   - name: PROMOTE
     description: Image (namespace/name:tag) to promote/import
-    value: openshift/postgresql:12
+    required: true
 objects:
   - apiVersion: v1
     kind: Secret
@@ -45,7 +44,7 @@ objects:
         app: ${NAME}-${ZONE}
     stringData:
       database-name: ${NAME}
-      database-password: ${DB_PASSWORD}
+      database-password: ${DATABASE_PASSWORD}
       database-user: ${NAME}
   - kind: PersistentVolumeClaim
     apiVersion: v1
@@ -124,58 +123,41 @@ objects:
                     - /usr/bin/env
                     - bash
                     - '-c'
-                    - >-
-                      psql -q -d
-                      $POSTGRESQL_DATABASE -c 'SELECT 1'
+                    - psql -q -U $POSTGRES_USER -d $POSTGRES_DB -c 'SELECT 1'
                 failureThreshold: 5
-                initialDelaySeconds: 60
+                initialDelaySeconds: 30
                 periodSeconds: 15
-                timeoutSeconds: 10
+                timeoutSeconds: 1
               livenessProbe:
                 exec:
                   command:
                     - /usr/bin/env
                     - bash
                     - '-c'
-                    - >-
-                      psql -q -d
-                      $POSTGRESQL_DATABASE -c 'SELECT 1'
+                    - psql -q $POSTGRES_USER -d $POSTGRES_DB -c 'SELECT 1'
                 failureThreshold: 5
-                initialDelaySeconds: 60
+                initialDelaySeconds: 30
                 periodSeconds: 15
-                timeoutSeconds: 10
+                timeoutSeconds: 1
               env:
-                - name: POSTGRESQL_DATABASE
+                - name: POSTGRES_DB
                   valueFrom:
                     secretKeyRef:
                       name: ${NAME}-${ZONE}-${COMPONENT}
                       key: database-name
-                - name: POSTGRESQL_PASSWORD
+                - name: POSTGRES_PASSWORD
                   valueFrom:
                     secretKeyRef:
                       name: ${NAME}-${ZONE}-${COMPONENT}
                       key: database-password
-                - name: POSTGRESQL_USER
+                - name: POSTGRES_USER
                   valueFrom:
                     secretKeyRef:
                       name: ${NAME}-${ZONE}-${COMPONENT}
                       key: database-user
               volumeMounts:
                 - name: ${NAME}-${ZONE}-${COMPONENT}
-                  mountPath: "/var/lib/pgsql/data"
-              livenessProbe:
-                initialDelaySeconds: 60
-                tcpSocket:
-                  port: 5432
-                timeoutSeconds: 10
-              readinessProbe:
-                exec:
-                  command:
-                    - /bin/bash
-                    - -c
-                    - pg_isready -h localhost -p 5432
-                initialDelaySeconds: 20
-                timeoutSeconds: 15
+                  mountPath: "/var/lib/postgresql"
               terminationMessagePath: "/dev/termination-log"
               terminationMessagePolicy: File
               imagePullPolicy: Always
