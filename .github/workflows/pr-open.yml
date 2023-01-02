@@ -68,6 +68,8 @@ jobs:
     runs-on: ubuntu-22.04
     permissions:
       packages: write
+    needs:
+      - build-backend
     strategy:
       matrix:
         package: [ backend, database ]
