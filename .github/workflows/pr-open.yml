@@ -41,6 +41,28 @@ jobs:
         with:
           exclude-file: docker-compose.yml
 
+  build-backend:
+    name: Build with Maven
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout repository and Setup JDK 17
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: cd backend && mvn --no-transfer-progress --update-snapshots package
+
   builds:
     name: Builds
     runs-on: ubuntu-22.04
@@ -56,16 +78,6 @@ jobs:
             triggers: ('database/')
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-
-      - name: Build with Maven
-        run: cd backend && mvn --no-transfer-progress --update-snapshots package
-
       - uses: bcgov-nr/action-builder-ghcr@v0.0.2
         with:
           package: ${{ matrix.package }}
