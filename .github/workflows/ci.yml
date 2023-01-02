@@ -9,6 +9,8 @@ on:
       - '**'
     tags-ignore:
       - '**'
+    paths-ignore:
+      - "**.md"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -35,23 +37,23 @@ jobs:
           distribution: 'temurin'
 
       - name: Code Validation
-        run: mvn --no-transfer-progress validate --file pom.xml
+        run: mvn --no-transfer-progress validate --file backend/pom.xml
 
       - name: Code Compilation
-        run: mvn --no-transfer-progress clean compile --file pom.xml
+        run: mvn --no-transfer-progress clean compile --file backend/pom.xml
 
       - name: Checkstyle
-        run: mvn --no-transfer-progress checkstyle:checkstyle -Dcheckstyle.skip=false --file pom.xml
+        run: mvn --no-transfer-progress checkstyle:checkstyle -Dcheckstyle.skip=false --file backend/pom.xml
 
       - name: Archive Checkstyle
         uses: actions/upload-artifact@v2
         with:
           name: checkstyle
-          path: target/site/checkstyle.html
+          path: backend/target/site/checkstyle.html
           retention-days: 5
 
   tests:
-    name: Code tests
+    name: Run tests
     runs-on: ubuntu-latest
     needs:
       - validate
@@ -89,20 +91,20 @@ jobs:
           distribution: 'temurin'
 
       - name: Unit Tests
-        run: mvn --no-transfer-progress test --file pom.xml
+        run: mvn --no-transfer-progress test --file backend/pom.xml
 
       - name: Integration Tests
-        run: mvn --no-transfer-progress verify -P integration-test --file pom.xml
+        run: mvn --no-transfer-progress verify -P integration-test --file backend/pom.xml
 
       - name: Code Coverage
-        run: mvn --no-transfer-progress clean verify -P all-tests --file pom.xml
+        run: mvn --no-transfer-progress clean verify -P all-tests --file backend/pom.xml
 
       - name: Generate JaCoCo Badge
         uses: cicirello/jacoco-badge-generator@v2
         id: jacoco
         with:
           generate-branches-badge: true
-          jacoco-csv-file: target/coverage-reports/merged-test-report/jacoco.csv
+          jacoco-csv-file: backend/target/coverage-reports/merged-test-report/jacoco.csv
 
       - name: Log coverage percentage
         run: |
@@ -121,10 +123,10 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: jacoco-report
-          path: target/coverage-reports/merged-test-report/
+          path: backend/target/coverage-reports/merged-test-report/
 
       - name: QualityGate
-        run: mvn --no-transfer-progress clean verify package -P all-tests sonar:sonar -Dsonar.projectKey=bcgov_nr-spar-backend -Dsonar.coverage.jacoco.xmlReportPaths=target/coverage-reports/merged-test-report/jacoco.xml --file pom.xml
+        run: mvn --no-transfer-progress clean verify package -P all-tests sonar:sonar -Dsonar.projectKey=bcgov_nr-spar-backend -Dsonar.coverage.jacoco.xmlReportPaths=backend/target/coverage-reports/merged-test-report/jacoco.xml --file backend/pom.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -135,7 +137,7 @@ jobs:
     permissions:
       security-events: write
     needs:
-      - validate
+      - tests
     steps:
       - uses: actions/checkout@v3
       - uses: actions/cache@v2
@@ -151,6 +153,7 @@ jobs:
         with:
           debug: true
           languages: java
+          config-file: ./.github/codeql/codeql-config.yml
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -159,7 +162,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Code Compilation
-        run: mvn --no-transfer-progress clean compile --file pom.xml
+        run: mvn --no-transfer-progress clean compile --file backend/pom.xml
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
@@ -172,7 +175,6 @@ jobs:
         with:
           args: --severity-threshold=high --sarif-file-output=snyk.sarif
 
-  # For every commit and pull request
   codeql:
     name: Semantic Code Analysis
     runs-on: ubuntu-latest
@@ -181,7 +183,7 @@ jobs:
       contents: read
       security-events: write
     needs:
-      - validate
+      - security
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -191,6 +193,7 @@ jobs:
         with:
           debug: true
           languages: java
+          config-file: ./.github/codeql/codeql-config.yml
 
       - name: Set up JDK 17
         uses: actions/setup-java@v2
@@ -205,195 +208,3 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
-
-  # Only for Pull Requests
-  build-spar-api:
-    name: API Image Build (Only PR)
-    env:
-      COMPONENT: spar-api
-      ZONE: ${{ github.event.number }}
-      NR_SPAR_BACKEND_VERSION: snapshot-${{ github.event.number }}
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main'
-    needs:
-      - tests
-      - security
-      - codeql
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - uses: actions/checkout@v3
-        name: Checkout repository and Setup JDK 17
-        with:
-          token: ${{ secrets.PAT }}
-          fetch-depth: 0
-
-      - uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-
-      - name: Build with Maven
-        run: mvn --no-transfer-progress --update-snapshots package
-
-      - name: Log in to the Container registry
-        uses: docker/login-action@v1
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ github.repository }}:${{ env.ZONE }}-${{ env.COMPONENT }}
-
-      - name: Clear any previous OpenShift image
-        run: |
-          # Login to OpenShift and select project
-          oc login --token=${{ secrets.OC_TOKEN }} --server=${{ secrets.OC_SERVER }}
-          oc project ${{ secrets.OC_NAMESPACE }}
-
-          # Clean previous image
-          oc delete is ${{ env.NAME }}-${{ env.ZONE }}-${{ env.COMPONENT }} || true
-
-  # Only for Pull Requests
-  build-database:
-    name: Database Image Build (Only PR)
-    env:
-      COMPONENT: database
-      ZONE: ${{ github.event.number }}
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main'
-    needs:
-      - build-spar-api
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - uses: actions/checkout@v3
-        name: Checkout repository
-        with:
-          token: ${{ secrets.PAT }}
-          fetch-depth: 0
-
-      - name: Log in to the Container registry
-        uses: docker/login-action@v1
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v3
-        with:
-          context: ./database
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ github.repository }}:${{ env.ZONE }}-${{ env.COMPONENT }}
-
-      - name: Clear any previous OpenShift image
-        run: |
-          # Login to OpenShift and select project
-          oc login --token=${{ secrets.OC_TOKEN }} --server=${{ secrets.OC_SERVER }}
-          oc project ${{ secrets.OC_NAMESPACE }}
-
-          # Clean previous image
-          oc delete is ${{ env.NAME }}-${{ env.ZONE }}-${{ env.COMPONENT }} || true
-
-
-  # Only for Pull Requests
-  deploy-dev:
-    name: DEV Deployment (Only PR)
-    needs:
-      - build-database
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main'
-    timeout-minutes: 15
-    env:
-      ZONE: ${{ github.event.number }}
-      NR_SPAR_BACKEND_VERSION: snapshot-${{ github.event.number }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Deploy
-        run: |
-          # Login to OpenShift and select project
-          oc login --token=${{ secrets.OC_TOKEN }} --server=${{ secrets.OC_SERVER }}
-          oc project ${{ secrets.OC_NAMESPACE }}
-
-          # Database uses a default build
-          oc process -f ./database/deploy.database.yml \
-            -p DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
-            -p PROMOTE=${{ github.repository }}:${{ env.ZONE }}-database \
-            -p ZONE=${{ env.ZONE }} | oc apply -f -
-          
-          # Clean previous image, if rebuilding - api
-          if [ ${{ needs.build-spar-api.outputs.build == 'true' }} ]
-          then
-            # Clear stale images for import/replacement
-            oc delete is ${{ env.NAME }}-${{ env.ZONE }}-spar-api || \
-              echo "No previously imported api images have been found"
-          fi
-
-          # Process and apply template
-          oc process -f deploy.backend.yml -p ZONE=${{ env.ZONE }} \
-            -p NR_SPAR_BACKEND_VERSION=${{ env.NR_SPAR_BACKEND_VERSION }} \
-            -p ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }} \
-            -p KEYCLOAK_REALM_URL=${{ secrets.KEYCLOAK_REALM_URL }} \
-            -p DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
-            -p PROMOTE=${{ github.repository }}:${{ env.ZONE }}-spar-api | oc apply -f -
-
-          # Follow any active rollouts (see deploymentconfigs)
-          oc rollout status dc/${{ env.NAME }}-${{ env.ZONE }}-database -w
-          oc rollout status dc/${{ env.NAME }}-${{ env.ZONE }}-spar-api -w
-      - name: DEV Deployment update
-        uses: mshick/add-pr-comment@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          allow-repeats: false
-          message: |
-            DEV deployments have completed successfully!
-            Service API: [https://${{ env.NAME }}-${{ github.event.number }}-spar-api.apps.silver.devops.gov.bc.ca/]()
-
-
-  api-tests:
-    name: Newman API tests runner
-    needs:
-      - deploy-dev
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Install Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: Install newman
-        run: |
-          npm install -g newman
-          npm install -g newman-reporter-htmlextra
-
-      - name: Make Directory for Test Results
-        run: mkdir -p testArtifacts
-
-      - name: Run Postman Collection
-        run: |
-          newman run test/postman/starting-api.postman_collection.json -e test/postman/starting-api.postman_environment.json \
-            --env-var "apiAddr=${{ env.NAME }}-${{ github.event.number }}-spar-api.apps.silver.devops.gov.bc.ca" \
-            --env-var "releaseVer=snapshot-${{ github.event.number }}" \
-            --env-var "authServer=${{ secrets.KEYCLOAK_SERVER_REALM }}" \
-            --env-var "authClient=${{ secrets.KC_SERVICE_ACCOUNT_NAME }}" \
-            --env-var "authClient=${{ secrets.KC_SERVICE_ACCOUNT_PASS }}" \
-            --suppress-exit-code -r htmlextra --reporter-htmlextra-export testArtifacts/api-tests-report.html
-
-      - name: Output the results
-        uses: actions/upload-artifact@v2
-        with:
-          name: API test report
-          path: testArtifacts

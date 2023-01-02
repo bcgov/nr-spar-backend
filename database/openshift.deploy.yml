@@ -1,14 +1,5 @@
 apiVersion: template.openshift.io/v1
 kind: Template
-metadata:
-  name: ${NAME}
-  annotations:
-    description: "NR SPAR database"
-    tags: "nr-spar-backend,database"
-    iconClass: iconpostgresql
-labels:
-  app: ${NAME}-${ZONE}
-  app.kubernetes.io/part-of: ${NAME}-${ZONE}
 parameters:
   - name: NAME
     description: Product name
@@ -22,43 +13,34 @@ parameters:
   - name: IMAGE_TAG
     description: Image tag to use
     value: latest
-  - name: DATABASE_PASSWORD
-    description: Password for the PostgreSQL connection user.
-    required: true
-  - description: Volume space available for data, e.g. 512Mi, 2Gi.
+  - name: PVC_MOUNT_PATH
+    description: Where to mount the PVC, subpath (e.g. data/)
+    value: /var/lib/postgresql
+  - name: DB_PVC_SIZE
+    description: Volume space available for data, e.g. 512Mi, 2Gi.
     displayName: Database Volume Capacity
-    name: DB_PVC_SIZE
     required: true
     value: 256Mi
   - name: REGISTRY
+    description: Container registry to import from (internal is image-registry.openshift-image-registry.svc:5000)
     value: ghcr.io
   - name: PROMOTE
     description: Image (namespace/name:tag) to promote/import
     required: true
 objects:
-  - apiVersion: v1
-    kind: Secret
-    metadata:
-      name: ${NAME}-${ZONE}-${COMPONENT}
-      labels:
-        app: ${NAME}-${ZONE}
-    stringData:
-      database-name: ${NAME}
-      database-password: ${DATABASE_PASSWORD}
-      database-user: ${NAME}
   - kind: PersistentVolumeClaim
     apiVersion: v1
     metadata:
       name: ${NAME}-${ZONE}-${COMPONENT}
       labels:
         app: ${NAME}-${ZONE}
-    spec:
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: "${DB_PVC_SIZE}"
-      storageClassName: netapp-file-standard
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: "${DB_PVC_SIZE}"
+        storageClassName: netapp-file-standard
   - kind: ImageStream
     apiVersion: v1
     metadata:
@@ -69,12 +51,12 @@ objects:
       lookupPolicy:
         local: false
       tags:
-      - name: ${IMAGE_TAG}
-        from:
-          kind: DockerImage
-          name: ${REGISTRY}/${PROMOTE}
-        referencePolicy:
-          type: Local
+        - name: ${IMAGE_TAG}
+          from:
+            kind: DockerImage
+            name: ${REGISTRY}/${PROMOTE}
+          referencePolicy:
+            type: Local
   - kind: DeploymentConfig
     apiVersion: v1
     metadata:
@@ -157,7 +139,7 @@ objects:
                       key: database-user
               volumeMounts:
                 - name: ${NAME}-${ZONE}-${COMPONENT}
-                  mountPath: "/var/lib/postgresql"
+                  mountPath: ${PVC_MOUNT_PATH}
               terminationMessagePath: "/dev/termination-log"
               terminationMessagePolicy: File
               imagePullPolicy: Always
