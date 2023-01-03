@@ -26,10 +26,8 @@ jobs:
             Thanks for the PR!
             Any successful deployments (not always required) will be available below.
             [Backend](https://${{ env.PREFIX }}-backend.${{ env.DOMAIN }}/) available
-            # E.g.: https://nr-spar-backend-12-backend.apps.silver.devops.gov.bc.ca/
             Once merged, code will be promoted and handed off to following workflow run.
             [Main Merge Workflow](https://github.com/${{ github.repository }}/actions/workflows/merge-main.yml)
-            # E.g.: https://github.com/bcgov/nr-spar-backend/actions/workflows/merge-main.yml
 
   secret-search:
     name: Secret Search
@@ -41,35 +39,11 @@ jobs:
         with:
           exclude-file: docker-compose.yml
 
-  build-backend:
-    name: Build with Maven
-    runs-on: ubuntu-22.04
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - uses: actions/checkout@v3
-        name: Checkout repository and Setup JDK 17
-        with:
-          token: ${{ secrets.PAT }}
-          fetch-depth: 0
-
-      - uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-
-      - name: Build with Maven
-        run: cd backend && mvn --no-transfer-progress --update-snapshots package
-
   builds:
     name: Builds
     runs-on: ubuntu-22.04
     permissions:
       packages: write
-    needs:
-      - build-backend
     strategy:
       matrix:
         package: [ backend, database ]
@@ -95,18 +69,18 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        name: [ backend, database, init ]
+        name: [ init, database, backend ]
         include:
+          - name: init
+            file: common/openshift.init.yml
+            overwrite: false
+          - name: database
+            file: database/openshift.deploy.yml
+            overwrite: false
           - name: backend
             file: backend/openshift.deploy.yml
             overwrite: true
             parameters: -p MIN_REPLICAS=1 -p MAX_REPLICAS=2 -p BUILD=snapshot-${{ github.event.number }}
-          - name: database
-            file: database/openshift.deploy.yml
-            overwrite: false
-          - name: init
-            file: common/openshift.init.yml
-            overwrite: false
     steps:
       - uses: bcgov-nr/action-deployer-openshift@v0.1.0
         with:

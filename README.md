@@ -81,6 +81,11 @@ export POSTGRES_PASSWORD=some-secret
 export POSTGRES_DB=some-name
 ```
 
+Build the package:
+```
+cd backend && ./mvnw --no-transfer-progress --update-snapshots -P prod package && cd ..
+```
+
 If Docker Compose is an option, with one command you get it up and running:
 ```
 docker-compose up --build
@@ -93,21 +98,27 @@ docker-compose down --remove-orphans
 
 But if not, You can build the Docker images:
 ```
-cd backend && docker build -t bcgov/nr-spar-backend-backend:dev . && cd ..
-cd database && docker build -t bcgov/nr-spar-backend-database:dev . && cd ..
+cd backend && docker build -t bcgov/nr-spar-backend-backend:snapshot . && cd ..
+cd database && docker build -t bcgov/nr-spar-backend-database:snapshot . && cd ..
 ```
 
 Abd then run with:
 ```
-docker run -t -i -p 5432:5432 \
+docker run -d -p 5432:5432 \
+  --name nr-spar-database \
   -e POSTGRES_USER=${POSTGRES_USER} \
   -e POSTGRES_DB=${POSTGRES_DB} \
   -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
-  -t bcgov/nr-spar-backend-database:dev
+  -t bcgov/nr-spar-backend-database:snapshot
 
-docker run -t -i -p 8090:8090 \
+docker run -t -i --net=host \
+  --name nr-spar-backend \
   -e KEYCLOAK_REALM_URL=${KEYCLOAK_REALM_URL} \
-  -t bcgov/nr-spar-backend-backend:dev
+  -e POSTGRES_HOST=${POSTGRES_HOST} \
+  -e POSTGRES_DB=${POSTGRES_DB} \
+  -e POSTGRES_USER=${POSTGRES_USER} \
+  -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+  -t bcgov/nr-spar-backend-backend:snapshot
 ```
 
 ## Getting help
