@@ -1,3 +1,12 @@
+# [0.3.0](https://github.com/bcgov/nr-spar-backend/compare/v0.2.0...v0.3.0) (2023-01-03)
+
+
+### Features
+
+* database versioning with Flyway ([#13](https://github.com/bcgov/nr-spar-backend/issues/13)) ([43bfbf7](https://github.com/bcgov/nr-spar-backend/commit/43bfbf7ca6d68d59e0123892d10d028fde042d76))
+
+
+
 # [0.2.0](https://github.com/bcgov/nr-spar-backend/compare/v0.1.2...v0.2.0) (2022-12-30)
 
 
