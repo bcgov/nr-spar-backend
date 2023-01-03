@@ -1,0 +1,6 @@
+test/
+target/
+.mvn
+mvnw*
+.env
+*.yml

@@ -81,25 +81,20 @@ export POSTGRES_PASSWORD=some-secret
 export POSTGRES_DB=some-name
 ```
 
-Build the package:
-```
-./mvnw --no-transfer-progress --update-snapshots package
-```
-
 If Docker Compose is an option, with one command you get it up and running:
 ```
-docker-compose -p "spar" -f ./docker-compose.yml up --build --force-recreate --no-deps
+docker-compose up --build
 ```
 
 You can clean and remove the images with
 ```
-docker-compose -p "spar" -f ./docker-compose.yml down --remove-orphans
+docker-compose down --remove-orphans
 ```
 
 But if not, You can build the Docker images:
 ```
-docker build -t bcgov/nr-spar-backend-backend:dev .
-docker build -t bcgov/nr-spar-backend-database:dev . --file DatabaseDockerfile
+cd backend && docker build -t bcgov/nr-spar-backend-backend:dev . && cd ..
+cd database && docker build -t bcgov/nr-spar-backend-database:dev . && cd ..
 ```
 
 Abd then run with:

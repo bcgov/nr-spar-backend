@@ -11,7 +11,7 @@
 	<groupId>ca.bc.gov</groupId>
 	<artifactId>nr-spar-backend</artifactId>
 	<version>0.2.0</version>
-	<name>backend-start-api</name>
+	<name>nr-spar-backend</name>
 	<description>Starting backend API project</description>
 
 	<licenses>
@@ -58,6 +58,13 @@
 			<properties>
 				<build.profile.id>integration-test</build.profile.id>
 				<skip.integration.tests>false</skip.integration.tests>
+				<skip.unit.tests>true</skip.unit.tests>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<build.profile.id>prod</build.profile.id>
 				<skip.unit.tests>true</skip.unit.tests>
 			</properties>
 		</profile>
