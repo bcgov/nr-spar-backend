@@ -1,6 +1,5 @@
 name: CI
 
-# What about CI? For the commits?
 on:
   push:
     branches:
@@ -9,6 +8,9 @@ on:
       - '**'
     tags-ignore:
       - '**'
+    paths:
+      - "backend/**"
+      - ".github/workflows/ci.yml"
     paths-ignore:
       - "**.md"
 

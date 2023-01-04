@@ -3,6 +3,7 @@ version: '3.9'
 services:
   database:
     container_name: database
+    image: ghcr.io/bcgov/nr-spar-backend-database:test
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -22,6 +23,7 @@ services:
 
   backend:
     container_name: backend
+    image: ghcr.io/bcgov/nr-spar-backend-backend:test
     depends_on:
       database:
         condition: service_healthy
