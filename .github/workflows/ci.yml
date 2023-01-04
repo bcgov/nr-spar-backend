@@ -126,7 +126,7 @@ jobs:
           path: backend/target/coverage-reports/merged-test-report/
 
       - name: QualityGate
-        run: mvn --no-transfer-progress clean verify package -P all-tests sonar:sonar -Dsonar.projectKey=bcgov_nr-spar-backend -Dsonar.coverage.jacoco.xmlReportPaths=backend/target/coverage-reports/merged-test-report/jacoco.xml --file backend/pom.xml
+        run: mvn --no-transfer-progress clean verify package -P all-tests sonar:sonar -Dsonar.projectKey=bcgov_nr-spar-backend -Dsonar.coverage.jacoco.xmlReportPaths=target/coverage-reports/merged-test-report/jacoco.xml --file backend/pom.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
