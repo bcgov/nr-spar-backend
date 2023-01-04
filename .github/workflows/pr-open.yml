@@ -312,7 +312,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Build Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          load: true
+          tags: ${{ env.REGISTRY }}/${{ github.repository }}:${{ env.ZONE }}-${{ env.COMPONENT }}
+
+      - name: Push Docker image
+        if: github.actor != 'dependabot[bot]'
         uses: docker/build-push-action@v3
         with:
           context: .
@@ -320,6 +328,7 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ github.repository }}:${{ env.ZONE }}-${{ env.COMPONENT }}
 
       - name: Clear any previous OpenShift image
+        if: github.actor != 'dependabot[bot]'
         run: |
           # Login to OpenShift and select project
           oc login --token=${{ secrets.OC_TOKEN }} --server=${{ secrets.OC_SERVER }}
@@ -335,7 +344,10 @@ jobs:
       COMPONENT: database
       ZONE: ${{ github.event.number }}
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main'
+    if: >
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.base.ref == 'main' &&
+      github.actor != 'dependabot[bot]'
     needs:
       - build-spar-api
     permissions:
@@ -378,7 +390,10 @@ jobs:
     needs:
       - build-database
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main'
+    if: >
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.base.ref == 'main' &&
+      github.actor != 'dependabot[bot]'
     timeout-minutes: 15
     env:
       ZONE: ${{ github.event.number }}
