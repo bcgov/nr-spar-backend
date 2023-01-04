@@ -11,8 +11,6 @@ on:
     paths:
       - "backend/**"
       - ".github/workflows/ci.yml"
-    paths-ignore:
-      - "**.md"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
