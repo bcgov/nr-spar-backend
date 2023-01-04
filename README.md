@@ -75,15 +75,10 @@ Note that you'll need these environment variables:
 ```
 export NR_SPAR_BACKEND_VERSION=local
 export KEYCLOAK_REALM_URL=https://dev.loginproxy.gov.bc.ca/auth/realms/standard
-export POSTGRES_HOST=localhost
-export POSTGRES_USER=some-user
-export POSTGRES_PASSWORD=some-secret
-export POSTGRES_DB=some-name
-```
-
-Build the package:
-```
-cd backend && ./mvnw --no-transfer-progress --update-snapshots -P prod package && cd ..
+export POSTGRESQL_HOST=localhost
+export POSTGRESQL_USER=some-user
+export POSTGRESQL_PASSWORD=some-secret
+export POSTGRESQL_DATABASE=some-name
 ```
 
 If Docker Compose is an option, with one command you get it up and running:
@@ -91,7 +86,7 @@ If Docker Compose is an option, with one command you get it up and running:
 docker-compose up --build
 ```
 
-You can clean and remove the images with
+You can clean and remove the containers with
 ```
 docker-compose down --remove-orphans
 ```
@@ -102,22 +97,22 @@ cd backend && docker build -t bcgov/nr-spar-backend-backend:snapshot . && cd ..
 cd database && docker build -t bcgov/nr-spar-backend-database:snapshot . && cd ..
 ```
 
-Abd then run with:
+And then run with:
 ```
 docker run -d -p 5432:5432 \
   --name nr-spar-database \
-  -e POSTGRES_USER=${POSTGRES_USER} \
-  -e POSTGRES_DB=${POSTGRES_DB} \
-  -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+  -e POSTGRES_USER=${POSTGRESQL_USER} \
+  -e POSTGRES_DB=${POSTGRESQL_DATABASE} \
+  -e POSTGRES_PASSWORD=${POSTGRESQL_PASSWORD} \
   -t bcgov/nr-spar-backend-database:snapshot
 
 docker run -t -i --net=host \
   --name nr-spar-backend \
   -e KEYCLOAK_REALM_URL=${KEYCLOAK_REALM_URL} \
-  -e POSTGRES_HOST=${POSTGRES_HOST} \
-  -e POSTGRES_DB=${POSTGRES_DB} \
-  -e POSTGRES_USER=${POSTGRES_USER} \
-  -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+  -e POSTGRESQL_HOST=${POSTGRESQL_HOST} \
+  -e POSTGRESQL_DATABASE=${POSTGRESQL_DATABASE} \
+  -e POSTGRESQL_USER=${POSTGRESQL_USER} \
+  -e POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD} \
   -t bcgov/nr-spar-backend-backend:snapshot
 ```
 

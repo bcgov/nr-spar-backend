@@ -1,5 +1,14 @@
 apiVersion: template.openshift.io/v1
 kind: Template
+metadata:
+  name: ${NAME}
+  annotations:
+    description: "NR SPAR Database"
+    tags: "nr-spar-backend,database"
+    iconClass: icon-java
+labels:
+  app: ${NAME}-${ZONE}
+  app.kubernetes.io/part-of: ${NAME}-${ZONE}
 parameters:
   - name: NAME
     description: Product name
