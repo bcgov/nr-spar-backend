@@ -94,6 +94,15 @@ Pull Request template that you can fill. The more complete the better. If you
 have images, screen capture or diagrams, that helps a lot. Don't forget to add
 reviewers, assign to yourself and add a label.
 
+## Database versioning
+
+Any permanent alteration to the database schema (creation or alteration of tables,
+columns, etc.) should be done through Flyway. [Here's a brief explanation on how
+versioning with Flyway works](https://flywaydb.org/documentation/getstarted/how).
+
+Each migration should have its own file, which must follow [this naming
+pattern](https://flywaydb.org/documentation/concepts/migrations#naming). 
+
 ## Follow our best practices
 
 - Java source code must be formatted according to
