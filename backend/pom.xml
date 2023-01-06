@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.0.0</version>
+		<version>3.0.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ca.bc.gov</groupId>
 	<artifactId>nr-spar-backend</artifactId>
-	<version>0.1.2</version>
-	<name>backend-start-api</name>
+	<version>0.3.3</version>
+	<name>nr-spar-backend</name>
 	<description>Starting backend API project</description>
 
 	<licenses>
@@ -61,6 +61,13 @@
 				<skip.unit.tests>true</skip.unit.tests>
 			</properties>
 		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<build.profile.id>prod</build.profile.id>
+				<skip.unit.tests>true</skip.unit.tests>
+			</properties>
+		</profile>
 	</profiles>
 
 	<dependencies>
@@ -103,6 +110,17 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -339,7 +357,7 @@
 					<dependency>
 						<groupId>com.puppycrawl.tools</groupId>
 						<artifactId>checkstyle</artifactId>
-						<version>10.5.0</version>
+						<version>10.6.0</version>
 					</dependency>
 				</dependencies>
 				<configuration>

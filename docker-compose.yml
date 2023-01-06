@@ -3,37 +3,37 @@ version: '3.9'
 services:
   database:
     container_name: database
-    image: spar:backend-dev
+    image: ghcr.io/bcgov/nr-spar-backend-database:test
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRESQL_USER}
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD}
+      POSTGRES_DB: ${POSTGRESQL_DATABASE}
     hostname: database
     restart: always
     volumes:
       - /pgdata
     build:
-      context: .
-      dockerfile: DatabaseDockerfile
+      context: ./database
+      dockerfile: Dockerfile
     healthcheck:
-      test: [ "CMD-SHELL", "psql -q -U $POSTGRES_USER -d $POSTGRES_DB -c 'SELECT 1'" ]
+      test: [ "CMD-SHELL", "psql -q -U $POSTGRESQL_USER -d $POSTGRESQL_DATABASE -c 'SELECT 1'" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
   backend:
     container_name: backend
-    image: spar:database-dev
+    image: ghcr.io/bcgov/nr-spar-backend-backend:test
     depends_on:
       database:
         condition: service_healthy
     environment:
-      NR_SPAR_BACKEND_VERSION: development
+      NR_SPAR_BACKEND_VERSION: snapshot
       KEYCLOAK_REALM_URL: ${KEYCLOAK_REALM_URL}
-      POSTGRES_HOST: database
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRESQL_HOST: database
+      POSTGRESQL_DATABASE: ${POSTGRESQL_DATABASE}
+      POSTGRESQL_USER: ${POSTGRESQL_USER}
+      POSTGRESQL_PASSWORD: ${POSTGRESQL_PASSWORD}
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8090/check" ]
       interval: 1m30s
@@ -46,5 +46,5 @@ services:
     ports:
       - "8090:8090"
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile

@@ -19,6 +19,7 @@ jobs:
   # Clean up OpenShift when PR closed, no conditions
   cleanup-openshift:
     name: Cleanup OpenShift
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     environment:
       name: dev
@@ -44,7 +45,10 @@ jobs:
     environment:
       name: test
     runs-on: ubuntu-22.04
-    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+    if: >
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.base.ref == 'main' &&
+      github.actor != 'dependabot[bot]'
     steps:
       - name: Check for image changes
         id: check
@@ -92,7 +96,10 @@ jobs:
   merge-notification:
     name: Merge Notification
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+    if: >
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.base.ref == 'main' &&
+      github.actor != 'dependabot[bot]'
     steps:
       - name: Pre-merge update
         uses: mshick/add-pr-comment@v1
