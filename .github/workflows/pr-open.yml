@@ -42,6 +42,7 @@ jobs:
   builds:
     name: Builds
     runs-on: ubuntu-22.04
+    if: github.actor != 'dependabot[bot]'
     permissions:
       packages: write
     strategy:
