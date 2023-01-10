@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  database:
+    container_name: database
+    image: ghcr.io/bcgov/nr-spar-backend-database:test
+    environment:
+      POSTGRES_USER: ${POSTGRESQL_USER}
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD}
+      POSTGRES_DB: ${POSTGRESQL_DATABASE}
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - /pgdata
+    build:
+      context: .
+      dockerfile: Dockerfile
+    healthcheck:
+      test: [ "CMD-SHELL", "psql -q -U $POSTGRESQL_USER -d $POSTGRESQL_DATABASE -c 'SELECT 1'" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
