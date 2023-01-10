@@ -6,6 +6,6 @@ CREATE TABLE IF NOT EXISTS spar.favorite_activity (
   enabled        BIT DEFAULT 1::bit,
   CONSTRAINT favorite_activity_pk
     primary key(id),
-  CONSTRAINT favorite_activity_fk
+  CONSTRAINT favorite_activity_user_fk
     foreign key(user_id) REFERENCES spar.user(id)
 );
