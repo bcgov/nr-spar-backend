@@ -1,4 +1,4 @@
-CREATE TABLE spar.favorite_activity (
+CREATE TABLE IF NOT EXISTS spar.favorite_activity (
   id             SERIAL,
   user_id        INT NOT NULL,
   activity_title VARCHAR(50) NOT NULL,

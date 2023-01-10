@@ -83,7 +83,7 @@ With Docker, build and run:
 ```shell
 cd database && docker build -t bcgov/nr-spar-backend-database:snapshot . && cd ..
 
-docker run -t -i --net=host \
+docker run -t -i -p 5432:5432 \
   --name nr-spar-database \
   -e POSTGRES_USER=${POSTGRESQL_USER} \
   -e POSTGRES_DB=${POSTGRESQL_DATABASE} \

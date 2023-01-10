@@ -1,4 +1,4 @@
-CREATE TABLE spar.user (
+CREATE TABLE IF NOT EXISTS spar.user (
   id         SERIAL,
   email      VARCHAR(100) NOT NULL,
   last_login TIMESTAMP NOT NULL DEFAULT NOW(),
