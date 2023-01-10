@@ -75,7 +75,27 @@ root directory.
 In case you want to debug with remote JVM, you can do it with this command:
 `./mvnw spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005"`
 
-Note: TODO add here about database and running HOW-TOs.
+Note: You need a running Postgres service to have a fully working environment. You
+can do that with Docker or Docker Compose. Follow these steps
+
+With Docker, build and run:
+
+```shell
+cd database && docker build -t bcgov/nr-spar-backend-database:snapshot . && cd ..
+
+docker run -t -i --net=host \
+  --name nr-spar-database \
+  -e POSTGRES_USER=${POSTGRESQL_USER} \
+  -e POSTGRES_DB=${POSTGRESQL_DATABASE} \
+  -e POSTGRES_PASSWORD=${POSTGRESQL_PASSWORD} \
+  bcgov/nr-spar-backend-database:snapshot
+```
+
+With Docker Compose:
+
+```shell
+docker-compose -f database/docker-compose.yml up --build
+```
 
 ## Run tests
 
@@ -101,7 +121,7 @@ columns, etc.) should be done through Flyway. [Here's a brief explanation on how
 versioning with Flyway works](https://flywaydb.org/documentation/getstarted/how).
 
 Each migration should have its own file, which must follow [this naming
-pattern](https://flywaydb.org/documentation/concepts/migrations#naming). 
+pattern](https://flywaydb.org/documentation/concepts/migrations#naming).
 
 ## Follow our best practices
 
