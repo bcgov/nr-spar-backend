@@ -9,16 +9,19 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name = "favorite_activity")
+/**
+ * This class represents a user's favorite activity.
+ */
 @Entity
 @Getter
 @Setter
+@Table(name = "favorite_activity")
 public class FavoriteActivityEntity {
 
   @Id

@@ -12,10 +12,13 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
-@Table(name = "user")
+/**
+ * This class represents a system User.
+ */
 @Entity
 @Getter
 @Setter
+@Table(name = "user")
 public class UserEntity {
 
   @Id

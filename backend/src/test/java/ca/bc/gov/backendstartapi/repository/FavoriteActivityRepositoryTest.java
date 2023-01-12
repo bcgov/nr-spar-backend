@@ -3,6 +3,7 @@ package ca.bc.gov.backendstartapi.repository;
 import ca.bc.gov.backendstartapi.entity.FavoriteActivityEntity;
 import ca.bc.gov.backendstartapi.entity.UserEntity;
 import ca.bc.gov.backendstartapi.enums.ActivityEnum;
+import ca.bc.gov.backendstartapi.exception.NotRemovableEntityException;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
@@ -27,11 +28,12 @@ class FavoriteActivityRepositoryTest {
 
   private static final String USER_TEST_EMAIL = "test.user@gov.bc.ca";
 
-  @Autowired private FavoriteActivityRepository favoriteActivityRepository;
+  @Autowired
+  private FavoriteActivityRepository favoriteActivityRepository;
 
-  @Autowired private UserRepository userRepository;
+  @Autowired
+  private UserRepository userRepository;
 
-  // CREATE - POST
   @Test
   @DisplayName("createWithDefaultValuesTest")
   @Order(1)
@@ -75,8 +77,16 @@ class FavoriteActivityRepositoryTest {
   @Test
   @DisplayName("preventFromDuplicateUserTest")
   @Order(3)
+  @Sql(scripts = {"classpath:sql_scripts/FavoriteActivityRepositoryTest_favorite.sql"})
   void preventFromDuplicateUserTest() {
-    //
+    List<UserEntity> userList = userRepository.findAllByEmail(USER_TEST_EMAIL);
+    Assertions.assertFalse(userList.isEmpty());
+    UserEntity user = userList.get(0);
+
+    FavoriteActivityEntity activity = new FavoriteActivityEntity();
+    activity.setUser(user);
+    activity.setActivityTitle(ActivityEnum.SEEDLOT_REGISTRATION.getTitle());
+    FavoriteActivityEntity created = favoriteActivityRepository.save(activity);
   }
 
   @Test
@@ -102,7 +112,6 @@ class FavoriteActivityRepositoryTest {
     Assertions.assertTrue(getOne.isPresent());
 
     FavoriteActivityEntity activity = getOne.get();
-    Long activityId = activity.getId();
     Assertions.assertEquals("Activity one", activity.getActivityTitle());
     Assertions.assertFalse(activity.getHighlighted());
     Assertions.assertTrue(activity.getEnabled());
@@ -111,10 +120,26 @@ class FavoriteActivityRepositoryTest {
     activity.setHighlighted(Boolean.TRUE);
     FavoriteActivityEntity saved = favoriteActivityRepository.save(activity);
 
+    Long activityId = activity.getId();
     Assertions.assertEquals(activityId, saved.getId());
     Assertions.assertEquals("Activity one", saved.getActivityTitle());
     Assertions.assertTrue(saved.getHighlighted());
     Assertions.assertFalse(saved.getEnabled());
   }
 
+  @Test
+  @DisplayName("deleteActivityTest")
+  @Order(6)
+  @Sql(scripts = {"classpath:sql_scripts/FavoriteActivityRepositoryTest_favorite.sql"})
+  void deleteActivityTest() {
+    String title = "Activity one";
+    Optional<FavoriteActivityEntity> getOne = favoriteActivityRepository.findByActivityTitle(title);
+    Assertions.assertTrue(getOne.isPresent());
+
+    Exception e = Assertions.assertThrows(NotRemovableEntityException.class,
+        () -> favoriteActivityRepository.delete(getOne.get()));
+
+    String message = e.getMessage();
+    Assertions.assertEquals("Entity not removable!", message);
+  }
 }

@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 
+/**
+ * This class represents a user's favorite activity repository.
+ */
 public interface FavoriteActivityRepository extends CrudRepository<FavoriteActivityEntity, Long> {
 
   List<FavoriteActivityEntity> findAllByUser(UserEntity user);
