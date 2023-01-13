@@ -2,11 +2,11 @@ package ca.bc.gov.backendstartapi.enums;
 
 import java.util.Optional;
 import lombok.Getter;
+import lombok.ToString;
 
-/**
- * This enumeration contains all possible activities.
- */
+/** This enumeration contains all possible activities. */
 @Getter
+@ToString
 public enum ActivityEnum {
   SEEDLOT_REGISTRATION(
       "SoilMoistureField",
@@ -30,8 +30,8 @@ public enum ActivityEnum {
   private final String description;
   private final String page;
 
-  private ActivityEnum(final String iconName, final String title, final String description,
-      final String page) {
+  private ActivityEnum(
+      final String iconName, final String title, final String description, final String page) {
     this.iconName = iconName;
     this.title = title;
     this.description = description;
@@ -44,7 +44,7 @@ public enum ActivityEnum {
    * @param title the title of the page
    * @return an ActivityEnum instance if found, null otherwise
    */
-  public static Optional<ActivityEnum> findByTitle(String title) {
+  public static Optional<ActivityEnum> getByTitle(String title) {
     for (ActivityEnum activityEnum : values()) {
       if (activityEnum.title.equals(title)) {
         return Optional.of(activityEnum);

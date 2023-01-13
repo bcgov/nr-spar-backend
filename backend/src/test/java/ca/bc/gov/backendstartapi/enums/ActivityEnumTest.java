@@ -1,5 +1,6 @@
 package ca.bc.gov.backendstartapi.enums;
 
+import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,15 +25,18 @@ class ActivityEnumTest {
   @DisplayName("getByTitleTest")
   void getByTitleTest() {
     String title = "Seedlot registration";
-    ActivityEnum seedlotRegistration = ActivityEnum.findByTitle(title);
+    Optional<ActivityEnum> seedlotRegistration = ActivityEnum.getByTitle(title);
+    Assertions.assertTrue(seedlotRegistration.isPresent());
 
-    Assertions.assertNotNull(seedlotRegistration);
-    Assertions.assertEquals("SoilMoistureField", seedlotRegistration.getIconName());
-    Assertions.assertEquals("Seedlot registration", seedlotRegistration.getTitle());
-    Assertions.assertEquals(DESCRIPTION, seedlotRegistration.getDescription());
-    Assertions.assertEquals("/seedlot-registration", seedlotRegistration.getPage());
+    ActivityEnum activityEnum = seedlotRegistration.get();
+    Assertions.assertEquals("SoilMoistureField", activityEnum.getIconName());
+    Assertions.assertEquals("Seedlot registration", activityEnum.getTitle());
+    Assertions.assertEquals(DESCRIPTION, activityEnum.getDescription());
+    Assertions.assertEquals("/seedlot-registration", activityEnum.getPage());
 
-    ActivityEnum notExisting = ActivityEnum.findByTitle("Nothing");
-    Assertions.assertNull(notExisting);
+    Optional<ActivityEnum> notExisting = ActivityEnum.getByTitle("Nothing");
+    Assertions.assertFalse(notExisting.isPresent());
+
+    ActivityEnum myEnum = ActivityEnum.valueOf("SEEDLOT_REGISTRATION");
   }
 }

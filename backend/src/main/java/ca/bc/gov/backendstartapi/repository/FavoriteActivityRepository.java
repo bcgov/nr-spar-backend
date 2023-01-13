@@ -13,5 +13,7 @@ public interface FavoriteActivityRepository extends CrudRepository<FavoriteActiv
 
   List<FavoriteActivityEntity> findAllByUser(UserEntity user);
 
+  List<FavoriteActivityEntity> findAllEnabledByUser(Boolean enabled, UserEntity user);
+
   Optional<FavoriteActivityEntity> findByActivityTitle(String activityTitle);
 }

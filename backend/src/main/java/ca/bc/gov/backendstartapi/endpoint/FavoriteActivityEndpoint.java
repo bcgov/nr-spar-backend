@@ -2,24 +2,21 @@ package ca.bc.gov.backendstartapi.endpoint;
 
 import ca.bc.gov.backendstartapi.dto.FavoriteActivityDto;
 import ca.bc.gov.backendstartapi.entity.FavoriteActivityEntity;
-import ca.bc.gov.backendstartapi.entity.UserEntity;
-import ca.bc.gov.backendstartapi.enums.ActivityEnum;
-import ca.bc.gov.backendstartapi.repository.FavoriteActivityRepository;
-import ca.bc.gov.backendstartapi.repository.UserRepository;
-import ca.bc.gov.backendstartapi.response.BaseResponse;
 import ca.bc.gov.backendstartapi.service.FavoriteActivityService;
 import java.util.List;
-import java.util.Optional;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.aspectj.apache.bcel.classfile.Module.Open;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/** This class contains all users' favorite activity endpoints. */
 @Setter
 @NoArgsConstructor
 @RestController
@@ -38,13 +35,25 @@ public class FavoriteActivityEndpoint {
     this.favoriteActivityService = favoriteActivityService;
   }
 
-  // create - post
   @PostMapping(consumes = "application/json", produces = "application/json")
+  @PreAuthorize("hasRole('user_write')")
   public FavoriteActivityEntity createUserActivity(@RequestBody FavoriteActivityDto activityDto) {
     return favoriteActivityService.createUserActivity(activityDto);
   }
 
-  // retrieve - get
+  @GetMapping(produces = "application/json")
+  public List<FavoriteActivityEntity> getUserActivities() {
+    return favoriteActivityService.getAllUserFavoriteActivities();
+  }
 
-  // update - put
+  @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
+  public FavoriteActivityEntity updateFavoriteActivity() {
+    // TODO: keep going from here!!
+    return null;
+  }
+
+  @DeleteMapping(value = "/{id}", produces = "application/json")
+  public void deleteFavoriteActivity() {
+    //
+  }
 }

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -23,16 +23,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestMethodOrder(OrderAnnotation.class)
 class FavoriteActivityRepositoryTest {
 
   private static final String USER_TEST_EMAIL = "test.user@gov.bc.ca";
 
-  @Autowired
-  private FavoriteActivityRepository favoriteActivityRepository;
+  @Autowired private FavoriteActivityRepository favoriteActivityRepository;
 
-  @Autowired
-  private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
   @Test
   @DisplayName("createWithDefaultValuesTest")
@@ -136,8 +134,10 @@ class FavoriteActivityRepositoryTest {
     Optional<FavoriteActivityEntity> getOne = favoriteActivityRepository.findByActivityTitle(title);
     Assertions.assertTrue(getOne.isPresent());
 
-    Exception e = Assertions.assertThrows(NotRemovableEntityException.class,
-        () -> favoriteActivityRepository.delete(getOne.get()));
+    Exception e =
+        Assertions.assertThrows(
+            NotRemovableEntityException.class,
+            () -> favoriteActivityRepository.delete(getOne.get()));
 
     String message = e.getMessage();
     Assertions.assertEquals("Entity not removable!", message);
