@@ -104,7 +104,7 @@ docker run -d -p 5432:5432 \
   -e POSTGRES_USER=${POSTGRESQL_USER} \
   -e POSTGRES_DB=${POSTGRESQL_DATABASE} \
   -e POSTGRES_PASSWORD=${POSTGRESQL_PASSWORD} \
-  -t bcgov/nr-spar-backend-database:snapshot
+  bcgov/nr-spar-backend-database:snapshot
 
 docker run -t -i --net=host \
   --name nr-spar-backend \
@@ -113,7 +113,7 @@ docker run -t -i --net=host \
   -e POSTGRESQL_DATABASE=${POSTGRESQL_DATABASE} \
   -e POSTGRESQL_USER=${POSTGRESQL_USER} \
   -e POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD} \
-  -t bcgov/nr-spar-backend-backend:snapshot
+  bcgov/nr-spar-backend-backend:snapshot
 ```
 
 ## Getting help
