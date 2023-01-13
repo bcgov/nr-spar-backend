@@ -75,7 +75,7 @@ jobs:
         with:
           path: |
             ~/.m2
-          key: ${{ runner.os }}-maven-test-${{ hashFiles('**/pom.xml') }}
+          key: ${{ runner.os }}-maven-test-${{ hashFiles('**/backend/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-test-
 
@@ -93,13 +93,13 @@ jobs:
           distribution: 'temurin'
 
       - name: Unit Tests
-        run: mvn --no-transfer-progress test --file pom.xml
+        run: mvn --no-transfer-progress test --file backend/pom.xml
 
       - name: Integration Tests
-        run: mvn --no-transfer-progress verify -P integration-test --file pom.xml
+        run: mvn --no-transfer-progress verify -P integration-test --file backend/pom.xml
 
       - name: Code Coverage
-        run: mvn --no-transfer-progress clean verify -P all-tests --file pom.xml
+        run: mvn --no-transfer-progress clean verify -P all-tests --file backend/pom.xml
 
       - name: Generate JaCoCo Badge
         uses: cicirello/jacoco-badge-generator@v2
@@ -130,7 +130,7 @@ jobs:
           path: target/coverage-reports/merged-test-report/
 
       - name: SonarCloud Scan
-        run: mvn --no-transfer-progress clean verify package -P all-tests sonar:sonar -Dsonar.projectKey=bcgov_nr-spar-backend -Dsonar.coverage.jacoco.xmlReportPaths=target/coverage-reports/merged-test-report/jacoco.xml --file pom.xml
+        run: mvn --no-transfer-progress clean verify package -P all-tests sonar:sonar -Dsonar.projectKey=bcgov_nr-spar-backend -Dsonar.coverage.jacoco.xmlReportPaths=target/coverage-reports/merged-test-report/jacoco.xml --file backend/pom.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -151,7 +151,7 @@ jobs:
         with:
           path: |
             ~/.m2
-          key: ${{ runner.os }}-maven-test-${{ hashFiles('**/pom.xml') }}
+          key: ${{ runner.os }}-maven-test-${{ hashFiles('**/backend/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-test-
 
@@ -176,7 +176,7 @@ jobs:
       - name: Set new version
         run: |
           echo "::set-output name=version::${{ steps.changelog.outputs.version }}"
-          mvn versions:set -DnewVersion='${{ steps.changelog.outputs.version }}' -f pom.xml -DskipTests -Dtests.skip=true -Dskip.unit.tests=true
+          mvn versions:set -DnewVersion='${{ steps.changelog.outputs.version }}' -f backend/pom.xml -DskipTests -Dtests.skip=true -Dskip.unit.tests=true
 
       - name: Update POM
         run: mvn versions:commit
@@ -187,7 +187,7 @@ jobs:
           author_name: Ci Bot
           author_email: cibot@users.noreply.github.com
           message: 'doc: updating pom to ${{ steps.changelog.outputs.version }} [ci skip]'
-          add: '["pom.xml","CHANGELOG.md"]'
+          add: '["backend/pom.xml","CHANGELOG.md"]'
 
       - name: Create Release
         uses: actions/create-release@v1
