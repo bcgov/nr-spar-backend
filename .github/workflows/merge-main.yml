@@ -179,7 +179,7 @@ jobs:
           mvn versions:set -DnewVersion='${{ steps.changelog.outputs.version }}' -f backend/pom.xml -DskipTests -Dtests.skip=true -Dskip.unit.tests=true
 
       - name: Update POM
-        run: mvn versions:commit
+        run: mvn versions:commit --file backend/pom.xml
 
       - name: Commit pom and changelog
         uses: EndBug/add-and-commit@v9
