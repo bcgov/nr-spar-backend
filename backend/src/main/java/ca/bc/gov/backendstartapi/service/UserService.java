@@ -28,8 +28,10 @@ public class UserService {
    * @param userRepository a userRepository instance
    */
   @Autowired
-  public UserService(UserRepository userRepository) {
+  public UserService(
+      UserRepository userRepository, UserAuthenticationHelper userAuthenticationHelper) {
     this.userRepository = userRepository;
+    this.userAuthenticationHelper = userAuthenticationHelper;
   }
 
   /**

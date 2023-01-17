@@ -9,18 +9,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.With;
 
-/**
- * This class represents a user's favorite activity.
- */
+/** This class represents a user's favorite activity in the database. */
 @Entity
 @Getter
 @Setter
+@With
+@AllArgsConstructor
 @Table(name = "favorite_activity")
 public class FavoriteActivityEntity {
 
@@ -36,11 +38,9 @@ public class FavoriteActivityEntity {
   @Column(name = "activity_title", updatable = false)
   private String activityTitle;
 
-  @Column
-  private Boolean highlighted;
+  @Column private Boolean highlighted;
 
-  @Column
-  private Boolean enabled;
+  @Column private Boolean enabled;
 
   public FavoriteActivityEntity() {
     this.highlighted = false;

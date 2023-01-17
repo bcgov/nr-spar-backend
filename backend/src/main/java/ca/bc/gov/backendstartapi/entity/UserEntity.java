@@ -9,24 +9,25 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.Set;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * This class represents a system User.
- */
+/** This class represents a system User in the database. */
 @Entity
 @Getter
 @Setter
 @Table(name = "user")
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column
-  private String email;
+  @Column private String email;
 
   @Column(name = "last_login")
   private LocalDateTime lastLogin;

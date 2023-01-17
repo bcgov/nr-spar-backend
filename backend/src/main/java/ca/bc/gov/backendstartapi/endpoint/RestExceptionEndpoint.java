@@ -1,7 +1,7 @@
 package ca.bc.gov.backendstartapi.endpoint;
 
-import ca.bc.gov.backendstartapi.exception.FavoriteActivityExistsToUser;
 import ca.bc.gov.backendstartapi.exception.ActivityNotFoundException;
+import ca.bc.gov.backendstartapi.exception.FavoriteActivityExistsToUser;
 import ca.bc.gov.backendstartapi.exception.NotRemovableEntityException;
 import ca.bc.gov.backendstartapi.exception.UserNotFoundException;
 import ca.bc.gov.backendstartapi.response.ExceptionResponse;
@@ -32,8 +32,8 @@ public class RestExceptionEndpoint {
   /**
    * Handle a user not found exception.
    *
-   * @param ex UserNotFoundException instance
-   * @return a JSON message
+   * @param ex a {@link UserNotFoundException} instance
+   * @return a {@link ExceptionResponse} containing the error message
    */
   @ExceptionHandler(UserNotFoundException.class)
   ResponseEntity<ExceptionResponse> userNotFound(UserNotFoundException ex) {
@@ -44,8 +44,8 @@ public class RestExceptionEndpoint {
   /**
    * Handle a removal attempt of an entity that can't be removed.
    *
-   * @param ex NotRemovableEntityException instance
-   * @return a JSON message
+   * @param ex a {@link NotRemovableEntityException} instance
+   * @return a {@link ExceptionResponse} containing the error message
    */
   @ExceptionHandler(NotRemovableEntityException.class)
   ResponseEntity<ExceptionResponse> notRemovableEntity(NotRemovableEntityException ex) {
@@ -56,8 +56,8 @@ public class RestExceptionEndpoint {
   /**
    * Handle a user not found exception.
    *
-   * @param ex ActivityNotFoundException instance
-   * @return a JSON message
+   * @param ex a {@link ActivityNotFoundException} instance
+   * @return a {@link ExceptionResponse} containing the error message
    */
   @ExceptionHandler(ActivityNotFoundException.class)
   ResponseEntity<ExceptionResponse> activityNotFound(ActivityNotFoundException ex) {
@@ -68,8 +68,8 @@ public class RestExceptionEndpoint {
   /**
    * Handle a user not found exception.
    *
-   * @param ex FavoriteActivityExistsToUser instance
-   * @return a JSON message
+   * @param ex a {@link FavoriteActivityExistsToUser} instance
+   * @return a {@link ExceptionResponse} containing the error message
    */
   @ExceptionHandler(FavoriteActivityExistsToUser.class)
   ResponseEntity<ExceptionResponse> activityExistsToUser(FavoriteActivityExistsToUser ex) {
