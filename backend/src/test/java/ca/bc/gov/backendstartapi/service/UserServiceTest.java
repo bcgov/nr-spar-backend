@@ -33,9 +33,18 @@ class UserServiceTest {
   @BeforeEach
   void setup() {
     userService = new UserService(userRepository, userAuthenticationHelper);
-    userInfo = new UserInfo("User", "user@test.com", new HashSet<>(),
-        "idir", "USERT", "bceid", false,
-        "User", "User", "Test");
+    userInfo =
+        new UserInfo(
+            "User",
+            "user@test.com",
+            new HashSet<>(),
+            "idir",
+            "USERT",
+            "bceid",
+            false,
+            "User",
+            "User",
+            "Test");
   }
 
   @Test
@@ -51,9 +60,12 @@ class UserServiceTest {
   @Test
   @DisplayName("getLoggedUserEmailExceptionTest")
   void getLoggedUserEmailExceptionTest() {
-    Exception e = Assertions.assertThrows(UserNotFoundException.class, () -> {
-      userService.getLoggedUserEmail();
-    });
+    Exception e =
+        Assertions.assertThrows(
+            UserNotFoundException.class,
+            () -> {
+              userService.getLoggedUserEmail();
+            });
 
     Assertions.assertEquals("User not registered!", e.getMessage());
   }
@@ -79,7 +91,29 @@ class UserServiceTest {
     UserEntity user = userService.getLoggerUserEntity();
 
     Assertions.assertNotNull(user);
+  }
 
-    // TODO: keep going from here!
+  @Test
+  @DisplayName("getLoggerUserEntityExceptionTest")
+  void getLoggerUserEntityExceptionTest() {
+    when(userAuthenticationHelper.getUserInfo()).thenReturn(Optional.of(userInfo));
+
+    when(userRepository.findAllByEmail(any())).thenReturn(List.of());
+
+    Exception e =
+        Assertions.assertThrows(
+            UserNotFoundException.class,
+            () -> {
+              userService.getLoggerUserEntity();
+            });
+
+    Assertions.assertEquals("User not registered!", e.getMessage());
+  }
+
+  @Test
+  void createUserService() {
+    UserService userService1 = new UserService();
+    userService1.setUserRepository(userRepository);
+    userService1.setUserAuthenticationHelper(userAuthenticationHelper);
   }
 }

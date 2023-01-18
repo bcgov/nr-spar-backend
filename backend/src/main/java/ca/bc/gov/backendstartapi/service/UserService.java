@@ -23,9 +23,10 @@ public class UserService {
   private UserAuthenticationHelper userAuthenticationHelper;
 
   /**
-   * Create a UserService instance.
+   * Create a {@link UserService} instance.
    *
-   * @param userRepository a userRepository instance
+   * @param userRepository a {@link UserRepository} instance
+   * @param userAuthenticationHelper a {@link UserAuthenticationHelper} instance
    */
   @Autowired
   public UserService(
@@ -37,7 +38,8 @@ public class UserService {
   /**
    * Get the logged user email address.
    *
-   * @return the email address if logged in. Or an empty string otherwise.
+   * @return a {@link String} containing the email address if logged in. Or an empty string
+   *     otherwise.
    */
   public String getLoggedUserEmail() {
     Optional<UserInfo> userInfo = userAuthenticationHelper.getUserInfo();
@@ -49,9 +51,9 @@ public class UserService {
   }
 
   /**
-   * Get all user info included in the JWT decoded token
+   * Get all user info included in the JWT decoded token.
    *
-   * @return an optional of UserInfo.
+   * @return an optional of {@link UserInfo}
    */
   public Optional<UserInfo> getLoggerUserInfo() {
     return userAuthenticationHelper.getUserInfo();

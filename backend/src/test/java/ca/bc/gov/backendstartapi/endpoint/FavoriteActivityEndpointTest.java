@@ -267,4 +267,11 @@ class FavoriteActivityEndpointTest {
         .andExpect(status().isOk())
         .andReturn();
   }
+
+  @Test
+  @DisplayName("createFavoriteActivityEndpointTest")
+  void createFavoriteActivityEndpointTest() {
+    FavoriteActivityEndpoint activityEndpoint = new FavoriteActivityEndpoint();
+    activityEndpoint.setFavoriteActivityService(favoriteActivityService);
+  }
 }

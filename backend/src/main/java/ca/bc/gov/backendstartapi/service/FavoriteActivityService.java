@@ -28,10 +28,10 @@ public class FavoriteActivityService {
   private UserService userService;
 
   /**
-   * Create a FavoriteActivityService instance.
+   * Create a {@link FavoriteActivityService} instance.
    *
-   * @param userService a userService instance
-   * @param favoriteActivityRepository a favoriteActivityRepository instance
+   * @param userService a {@link UserService} instance
+   * @param favoriteActivityRepository a {@link FavoriteActivityRepository} instance
    */
   @Autowired
   public FavoriteActivityService(
@@ -43,8 +43,8 @@ public class FavoriteActivityService {
   /**
    * Create a user's activity in the database.
    *
-   * @param activityDto a dto containing the activity title
-   * @return the FavoriteActivityEntity created
+   * @param activityDto a {@link FavoriteActivityCreateDto} containing the activity title
+   * @return the {@link FavoriteActivityEntity} created
    */
   public FavoriteActivityEntity createUserActivity(FavoriteActivityCreateDto activityDto) {
     UserEntity user = userService.getLoggerUserEntity();
@@ -80,10 +80,10 @@ public class FavoriteActivityService {
   /**
    * Updates a user activity.
    *
-   * @param id the id of the activity to be updated.
-   * @param updateDto a FavoriteActivityUpdateDto containing the values to be updated
-   * @return a FavoriteActivityEntity updated
-   * @throws ActivityNotFoundException
+   * @param id the {@link Long} value as the id of the activity to be updated
+   * @param updateDto a {@link FavoriteActivityUpdateDto} containing the values to be updated
+   * @return a {@link FavoriteActivityEntity} updated
+   * @throws ActivityNotFoundException if the activity doesn't exist
    */
   public FavoriteActivityEntity updateUserActivity(Long id, FavoriteActivityUpdateDto updateDto) {
     UserEntity user = userService.getLoggerUserEntity();
@@ -106,7 +106,7 @@ public class FavoriteActivityService {
   /**
    * Deletes a user activity by the activity id number.
    *
-   * @param id the id of the activity
+   * @param id A {@link Long} value as the id of the activity
    */
   public void deleteUserActivity(Long id) {
     UserEntity user = userService.getLoggerUserEntity();

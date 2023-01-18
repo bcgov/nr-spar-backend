@@ -9,6 +9,8 @@ import ca.bc.gov.backendstartapi.dto.FavoriteActivityUpdateDto;
 import ca.bc.gov.backendstartapi.entity.FavoriteActivityEntity;
 import ca.bc.gov.backendstartapi.entity.UserEntity;
 import ca.bc.gov.backendstartapi.enums.ActivityEnum;
+import ca.bc.gov.backendstartapi.exception.ActivityNotFoundException;
+import ca.bc.gov.backendstartapi.exception.FavoriteActivityExistsToUser;
 import ca.bc.gov.backendstartapi.repository.FavoriteActivityRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +67,46 @@ class FavoriteActivityServiceTest {
   }
 
   @Test
+  @DisplayName("createUserActivityExceptionTest")
+  void createUserActivityExceptionTest() {
+    when(userService.getLoggerUserEntity()).thenReturn(createUserEntity());
+
+    String title = ActivityEnum.SEEDLING_REQUEST.getTitle();
+
+    FavoriteActivityEntity entity = new FavoriteActivityEntity();
+    entity.setActivityTitle(title);
+    entity.setHighlighted(false);
+    entity.setEnabled(true);
+    when(favoriteActivityRepository.save(any())).thenReturn(entity);
+
+    FavoriteActivityCreateDto createDto = new FavoriteActivityCreateDto("NotExists");
+
+    Exception notFoundExc =
+        Assertions.assertThrows(
+            ActivityNotFoundException.class,
+            () -> {
+              favoriteActivityService.createUserActivity(createDto);
+            });
+
+    Assertions.assertEquals("Activity don't exist!", notFoundExc.getMessage());
+
+    List<FavoriteActivityEntity> userFavList = List.of(entity);
+    when(favoriteActivityRepository.findAllByUser(any())).thenReturn(userFavList);
+
+    FavoriteActivityCreateDto createAnotherDto = new FavoriteActivityCreateDto(title);
+
+    Exception activityExists =
+        Assertions.assertThrows(
+            FavoriteActivityExistsToUser.class,
+            () -> {
+              favoriteActivityService.createUserActivity(createAnotherDto);
+            });
+
+    Assertions.assertEquals(
+        "Activity already registered to this user!", activityExists.getMessage());
+  }
+
+  @Test
   @DisplayName("getAllUserFavoriteActivitiesTest")
   void getAllUserFavoriteActivitiesTest() {
     when(userService.getLoggerUserEntity()).thenReturn(createUserEntity());
@@ -73,8 +115,7 @@ class FavoriteActivityServiceTest {
     FavoriteActivityEntity activityTwo = new FavoriteActivityEntity();
     List<FavoriteActivityEntity> activityEntities =
         new ArrayList<>(List.of(activityOne, activityTwo));
-    when(favoriteActivityRepository.findAllByEnabledAndUser(true, 1L))
-        .thenReturn(activityEntities);
+    when(favoriteActivityRepository.findAllByEnabledAndUser(true, 1L)).thenReturn(activityEntities);
 
     List<FavoriteActivityEntity> entityList =
         favoriteActivityService.getAllUserFavoriteActivities();
@@ -102,6 +143,31 @@ class FavoriteActivityServiceTest {
   }
 
   @Test
+  @DisplayName("updateUserActivityExceptionTest")
+  void updateUserActivityExceptionTest() {
+    when(userService.getLoggerUserEntity()).thenReturn(createUserEntity());
+
+    FavoriteActivityEntity entity = new FavoriteActivityEntity();
+    entity.setActivityTitle(ActivityEnum.SEEDLING_REQUEST.getTitle());
+    entity.setHighlighted(false);
+    entity.setEnabled(true);
+    when(favoriteActivityRepository.findById(any())).thenReturn(Optional.empty());
+
+    when(favoriteActivityRepository.save(any())).thenReturn(entity);
+
+    FavoriteActivityUpdateDto updateDto = new FavoriteActivityUpdateDto(true, true);
+
+    Exception e =
+        Assertions.assertThrows(
+            ActivityNotFoundException.class,
+            () -> {
+              favoriteActivityService.updateUserActivity(1L, updateDto);
+            });
+
+    Assertions.assertEquals("Activity don't exist!", e.getMessage());
+  }
+
+  @Test
   @DisplayName("deleteUserActivityTest")
   void deleteUserActivityTest() {
     when(userService.getLoggerUserEntity()).thenReturn(createUserEntity());
@@ -115,5 +181,33 @@ class FavoriteActivityServiceTest {
     doNothing().when(favoriteActivityRepository).deleteById(any());
 
     favoriteActivityService.deleteUserActivity(1L);
+  }
+
+  @Test
+  @DisplayName("deleteUserActivityExceptionTest")
+  void deleteUserActivityExceptionTest() {
+    when(userService.getLoggerUserEntity()).thenReturn(createUserEntity());
+
+    FavoriteActivityEntity entity = new FavoriteActivityEntity();
+    entity.setActivityTitle(ActivityEnum.SEEDLING_REQUEST.getTitle());
+    entity.setHighlighted(false);
+    entity.setEnabled(true);
+    when(favoriteActivityRepository.findById(any())).thenReturn(Optional.empty());
+
+    doNothing().when(favoriteActivityRepository).deleteById(any());
+
+    Exception e = Assertions.assertThrows(ActivityNotFoundException.class, () -> {
+      favoriteActivityService.deleteUserActivity(1L);
+    });
+
+    Assertions.assertEquals("Activity don't exist!", e.getMessage());
+  }
+
+  @Test
+  @DisplayName("createFavoriteActivityService")
+  void createFavoriteActivityService() {
+    FavoriteActivityService activityService = new FavoriteActivityService();
+    activityService.setUserService(userService);
+    activityService.setFavoriteActivityRepository(favoriteActivityRepository);
   }
 }

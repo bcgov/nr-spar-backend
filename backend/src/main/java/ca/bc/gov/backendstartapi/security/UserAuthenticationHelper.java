@@ -15,9 +15,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserAuthenticationHelper {
 
+  /**
+   * Get the logged user information.
+   *
+   * @return An Optional of {@link UserInfo} with all information from JWT token, if logged in
+   *     or empty Optional otherwise.
+   */
   public Optional<UserInfo> getUserInfo() {
-
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
     if (authentication.isAuthenticated()) {
       // For test cases, integration tests
       if (authentication.getPrincipal() instanceof User) {
