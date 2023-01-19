@@ -88,7 +88,7 @@ class FavoriteActivityEndpointTest {
     FavoriteActivityCreateDto activityDto =
         new FavoriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST.getTitle());
 
-    when(favoriteActivityService.createUserActivity(any())).thenThrow(UserNotFoundException.class);
+    when(favoriteActivityService.createUserActivity(any())).thenThrow(new UserNotFoundException());
 
     mockMvc
         .perform(
@@ -108,7 +108,7 @@ class FavoriteActivityEndpointTest {
     FavoriteActivityCreateDto activityDto = new FavoriteActivityCreateDto("Any Title Here");
 
     when(favoriteActivityService.createUserActivity(any()))
-        .thenThrow(ActivityNotFoundException.class);
+        .thenThrow(new ActivityNotFoundException());
 
     mockMvc
         .perform(
@@ -146,7 +146,7 @@ class FavoriteActivityEndpointTest {
         .andReturn();
 
     when(favoriteActivityService.createUserActivity(any()))
-        .thenThrow(FavoriteActivityExistsToUser.class);
+        .thenThrow(new FavoriteActivityExistsToUser());
 
     mockMvc
         .perform(

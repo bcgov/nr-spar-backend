@@ -67,7 +67,7 @@ class UserServiceTest {
               userService.getLoggedUserEmail();
             });
 
-    Assertions.assertEquals("User not registered!", e.getMessage());
+    Assertions.assertEquals("404 NOT_FOUND \"User not registered!\"", e.getMessage());
   }
 
   @Test
@@ -107,7 +107,7 @@ class UserServiceTest {
               userService.getLoggerUserEntity();
             });
 
-    Assertions.assertEquals("User not registered!", e.getMessage());
+    Assertions.assertEquals("404 NOT_FOUND \"User not registered!\"", e.getMessage());
   }
 
   @Test

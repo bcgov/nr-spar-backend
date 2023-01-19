@@ -84,7 +84,7 @@ class FavoriteActivityRepositoryTest {
     FavoriteActivityEntity activity = new FavoriteActivityEntity();
     activity.setUser(user);
     activity.setActivityTitle(ActivityEnum.SEEDLOT_REGISTRATION.getTitle());
-    FavoriteActivityEntity created = favoriteActivityRepository.save(activity);
+    favoriteActivityRepository.save(activity);
   }
 
   @Test
@@ -140,6 +140,6 @@ class FavoriteActivityRepositoryTest {
             () -> favoriteActivityRepository.delete(getOne.get()));
 
     String message = e.getMessage();
-    Assertions.assertEquals("Entity not removable!", message);
+    Assertions.assertEquals("400 BAD_REQUEST \"Entity not removable!\"", message);
   }
 }

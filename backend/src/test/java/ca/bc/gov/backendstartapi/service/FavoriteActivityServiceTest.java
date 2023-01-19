@@ -88,7 +88,7 @@ class FavoriteActivityServiceTest {
               favoriteActivityService.createUserActivity(createDto);
             });
 
-    Assertions.assertEquals("Activity don't exist!", notFoundExc.getMessage());
+    Assertions.assertEquals("404 NOT_FOUND \"Activity don't exist!\"", notFoundExc.getMessage());
 
     List<FavoriteActivityEntity> userFavList = List.of(entity);
     when(favoriteActivityRepository.findAllByUser(any())).thenReturn(userFavList);
@@ -103,7 +103,8 @@ class FavoriteActivityServiceTest {
             });
 
     Assertions.assertEquals(
-        "Activity already registered to this user!", activityExists.getMessage());
+        "400 BAD_REQUEST \"Activity already registered to this user!\"",
+        activityExists.getMessage());
   }
 
   @Test
@@ -164,7 +165,7 @@ class FavoriteActivityServiceTest {
               favoriteActivityService.updateUserActivity(1L, updateDto);
             });
 
-    Assertions.assertEquals("Activity don't exist!", e.getMessage());
+    Assertions.assertEquals("404 NOT_FOUND \"Activity don't exist!\"", e.getMessage());
   }
 
   @Test
@@ -196,11 +197,14 @@ class FavoriteActivityServiceTest {
 
     doNothing().when(favoriteActivityRepository).deleteById(any());
 
-    Exception e = Assertions.assertThrows(ActivityNotFoundException.class, () -> {
-      favoriteActivityService.deleteUserActivity(1L);
-    });
+    Exception e =
+        Assertions.assertThrows(
+            ActivityNotFoundException.class,
+            () -> {
+              favoriteActivityService.deleteUserActivity(1L);
+            });
 
-    Assertions.assertEquals("Activity don't exist!", e.getMessage());
+    Assertions.assertEquals("404 NOT_FOUND \"Activity don't exist!\"", e.getMessage());
   }
 
   @Test
