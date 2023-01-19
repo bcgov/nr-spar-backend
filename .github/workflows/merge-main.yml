@@ -106,7 +106,7 @@ jobs:
         id: jacoco
         with:
           generate-branches-badge: true
-          jacoco-csv-file: target/coverage-reports/merged-test-report/jacoco.csv
+          jacoco-csv-file: backend/target/coverage-reports/merged-test-report/jacoco.csv
 
       - name: Log coverage percentage
         run: |
@@ -127,7 +127,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: jacoco-report
-          path: target/coverage-reports/merged-test-report/
+          path: backend/target/coverage-reports/merged-test-report/
 
       - name: SonarCloud Scan
         run: mvn --no-transfer-progress clean verify package -P all-tests sonar:sonar -Dsonar.projectKey=bcgov_nr-spar-backend -Dsonar.coverage.jacoco.xmlReportPaths=target/coverage-reports/merged-test-report/jacoco.xml --file backend/pom.xml
