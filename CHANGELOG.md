@@ -1,3 +1,12 @@
+## [0.4.1](https://github.com/bcgov/nr-spar-backend/compare/v0.4.0...v0.4.1) (2023-01-19)
+
+
+### Bug Fixes
+
+* jacoco csv file location and report location ([#23](https://github.com/bcgov/nr-spar-backend/issues/23)) ([cb8f753](https://github.com/bcgov/nr-spar-backend/commit/cb8f753377e38d86ccb03f4c56e66fa3229180d4)), closes [#18](https://github.com/bcgov/nr-spar-backend/issues/18)
+
+
+
 # [0.4.0](https://github.com/bcgov/nr-spar-backend/compare/v0.3.3...v0.4.0) (2023-01-13)
 
 
@@ -16,15 +25,6 @@
 
 
 ## [0.3.1](https://github.com/bcgov/nr-spar-backend/compare/v0.3.0...v0.3.1) (2023-01-04)
-
-
-
-# [0.3.0](https://github.com/bcgov/nr-spar-backend/compare/v0.2.0...v0.3.0) (2023-01-03)
-
-
-### Features
-
-* database versioning with Flyway ([#13](https://github.com/bcgov/nr-spar-backend/issues/13)) ([43bfbf7](https://github.com/bcgov/nr-spar-backend/commit/43bfbf7ca6d68d59e0123892d10d028fde042d76))
 
 
 
