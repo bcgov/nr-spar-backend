@@ -1,6 +1,7 @@
 package ca.bc.gov.backendstartapi.config;
 
 import com.nimbusds.jose.shaded.gson.JsonArray;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.StreamSupport;
@@ -81,8 +82,8 @@ public class SecurityConfig {
                   new SimpleGrantedAuthority("ROLE_user_write"))
               : List.of();
         }
-        final JsonArray realmAccess = (JsonArray) jwt.getClaims().get("client_roles");
-        return StreamSupport.stream(realmAccess.spliterator(), false)
+        final List<String> realmAccess = (ArrayList<String>) jwt.getClaims().get("client_roles");
+        return realmAccess.stream()
             .map(roleName -> "ROLE_" + roleName)
             .map(roleName -> (GrantedAuthority) new SimpleGrantedAuthority(roleName))
             .toList();
