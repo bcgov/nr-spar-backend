@@ -16,25 +16,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /** This class contains all {@link FavoriteActivityEntity} resources that a user needs. */
 @Setter
 @NoArgsConstructor
 @RestController
-@RequestMapping("/api/favorite_activity")
+@RequestMapping("/api/favorite-activities")
 public class FavoriteActivityEndpoint {
 
   private FavoriteActivityService favoriteActivityService;
 
-  /**
-   * Creates a {@link FavoriteActivityEndpoint} instance.
-   *
-   * @param favoriteActivityService a {@link FavoriteActivityService} instance
-   */
   @Autowired
-  public FavoriteActivityEndpoint(FavoriteActivityService favoriteActivityService) {
+  FavoriteActivityEndpoint(FavoriteActivityService favoriteActivityService) {
     this.favoriteActivityService = favoriteActivityService;
   }
 
@@ -53,7 +47,7 @@ public class FavoriteActivityEndpoint {
   }
 
   /**
-   * Retrieve all {@link FavoriteActivityEntity} bounded to the user that made the request.
+   * Retrieve all {@link FavoriteActivityEntity} bound to the user that made the request.
    *
    * @return a list of {@link FavoriteActivityEntity}
    */

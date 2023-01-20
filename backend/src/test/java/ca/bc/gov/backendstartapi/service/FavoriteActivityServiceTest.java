@@ -49,19 +49,18 @@ class FavoriteActivityServiceTest {
   void createUserActivityTest() {
     when(userService.getLoggerUserEntity()).thenReturn(createUserEntity());
 
-    String title = ActivityEnum.SEEDLING_REQUEST.getTitle();
-
     FavoriteActivityEntity entity = new FavoriteActivityEntity();
-    entity.setActivityTitle(title);
+    entity.setActivityTitle(ActivityEnum.SEEDLING_REQUEST);
     entity.setHighlighted(false);
     entity.setEnabled(true);
     when(favoriteActivityRepository.save(any())).thenReturn(entity);
 
-    FavoriteActivityCreateDto createDto = new FavoriteActivityCreateDto(title);
+    FavoriteActivityCreateDto createDto =
+        new FavoriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST);
     FavoriteActivityEntity entitySaved = favoriteActivityService.createUserActivity(createDto);
 
     Assertions.assertNotNull(entitySaved);
-    Assertions.assertEquals(title, entitySaved.getActivityTitle());
+    Assertions.assertEquals(ActivityEnum.SEEDLING_REQUEST, entitySaved.getActivityTitle());
     Assertions.assertFalse(entitySaved.getHighlighted());
     Assertions.assertTrue(entitySaved.getEnabled());
   }
@@ -71,15 +70,13 @@ class FavoriteActivityServiceTest {
   void createUserActivityExceptionTest() {
     when(userService.getLoggerUserEntity()).thenReturn(createUserEntity());
 
-    String title = ActivityEnum.SEEDLING_REQUEST.getTitle();
-
     FavoriteActivityEntity entity = new FavoriteActivityEntity();
-    entity.setActivityTitle(title);
+    entity.setActivityTitle(ActivityEnum.SEEDLING_REQUEST);
     entity.setHighlighted(false);
     entity.setEnabled(true);
     when(favoriteActivityRepository.save(any())).thenReturn(entity);
 
-    FavoriteActivityCreateDto createDto = new FavoriteActivityCreateDto("NotExists");
+    FavoriteActivityCreateDto createDto = new FavoriteActivityCreateDto(null);
 
     Exception notFoundExc =
         Assertions.assertThrows(
@@ -93,7 +90,8 @@ class FavoriteActivityServiceTest {
     List<FavoriteActivityEntity> userFavList = List.of(entity);
     when(favoriteActivityRepository.findAllByUser(any())).thenReturn(userFavList);
 
-    FavoriteActivityCreateDto createAnotherDto = new FavoriteActivityCreateDto(title);
+    FavoriteActivityCreateDto createAnotherDto =
+        new FavoriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST);
 
     Exception activityExists =
         Assertions.assertThrows(
@@ -130,7 +128,7 @@ class FavoriteActivityServiceTest {
     when(userService.getLoggerUserEntity()).thenReturn(createUserEntity());
 
     FavoriteActivityEntity entity = new FavoriteActivityEntity();
-    entity.setActivityTitle(ActivityEnum.SEEDLING_REQUEST.getTitle());
+    entity.setActivityTitle(ActivityEnum.SEEDLING_REQUEST);
     entity.setHighlighted(false);
     entity.setEnabled(true);
     when(favoriteActivityRepository.findById(any())).thenReturn(Optional.of(entity));
@@ -149,7 +147,7 @@ class FavoriteActivityServiceTest {
     when(userService.getLoggerUserEntity()).thenReturn(createUserEntity());
 
     FavoriteActivityEntity entity = new FavoriteActivityEntity();
-    entity.setActivityTitle(ActivityEnum.SEEDLING_REQUEST.getTitle());
+    entity.setActivityTitle(ActivityEnum.SEEDLING_REQUEST);
     entity.setHighlighted(false);
     entity.setEnabled(true);
     when(favoriteActivityRepository.findById(any())).thenReturn(Optional.empty());
@@ -174,7 +172,7 @@ class FavoriteActivityServiceTest {
     when(userService.getLoggerUserEntity()).thenReturn(createUserEntity());
 
     FavoriteActivityEntity entity = new FavoriteActivityEntity();
-    entity.setActivityTitle(ActivityEnum.SEEDLING_REQUEST.getTitle());
+    entity.setActivityTitle(ActivityEnum.SEEDLING_REQUEST);
     entity.setHighlighted(false);
     entity.setEnabled(true);
     when(favoriteActivityRepository.findById(any())).thenReturn(Optional.of(entity));
@@ -189,10 +187,6 @@ class FavoriteActivityServiceTest {
   void deleteUserActivityExceptionTest() {
     when(userService.getLoggerUserEntity()).thenReturn(createUserEntity());
 
-    FavoriteActivityEntity entity = new FavoriteActivityEntity();
-    entity.setActivityTitle(ActivityEnum.SEEDLING_REQUEST.getTitle());
-    entity.setHighlighted(false);
-    entity.setEnabled(true);
     when(favoriteActivityRepository.findById(any())).thenReturn(Optional.empty());
 
     doNothing().when(favoriteActivityRepository).deleteById(any());

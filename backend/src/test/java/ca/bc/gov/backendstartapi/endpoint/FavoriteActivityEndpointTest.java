@@ -42,6 +42,12 @@ class FavoriteActivityEndpointTest {
 
   @MockBean private FavoriteActivityService favoriteActivityService;
 
+  private static final String API_PATH = "/api/favorite-activities";
+
+  private static final String CONTENT_HEADER = "Content-Type";
+
+  private static final String JSON = "application/json";
+
   private String stringify(Object obj) throws Exception {
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
@@ -51,7 +57,7 @@ class FavoriteActivityEndpointTest {
 
   private FavoriteActivityEntity createEntity(ActivityEnum activityEnum) {
     FavoriteActivityEntity activityEntity = new FavoriteActivityEntity();
-    activityEntity.setActivityTitle(activityEnum.getTitle());
+    activityEntity.setActivityTitle(activityEnum);
     activityEntity.setHighlighted(Boolean.FALSE);
     activityEntity.setEnabled(Boolean.TRUE);
     return activityEntity;
@@ -62,20 +68,20 @@ class FavoriteActivityEndpointTest {
   @WithMockUser(roles = "user_write")
   void createFavoriteActivitySuccessTest() throws Exception {
     FavoriteActivityCreateDto activityDto =
-        new FavoriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST.getTitle());
+        new FavoriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST);
 
     FavoriteActivityEntity activityEntity = createEntity(ActivityEnum.SEEDLING_REQUEST);
     when(favoriteActivityService.createUserActivity(any())).thenReturn(activityEntity);
 
     mockMvc
         .perform(
-            post("/api/favorite_activity")
+            post(API_PATH)
                 .with(csrf().asHeader())
-                .header("Content-Type", "application/json")
+                .header(CONTENT_HEADER, JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(stringify(activityDto)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.activityTitle").value("Seedling request"))
+        .andExpect(jsonPath("$.activityTitle").value("SEEDLING_REQUEST"))
         .andExpect(jsonPath("$.highlighted").value("false"))
         .andExpect(jsonPath("$.enabled").value("true"))
         .andReturn();
@@ -86,15 +92,15 @@ class FavoriteActivityEndpointTest {
   @WithMockUser(roles = "user_write")
   void createFavoriteActivityUserNotFoundTest() throws Exception {
     FavoriteActivityCreateDto activityDto =
-        new FavoriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST.getTitle());
+        new FavoriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST);
 
     when(favoriteActivityService.createUserActivity(any())).thenThrow(new UserNotFoundException());
 
     mockMvc
         .perform(
-            post("/api/favorite_activity")
+            post(API_PATH)
                 .with(csrf().asHeader())
-                .header("Content-Type", "application/json")
+                .header(CONTENT_HEADER, JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(stringify(activityDto)))
         .andExpect(status().isNotFound())
@@ -105,16 +111,17 @@ class FavoriteActivityEndpointTest {
   @DisplayName("createFavoriteActivityNotFoundTest")
   @WithMockUser(roles = "user_write")
   void createFavoriteActivityNotFoundTest() throws Exception {
-    FavoriteActivityCreateDto activityDto = new FavoriteActivityCreateDto("Any Title Here");
+    FavoriteActivityCreateDto activityDto =
+        new FavoriteActivityCreateDto(null);
 
     when(favoriteActivityService.createUserActivity(any()))
         .thenThrow(new ActivityNotFoundException());
 
     mockMvc
         .perform(
-            post("/api/favorite_activity")
+            post(API_PATH)
                 .with(csrf().asHeader())
-                .header("Content-Type", "application/json")
+                .header(CONTENT_HEADER, JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(stringify(activityDto)))
         .andExpect(status().isNotFound())
@@ -126,7 +133,7 @@ class FavoriteActivityEndpointTest {
   @WithMockUser(roles = "user_write")
   void createFavoriteActivityDuplicatedTest() throws Exception {
     FavoriteActivityCreateDto activityDto =
-        new FavoriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST.getTitle());
+        new FavoriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST);
 
     String contentString = stringify(activityDto);
     FavoriteActivityEntity activityEntity = createEntity(ActivityEnum.SEEDLING_REQUEST);
@@ -134,13 +141,13 @@ class FavoriteActivityEndpointTest {
 
     mockMvc
         .perform(
-            post("/api/favorite_activity")
+            post(API_PATH)
                 .with(csrf().asHeader())
-                .header("Content-Type", "application/json")
+                .header(CONTENT_HEADER, JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(contentString))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.activityTitle").value("Seedling request"))
+        .andExpect(jsonPath("$.activityTitle").value("SEEDLING_REQUEST"))
         .andExpect(jsonPath("$.highlighted").value("false"))
         .andExpect(jsonPath("$.enabled").value("true"))
         .andReturn();
@@ -150,9 +157,9 @@ class FavoriteActivityEndpointTest {
 
     mockMvc
         .perform(
-            post("/api/favorite_activity")
+            post(API_PATH)
                 .with(csrf().asHeader())
-                .header("Content-Type", "application/json")
+                .header(CONTENT_HEADER, JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(contentString))
         .andExpect(status().isBadRequest())
@@ -173,16 +180,16 @@ class FavoriteActivityEndpointTest {
         .thenReturn(favoriteActivityEntities);
     mockMvc
         .perform(
-            get("/api/favorite_activity")
+            get(API_PATH)
                 .with(csrf().asHeader())
-                .header("Content-Type", "application/json")
+                .header(CONTENT_HEADER, JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$[0].activityTitle").value("Seedling request"))
+        .andExpect(jsonPath("$[0].activityTitle").value("SEEDLING_REQUEST"))
         .andExpect(jsonPath("$[0].highlighted").value("false"))
         .andExpect(jsonPath("$[0].enabled").value("true"))
         .andExpect(
-            jsonPath("$[1].activityTitle").value(ActivityEnum.SEEDLOT_REGISTRATION.getTitle()))
+            jsonPath("$[1].activityTitle").value("SEEDLOT_REGISTRATION"))
         .andExpect(jsonPath("$[1].highlighted").value("true"))
         .andExpect(jsonPath("$[1].enabled").value("true"))
         .andReturn();
@@ -197,16 +204,15 @@ class FavoriteActivityEndpointTest {
 
     when(favoriteActivityService.createUserActivity(any())).thenReturn(activityEntity);
 
-    String title = ActivityEnum.PARENT_TREE_ORCHARD.getTitle();
     mockMvc
         .perform(
-            post("/api/favorite_activity")
+            post(API_PATH)
                 .with(csrf().asHeader())
-                .header("Content-Type", "application/json")
+                .header(CONTENT_HEADER, JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(stringify(activityEntity)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.activityTitle").value(title))
+        .andExpect(jsonPath("$.activityTitle").value("PARENT_TREE_ORCHARD"))
         .andExpect(jsonPath("$.highlighted").value("false"))
         .andExpect(jsonPath("$.enabled").value("true"))
         .andReturn();
@@ -219,13 +225,13 @@ class FavoriteActivityEndpointTest {
 
     mockMvc
         .perform(
-            put("/api/favorite_activity/{id}", activityEntity.getId())
+            put(API_PATH + "/{id}", activityEntity.getId())
                 .with(csrf().asHeader())
-                .header("Content-Type", "application/json")
+                .header(CONTENT_HEADER, JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(stringify(updateDto)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.activityTitle").value(title))
+        .andExpect(jsonPath("$.activityTitle").value("PARENT_TREE_ORCHARD"))
         .andExpect(jsonPath("$.highlighted").value("true"))
         .andExpect(jsonPath("$.enabled").value("true"))
         .andReturn();
@@ -240,16 +246,15 @@ class FavoriteActivityEndpointTest {
 
     when(favoriteActivityService.createUserActivity(any())).thenReturn(activityEntity);
 
-    String title = ActivityEnum.PARENT_TREE_ORCHARD.getTitle();
     mockMvc
         .perform(
-            post("/api/favorite_activity")
+            post(API_PATH)
                 .with(csrf().asHeader())
-                .header("Content-Type", "application/json")
+                .header(CONTENT_HEADER, JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(stringify(activityEntity)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.activityTitle").value(title))
+        .andExpect(jsonPath("$.activityTitle").value("PARENT_TREE_ORCHARD"))
         .andExpect(jsonPath("$.highlighted").value("false"))
         .andExpect(jsonPath("$.enabled").value("true"))
         .andReturn();
@@ -260,9 +265,9 @@ class FavoriteActivityEndpointTest {
 
     mockMvc
         .perform(
-            delete("/api/favorite_activity/{id}", activityEntity.getId())
+            delete(API_PATH + "/{id}", activityUpdated.getId())
                 .with(csrf().asHeader())
-                .header("Content-Type", "application/json")
+                .header(CONTENT_HEADER, JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andReturn();

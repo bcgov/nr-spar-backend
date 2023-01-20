@@ -12,6 +12,6 @@ import jakarta.validation.constraints.Pattern;
  */
 public record FavoriteActivityUpdateDto(
     @NotBlank @Pattern(regexp = "^true$|^false$", message = "allowed input: true of false")
-        Boolean highlighted,
+        boolean highlighted,
     @NotBlank @Pattern(regexp = "^true$|^false$", message = "allowed input: true of false")
-        Boolean enabled) {}
+        boolean enabled) {}

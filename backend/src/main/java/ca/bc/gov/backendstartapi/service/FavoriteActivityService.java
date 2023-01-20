@@ -9,6 +9,7 @@ import ca.bc.gov.backendstartapi.exception.ActivityNotFoundException;
 import ca.bc.gov.backendstartapi.exception.FavoriteActivityExistsToUser;
 import ca.bc.gov.backendstartapi.repository.FavoriteActivityRepository;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -49,21 +50,20 @@ public class FavoriteActivityService {
   public FavoriteActivityEntity createUserActivity(FavoriteActivityCreateDto activityDto) {
     UserEntity user = userService.getLoggerUserEntity();
 
-    log.info("Creating activity {} to user {}", activityDto.title(), user.getId());
+    log.info("Creating activity {} to user {}", activityDto.activity(), user.getId());
 
-    Optional<ActivityEnum> activityEnum = ActivityEnum.getByTitle(activityDto.title());
-    if (activityEnum.isEmpty()) {
+    if (Objects.isNull(activityDto.activity())) {
       throw new ActivityNotFoundException();
     }
 
     List<FavoriteActivityEntity> userFavList = favoriteActivityRepository.findAllByUser(user);
-    if (userFavList.stream().anyMatch(ac -> ac.getActivityTitle().equals(activityDto.title()))) {
+    if (userFavList.stream().anyMatch(ac -> ac.getActivityTitle().equals(activityDto.activity()))) {
       throw new FavoriteActivityExistsToUser();
     }
 
     FavoriteActivityEntity activityEntity = new FavoriteActivityEntity();
     activityEntity.setUser(user);
-    activityEntity.setActivityTitle(activityEnum.get().getTitle());
+    activityEntity.setActivityTitle(activityDto.activity());
     return favoriteActivityRepository.save(activityEntity);
   }
 
@@ -74,6 +74,7 @@ public class FavoriteActivityService {
    */
   public List<FavoriteActivityEntity> getAllUserFavoriteActivities() {
     UserEntity user = userService.getLoggerUserEntity();
+    log.info("Retrieving all favorite activities to user {}", user.getId());
     return favoriteActivityRepository.findAllByEnabledAndUser(Boolean.TRUE, user.getId());
   }
 

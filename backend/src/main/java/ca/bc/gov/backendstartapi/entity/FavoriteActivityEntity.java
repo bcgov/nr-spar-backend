@@ -1,9 +1,12 @@
 package ca.bc.gov.backendstartapi.entity;
 
+import ca.bc.gov.backendstartapi.enums.ActivityEnum;
 import ca.bc.gov.backendstartapi.exception.NotRemovableEntityException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,7 +39,8 @@ public class FavoriteActivityEntity {
   private UserEntity user;
 
   @Column(name = "activity_title", updatable = false)
-  private String activityTitle;
+  @Enumerated(value = EnumType.STRING)
+  private ActivityEnum activityTitle;
 
   @Column private Boolean highlighted;
 
