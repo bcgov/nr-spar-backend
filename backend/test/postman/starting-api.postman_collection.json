@@ -593,7 +593,7 @@
 			"description": "Group all tests related to the `/user` API endpoint. "
 		},
 		{
-			"name": "Version check",
+			"name": "Status check",
 			"event": [
 				{
 					"listen": "test",
@@ -605,8 +605,7 @@
 							"",
 							"pm.test(\"JSON body is valid\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.message).to.eql('OK');",
-							"    pm.expect(jsonData.release).to.include(pm.environment.get(\"releaseVer\"));",
+							"    pm.expect(jsonData.status).to.eql('UP');",
 							"});",
 							""
 						],
@@ -627,13 +626,13 @@
 					}
 				],
 				"url": {
-					"raw": "https://{{apiAddr}}/check",
+					"raw": "https://{{apiAddr}}/actuator/health",
 					"protocol": "https",
 					"host": [
 						"{{apiAddr}}"
 					],
 					"path": [
-						"check"
+						"actuator/health"
 					]
 				},
 				"description": "Returns the API status, environment and version."
