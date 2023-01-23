@@ -606,6 +606,7 @@
 							"pm.test(\"JSON body is valid\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.status).to.eql('UP');",
+							"    pm.expect(jsonData.components.db.status).to.eql('UP')",
 							"});",
 							""
 						],
