@@ -1,3 +1,12 @@
+# [0.8.0](https://github.com/bcgov/nr-spar-backend/compare/v0.7.0...v0.8.0) (2023-01-23)
+
+
+### Features
+
+* bump maven checkstyle plugin version ([#29](https://github.com/bcgov/nr-spar-backend/issues/29)) ([0935616](https://github.com/bcgov/nr-spar-backend/commit/09356160f781d91bb215092d1004ee2e239e0ea3))
+
+
+
 # [0.7.0](https://github.com/bcgov/nr-spar-backend/compare/v0.6.0...v0.7.0) (2023-01-23)
 
 
@@ -26,15 +35,6 @@
 ### Features
 
 * Create Favorite Activities endpoint ([#22](https://github.com/bcgov/nr-spar-backend/issues/22)) ([39e4a3c](https://github.com/bcgov/nr-spar-backend/commit/39e4a3c03f5387b381ccf1a3ba5c4d91cae9d4da))
-
-
-
-## [0.4.1](https://github.com/bcgov/nr-spar-backend/compare/v0.4.0...v0.4.1) (2023-01-19)
-
-
-### Bug Fixes
-
-* jacoco csv file location and report location ([#23](https://github.com/bcgov/nr-spar-backend/issues/23)) ([cb8f753](https://github.com/bcgov/nr-spar-backend/commit/cb8f753377e38d86ccb03f4c56e66fa3229180d4)), closes [#18](https://github.com/bcgov/nr-spar-backend/issues/18)
 
 
 
