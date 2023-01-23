@@ -35,7 +35,7 @@ services:
       POSTGRESQL_USER: ${POSTGRESQL_USER}
       POSTGRESQL_PASSWORD: ${POSTGRESQL_PASSWORD}
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8090/check" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:8090/actuator/health" ]
       interval: 1m30s
       timeout: 3s
       retries: 3
