@@ -1,3 +1,12 @@
+# [0.7.0](https://github.com/bcgov/nr-spar-backend/compare/v0.6.0...v0.7.0) (2023-01-23)
+
+
+### Features
+
+* Remove check endpoint ([#24](https://github.com/bcgov/nr-spar-backend/issues/24)) ([da81d98](https://github.com/bcgov/nr-spar-backend/commit/da81d988915b2ccbea7c9887b7d81dc47196e531))
+
+
+
 # [0.6.0](https://github.com/bcgov/nr-spar-backend/compare/v0.5.1...v0.6.0) (2023-01-23)
 
 
@@ -26,15 +35,6 @@
 ### Bug Fixes
 
 * jacoco csv file location and report location ([#23](https://github.com/bcgov/nr-spar-backend/issues/23)) ([cb8f753](https://github.com/bcgov/nr-spar-backend/commit/cb8f753377e38d86ccb03f4c56e66fa3229180d4)), closes [#18](https://github.com/bcgov/nr-spar-backend/issues/18)
-
-
-
-# [0.4.0](https://github.com/bcgov/nr-spar-backend/compare/v0.3.3...v0.4.0) (2023-01-13)
-
-
-### Features
-
-* Create dashboard tables ([#19](https://github.com/bcgov/nr-spar-backend/issues/19)) ([4d5d0fb](https://github.com/bcgov/nr-spar-backend/commit/4d5d0fb120c71a9bfb23f7ecc12865c38d9c22d4))
 
 
 
