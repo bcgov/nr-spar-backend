@@ -141,7 +141,7 @@ objects:
                 successThreshold: 1
                 failureThreshold: 5
                 httpGet:
-                  path: /check
+                  path: /actuator/health
                   port: 8090
                   scheme: HTTP
                 initialDelaySeconds: 300
@@ -151,7 +151,7 @@ objects:
                 successThreshold: 1
                 failureThreshold: 5
                 httpGet:
-                  path: /check
+                  path: /actuator/health
                   port: 8090
                   scheme: HTTP
                 initialDelaySeconds: 300
