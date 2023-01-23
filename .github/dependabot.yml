@@ -1,8 +1,6 @@
 version: 2
 updates:
   - package-ecosystem: "maven"
-    directory: "/backend"
+    directory: "/"
     schedule:
-      interval: "daily"
-      time: "14:15"
-      timezone: "America/Sao_Paulo"
+      interval: "weekly"
