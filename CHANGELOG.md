@@ -1,3 +1,16 @@
+# [0.6.0](https://github.com/bcgov/nr-spar-backend/compare/v0.5.1...v0.6.0) (2023-01-23)
+
+
+### Features
+
+* Bump spring-boot-starter-parent in /backend ([#26](https://github.com/bcgov/nr-spar-backend/issues/26)) ([3d60af9](https://github.com/bcgov/nr-spar-backend/commit/3d60af906f2f0d630d3294103ee590ef4f074038))
+
+
+
+## [0.5.1](https://github.com/bcgov/nr-spar-backend/compare/v0.5.0...v0.5.1) (2023-01-23)
+
+
+
 # [0.5.0](https://github.com/bcgov/nr-spar-backend/compare/v0.4.1...v0.5.0) (2023-01-19)
 
 
@@ -22,14 +35,6 @@
 ### Features
 
 * Create dashboard tables ([#19](https://github.com/bcgov/nr-spar-backend/issues/19)) ([4d5d0fb](https://github.com/bcgov/nr-spar-backend/commit/4d5d0fb120c71a9bfb23f7ecc12865c38d9c22d4))
-
-
-
-## [0.3.3](https://github.com/bcgov/nr-spar-backend/compare/v0.3.2...v0.3.3) (2023-01-04)
-
-
-
-## [0.3.2](https://github.com/bcgov/nr-spar-backend/compare/v0.3.1...v0.3.2) (2023-01-04)
 
 
 
