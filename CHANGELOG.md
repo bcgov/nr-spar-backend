@@ -1,3 +1,12 @@
+# [0.5.0](https://github.com/bcgov/nr-spar-backend/compare/v0.4.1...v0.5.0) (2023-01-19)
+
+
+### Features
+
+* Create Favorite Activities endpoint ([#22](https://github.com/bcgov/nr-spar-backend/issues/22)) ([39e4a3c](https://github.com/bcgov/nr-spar-backend/commit/39e4a3c03f5387b381ccf1a3ba5c4d91cae9d4da))
+
+
+
 ## [0.4.1](https://github.com/bcgov/nr-spar-backend/compare/v0.4.0...v0.4.1) (2023-01-19)
 
 
@@ -21,10 +30,6 @@
 
 
 ## [0.3.2](https://github.com/bcgov/nr-spar-backend/compare/v0.3.1...v0.3.2) (2023-01-04)
-
-
-
-## [0.3.1](https://github.com/bcgov/nr-spar-backend/compare/v0.3.0...v0.3.1) (2023-01-04)
 
 
 
