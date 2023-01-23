@@ -36,15 +36,13 @@ class UserServiceTest {
     userInfo =
         new UserInfo(
             "User",
+            "Test",
             "user@test.com",
-            new HashSet<>(),
-            "idir",
+            "Test, User: LWRS:EX",
             "USERT",
-            "bceid",
-            false,
-            "User",
-            "User",
-            "Test");
+            null,
+            "idir",
+            new HashSet<>());
   }
 
   @Test
