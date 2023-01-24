@@ -1,3 +1,7 @@
+## [0.8.2](https://github.com/bcgov/nr-spar-backend/compare/v0.8.1...v0.8.2) (2023-01-24)
+
+
+
 ## [0.8.1](https://github.com/bcgov/nr-spar-backend/compare/v0.8.0...v0.8.1) (2023-01-23)
 
 
@@ -26,10 +30,6 @@
 ### Features
 
 * Bump spring-boot-starter-parent in /backend ([#26](https://github.com/bcgov/nr-spar-backend/issues/26)) ([3d60af9](https://github.com/bcgov/nr-spar-backend/commit/3d60af906f2f0d630d3294103ee590ef4f074038))
-
-
-
-## [0.5.1](https://github.com/bcgov/nr-spar-backend/compare/v0.5.0...v0.5.1) (2023-01-23)
 
 
 
