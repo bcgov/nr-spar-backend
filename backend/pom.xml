@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>ca.bc.gov</groupId>
 	<artifactId>nr-spar-backend</artifactId>
-	<version>0.8.1</version>
+	<version>0.8.5</version>
 	<name>nr-spar-backend</name>
 	<description>Starting backend API project</description>
 
