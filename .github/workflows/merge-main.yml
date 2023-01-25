@@ -277,7 +277,7 @@ jobs:
           - name: backend
             file: backend/openshift.deploy.yml
             overwrite: true
-            parameters: -p MIN_REPLICAS=1 -p MAX_REPLICAS=2 -p BUILD=test-${{ env.NR_SPAR_BACKEND_VERSION }}
+            parameters: -p BUILD=test-${{ env.NR_SPAR_BACKEND_VERSION }}
     steps:
       - uses: bcgov-nr/action-deployer-openshift@v1.0.1
         with:
