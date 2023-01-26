@@ -187,7 +187,6 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       ZONE: test
-      NR_SPAR_BACKEND_VERSION: ${{ needs.release.outputs.version }}
     strategy:
       matrix:
         name: [ init, database, backend ]
@@ -201,7 +200,7 @@ jobs:
           - name: backend
             file: backend/openshift.deploy.yml
             overwrite: true
-            parameters: -p MIN_REPLICAS=1 -p MAX_REPLICAS=2 -p BUILD=test-${{ env.NR_SPAR_BACKEND_VERSION }}
+            parameters: -p MIN_REPLICAS=1 -p MAX_REPLICAS=2 -p BUILD=test-${{ needs.release.outputs.version }}
     steps:
       - uses: bcgov-nr/action-deployer-openshift@v1.0.1
         with:
@@ -263,7 +262,6 @@ jobs:
     env:
       ZONE: prod
       PREV: test
-      NR_SPAR_BACKEND_VERSION: ${{ needs.release.outputs.version }}
     strategy:
       matrix:
         name: [ init, database, backend ]
@@ -277,7 +275,7 @@ jobs:
           - name: backend
             file: backend/openshift.deploy.yml
             overwrite: true
-            parameters: -p BUILD=test-${{ env.NR_SPAR_BACKEND_VERSION }}
+            parameters: -p BUILD=prod-${{ needs.release.outputs.version }}
     steps:
       - uses: bcgov-nr/action-deployer-openshift@v1.0.1
         with:
