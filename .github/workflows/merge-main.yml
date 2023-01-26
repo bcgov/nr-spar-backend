@@ -185,8 +185,6 @@ jobs:
       - release
     environment: test
     runs-on: ubuntu-22.04
-    env:
-      ZONE: test
     strategy:
       matrix:
         name: [ init, database, backend ]
@@ -259,9 +257,6 @@ jobs:
       - api-tests
     environment: prod
     runs-on: ubuntu-22.04
-    env:
-      ZONE: prod
-      PREV: test
     strategy:
       matrix:
         name: [ init, database, backend ]
@@ -296,5 +291,5 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           repository: ${{ github.repository }}
-          target: backend:${{ env.PREV }}
-          tags: ${{ env.ZONE }}
+          target: backend:test
+          tags: prod
