@@ -33,6 +33,7 @@ public class UserAuthenticationHelper {
 
       UserInfo userInfo =
           new UserInfo(
+              jwtPrincipal.getClaimAsString("sub"),
               jwtPrincipal.getClaimAsString("given_name"),
               jwtPrincipal.getClaimAsString("family_name"),
               jwtPrincipal.getClaimAsString("email"),

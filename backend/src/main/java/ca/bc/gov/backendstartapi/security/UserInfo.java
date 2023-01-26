@@ -8,6 +8,7 @@ import java.util.Set;
  * <a href="https://github.com/bcgov/sso-keycloak/blob/dev/docs/migration-guide.md">IDP Attributes</a>
  */
 public record UserInfo(
+    String id,
     String firstName,
     String lastName,
     String email,
@@ -20,6 +21,7 @@ public record UserInfo(
   /**
    * Constructor only for ensuring immutability for the user's roles.
    *
+   * @param id see the access method
    * @param firstName see the access method
    * @param lastName see the access method
    * @param email see the access method
@@ -31,6 +33,17 @@ public record UserInfo(
    */
   public UserInfo {
     roles = Collections.unmodifiableSet(roles);
+  }
+
+  /**
+   * The user's ID. This prop comes from JWT 'sub' property and will exist when logged with both
+   * IDIR and Business BCeID. E.g.: 123456789...45689@idir
+   *
+   * @return The user ID
+   */
+  @Override
+  public String id() {
+    return id;
   }
 
   /**

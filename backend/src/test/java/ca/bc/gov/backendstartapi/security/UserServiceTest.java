@@ -1,15 +1,13 @@
-package ca.bc.gov.backendstartapi.service;
+package ca.bc.gov.backendstartapi.security;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import ca.bc.gov.backendstartapi.entity.UserEntity;
 import ca.bc.gov.backendstartapi.exception.UserNotFoundException;
-import ca.bc.gov.backendstartapi.repository.UserRepository;
+import ca.bc.gov.backendstartapi.repository.UserProfileRepository;
+import ca.bc.gov.backendstartapi.security.LoggedUserService;
 import ca.bc.gov.backendstartapi.security.UserAuthenticationHelper;
 import ca.bc.gov.backendstartapi.security.UserInfo;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,19 +20,20 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 class UserServiceTest {
 
-  @Mock UserRepository userRepository;
+  @Mock UserProfileRepository userProfileRepository;
 
   @Mock UserAuthenticationHelper userAuthenticationHelper;
 
-  private UserService userService;
+  private LoggedUserService loggedUserService;
 
   private UserInfo userInfo;
 
   @BeforeEach
   void setup() {
-    userService = new UserService(userRepository, userAuthenticationHelper);
+    loggedUserService = new LoggedUserService(userAuthenticationHelper);
     userInfo =
         new UserInfo(
+            "123456789@idir",
             "User",
             "Test",
             "user@test.com",
@@ -50,7 +49,7 @@ class UserServiceTest {
   void getLoggedUserEmailTest() {
     when(userAuthenticationHelper.getUserInfo()).thenReturn(Optional.of(userInfo));
 
-    String userEmail = userService.getLoggedUserEmail();
+    String userEmail = loggedUserService.getLoggedUserEmail();
 
     Assertions.assertEquals("user@test.com", userEmail);
   }
@@ -62,7 +61,7 @@ class UserServiceTest {
         Assertions.assertThrows(
             UserNotFoundException.class,
             () -> {
-              userService.getLoggedUserEmail();
+              loggedUserService.getLoggedUserEmail();
             });
 
     Assertions.assertEquals("404 NOT_FOUND \"User not registered!\"", e.getMessage());
@@ -73,45 +72,14 @@ class UserServiceTest {
   void getLoggerUserInfoTest() {
     when(userAuthenticationHelper.getUserInfo()).thenReturn(Optional.of(userInfo));
 
-    Optional<UserInfo> userInfoOp = userService.getLoggerUserInfo();
+    Optional<UserInfo> userInfoOp = loggedUserService.getLoggerUserInfo();
 
     Assertions.assertTrue(userInfoOp.isPresent());
   }
 
   @Test
-  @DisplayName("getLoggerUserEntityTest")
-  void getLoggerUserEntityTest() {
-    when(userAuthenticationHelper.getUserInfo()).thenReturn(Optional.of(userInfo));
-
-    UserEntity userEntity = new UserEntity();
-    when(userRepository.findAllByEmail(any())).thenReturn(List.of(userEntity));
-
-    UserEntity user = userService.getLoggerUserEntity();
-
-    Assertions.assertNotNull(user);
-  }
-
-  @Test
-  @DisplayName("getLoggerUserEntityExceptionTest")
-  void getLoggerUserEntityExceptionTest() {
-    when(userAuthenticationHelper.getUserInfo()).thenReturn(Optional.of(userInfo));
-
-    when(userRepository.findAllByEmail(any())).thenReturn(List.of());
-
-    Exception e =
-        Assertions.assertThrows(
-            UserNotFoundException.class,
-            () -> {
-              userService.getLoggerUserEntity();
-            });
-
-    Assertions.assertEquals("404 NOT_FOUND \"User not registered!\"", e.getMessage());
-  }
-
-  @Test
   void createUserService() {
-    UserService userService1 = new UserService();
-    userService1.setUserRepository(userRepository);
-    userService1.setUserAuthenticationHelper(userAuthenticationHelper);
+    LoggedUserService loggedUserService1 = new LoggedUserService();
+    loggedUserService1.setUserAuthenticationHelper(userAuthenticationHelper);
   }
 }

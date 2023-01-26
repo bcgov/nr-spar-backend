@@ -11,14 +11,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import ca.bc.gov.backendstartapi.dto.FavoriteActivityCreateDto;
-import ca.bc.gov.backendstartapi.dto.FavoriteActivityUpdateDto;
-import ca.bc.gov.backendstartapi.entity.FavoriteActivityEntity;
+import ca.bc.gov.backendstartapi.dto.FavouriteActivityCreateDto;
+import ca.bc.gov.backendstartapi.dto.FavouriteActivityUpdateDto;
+import ca.bc.gov.backendstartapi.entity.FavouriteActivityEntity;
 import ca.bc.gov.backendstartapi.enums.ActivityEnum;
 import ca.bc.gov.backendstartapi.exception.ActivityNotFoundException;
 import ca.bc.gov.backendstartapi.exception.FavoriteActivityExistsToUser;
 import ca.bc.gov.backendstartapi.exception.UserNotFoundException;
-import ca.bc.gov.backendstartapi.service.FavoriteActivityService;
+import ca.bc.gov.backendstartapi.service.FavouriteActivityService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -35,14 +35,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(FavoriteActivityEndpoint.class)
-class FavoriteActivityEndpointTest {
+@WebMvcTest(FavouriteActivityEndpoint.class)
+class FavouriteActivityEndpointTest {
 
   @Autowired private MockMvc mockMvc;
 
-  @MockBean private FavoriteActivityService favoriteActivityService;
+  @MockBean private FavouriteActivityService favouriteActivityService;
 
-  private static final String API_PATH = "/api/favorite-activities";
+  private static final String API_PATH = "/api/favourite-activities";
 
   private static final String CONTENT_HEADER = "Content-Type";
 
@@ -55,9 +55,9 @@ class FavoriteActivityEndpointTest {
     return ow.writeValueAsString(obj);
   }
 
-  private FavoriteActivityEntity createEntity(ActivityEnum activityEnum) {
-    FavoriteActivityEntity activityEntity = new FavoriteActivityEntity();
-    activityEntity.setActivityTitle(activityEnum);
+  private FavouriteActivityEntity createEntity(ActivityEnum activityEnum) {
+    FavouriteActivityEntity activityEntity = new FavouriteActivityEntity();
+    activityEntity.setActivity(activityEnum);
     activityEntity.setHighlighted(Boolean.FALSE);
     activityEntity.setEnabled(Boolean.TRUE);
     return activityEntity;
@@ -67,11 +67,11 @@ class FavoriteActivityEndpointTest {
   @DisplayName("createFavoriteActivitySuccessTest")
   @WithMockUser(roles = "user_write")
   void createFavoriteActivitySuccessTest() throws Exception {
-    FavoriteActivityCreateDto activityDto =
-        new FavoriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST);
+    FavouriteActivityCreateDto activityDto =
+        new FavouriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST);
 
-    FavoriteActivityEntity activityEntity = createEntity(ActivityEnum.SEEDLING_REQUEST);
-    when(favoriteActivityService.createUserActivity(any())).thenReturn(activityEntity);
+    FavouriteActivityEntity activityEntity = createEntity(ActivityEnum.SEEDLING_REQUEST);
+    when(favouriteActivityService.createUserActivity(any())).thenReturn(activityEntity);
 
     mockMvc
         .perform(
@@ -81,7 +81,7 @@ class FavoriteActivityEndpointTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(stringify(activityDto)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.activityTitle").value("SEEDLING_REQUEST"))
+        .andExpect(jsonPath("$.activity").value("SEEDLING_REQUEST"))
         .andExpect(jsonPath("$.highlighted").value("false"))
         .andExpect(jsonPath("$.enabled").value("true"))
         .andReturn();
@@ -91,10 +91,10 @@ class FavoriteActivityEndpointTest {
   @DisplayName("createFavoriteActivityUserNotFoundTest")
   @WithMockUser(roles = "user_write")
   void createFavoriteActivityUserNotFoundTest() throws Exception {
-    FavoriteActivityCreateDto activityDto =
-        new FavoriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST);
+    FavouriteActivityCreateDto activityDto =
+        new FavouriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST);
 
-    when(favoriteActivityService.createUserActivity(any())).thenThrow(new UserNotFoundException());
+    when(favouriteActivityService.createUserActivity(any())).thenThrow(new UserNotFoundException());
 
     mockMvc
         .perform(
@@ -111,10 +111,10 @@ class FavoriteActivityEndpointTest {
   @DisplayName("createFavoriteActivityNotFoundTest")
   @WithMockUser(roles = "user_write")
   void createFavoriteActivityNotFoundTest() throws Exception {
-    FavoriteActivityCreateDto activityDto =
-        new FavoriteActivityCreateDto(null);
+    FavouriteActivityCreateDto activityDto =
+        new FavouriteActivityCreateDto(null);
 
-    when(favoriteActivityService.createUserActivity(any()))
+    when(favouriteActivityService.createUserActivity(any()))
         .thenThrow(new ActivityNotFoundException());
 
     mockMvc
@@ -132,12 +132,12 @@ class FavoriteActivityEndpointTest {
   @DisplayName("createFavoriteActivityDuplicatedTest")
   @WithMockUser(roles = "user_write")
   void createFavoriteActivityDuplicatedTest() throws Exception {
-    FavoriteActivityCreateDto activityDto =
-        new FavoriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST);
+    FavouriteActivityCreateDto activityDto =
+        new FavouriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST);
 
     String contentString = stringify(activityDto);
-    FavoriteActivityEntity activityEntity = createEntity(ActivityEnum.SEEDLING_REQUEST);
-    when(favoriteActivityService.createUserActivity(any())).thenReturn(activityEntity);
+    FavouriteActivityEntity activityEntity = createEntity(ActivityEnum.SEEDLING_REQUEST);
+    when(favouriteActivityService.createUserActivity(any())).thenReturn(activityEntity);
 
     mockMvc
         .perform(
@@ -147,12 +147,12 @@ class FavoriteActivityEndpointTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(contentString))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.activityTitle").value("SEEDLING_REQUEST"))
+        .andExpect(jsonPath("$.activity").value("SEEDLING_REQUEST"))
         .andExpect(jsonPath("$.highlighted").value("false"))
         .andExpect(jsonPath("$.enabled").value("true"))
         .andReturn();
 
-    when(favoriteActivityService.createUserActivity(any()))
+    when(favouriteActivityService.createUserActivity(any()))
         .thenThrow(new FavoriteActivityExistsToUser());
 
     mockMvc
@@ -171,12 +171,12 @@ class FavoriteActivityEndpointTest {
   @WithMockUser(roles = "user_write")
   void getAllUsersActivityTest() throws Exception {
 
-    FavoriteActivityEntity activityEntityOne = createEntity(ActivityEnum.SEEDLING_REQUEST);
-    FavoriteActivityEntity activityEntityTwo = createEntity(ActivityEnum.SEEDLOT_REGISTRATION);
+    FavouriteActivityEntity activityEntityOne = createEntity(ActivityEnum.SEEDLING_REQUEST);
+    FavouriteActivityEntity activityEntityTwo = createEntity(ActivityEnum.SEEDLOT_REGISTRATION);
     activityEntityTwo.setHighlighted(Boolean.TRUE);
-    List<FavoriteActivityEntity> favoriteActivityEntities =
+    List<FavouriteActivityEntity> favoriteActivityEntities =
         List.of(activityEntityOne, activityEntityTwo);
-    when(favoriteActivityService.getAllUserFavoriteActivities())
+    when(favouriteActivityService.getAllUserFavoriteActivities())
         .thenReturn(favoriteActivityEntities);
     mockMvc
         .perform(
@@ -185,11 +185,11 @@ class FavoriteActivityEndpointTest {
                 .header(CONTENT_HEADER, JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$[0].activityTitle").value("SEEDLING_REQUEST"))
+        .andExpect(jsonPath("$[0].activity").value("SEEDLING_REQUEST"))
         .andExpect(jsonPath("$[0].highlighted").value("false"))
         .andExpect(jsonPath("$[0].enabled").value("true"))
         .andExpect(
-            jsonPath("$[1].activityTitle").value("SEEDLOT_REGISTRATION"))
+            jsonPath("$[1].activity").value("SEEDLOT_REGISTRATION"))
         .andExpect(jsonPath("$[1].highlighted").value("true"))
         .andExpect(jsonPath("$[1].enabled").value("true"))
         .andReturn();
@@ -199,10 +199,10 @@ class FavoriteActivityEndpointTest {
   @DisplayName("updateUserFavoriteActivity")
   @WithMockUser(roles = "user_write")
   void updateUserFavoriteActivity() throws Exception {
-    FavoriteActivityEntity activityEntity = createEntity(ActivityEnum.PARENT_TREE_ORCHARD);
+    FavouriteActivityEntity activityEntity = createEntity(ActivityEnum.PARENT_TREE_ORCHARD);
     activityEntity.setId(10000L);
 
-    when(favoriteActivityService.createUserActivity(any())).thenReturn(activityEntity);
+    when(favouriteActivityService.createUserActivity(any())).thenReturn(activityEntity);
 
     mockMvc
         .perform(
@@ -212,16 +212,16 @@ class FavoriteActivityEndpointTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(stringify(activityEntity)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.activityTitle").value("PARENT_TREE_ORCHARD"))
+        .andExpect(jsonPath("$.activity").value("PARENT_TREE_ORCHARD"))
         .andExpect(jsonPath("$.highlighted").value("false"))
         .andExpect(jsonPath("$.enabled").value("true"))
         .andReturn();
 
-    FavoriteActivityEntity activityUpdated = activityEntity.withHighlighted(true);
+    FavouriteActivityEntity activityUpdated = activityEntity.withHighlighted(true);
 
-    when(favoriteActivityService.updateUserActivity(any(), any())).thenReturn(activityUpdated);
+    when(favouriteActivityService.updateUserActivity(any(), any())).thenReturn(activityUpdated);
 
-    FavoriteActivityUpdateDto updateDto = new FavoriteActivityUpdateDto(true, true);
+    FavouriteActivityUpdateDto updateDto = new FavouriteActivityUpdateDto(true, true);
 
     mockMvc
         .perform(
@@ -231,7 +231,7 @@ class FavoriteActivityEndpointTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(stringify(updateDto)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.activityTitle").value("PARENT_TREE_ORCHARD"))
+        .andExpect(jsonPath("$.activity").value("PARENT_TREE_ORCHARD"))
         .andExpect(jsonPath("$.highlighted").value("true"))
         .andExpect(jsonPath("$.enabled").value("true"))
         .andReturn();
@@ -241,10 +241,10 @@ class FavoriteActivityEndpointTest {
   @DisplayName("deleteUserFavoriteActivity")
   @WithMockUser(roles = "user_write")
   void deleteUserFavoriteActivity() throws Exception {
-    FavoriteActivityEntity activityEntity = createEntity(ActivityEnum.PARENT_TREE_ORCHARD);
+    FavouriteActivityEntity activityEntity = createEntity(ActivityEnum.PARENT_TREE_ORCHARD);
     activityEntity.setId(10000L);
 
-    when(favoriteActivityService.createUserActivity(any())).thenReturn(activityEntity);
+    when(favouriteActivityService.createUserActivity(any())).thenReturn(activityEntity);
 
     mockMvc
         .perform(
@@ -254,14 +254,14 @@ class FavoriteActivityEndpointTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(stringify(activityEntity)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.activityTitle").value("PARENT_TREE_ORCHARD"))
+        .andExpect(jsonPath("$.activity").value("PARENT_TREE_ORCHARD"))
         .andExpect(jsonPath("$.highlighted").value("false"))
         .andExpect(jsonPath("$.enabled").value("true"))
         .andReturn();
 
-    FavoriteActivityEntity activityUpdated = activityEntity.withHighlighted(true);
+    FavouriteActivityEntity activityUpdated = activityEntity.withHighlighted(true);
 
-    doNothing().when(favoriteActivityService).deleteUserActivity(any());
+    doNothing().when(favouriteActivityService).deleteUserActivity(any());
 
     mockMvc
         .perform(
@@ -276,7 +276,7 @@ class FavoriteActivityEndpointTest {
   @Test
   @DisplayName("createFavoriteActivityEndpointTest")
   void createFavoriteActivityEndpointTest() {
-    FavoriteActivityEndpoint activityEndpoint = new FavoriteActivityEndpoint();
-    activityEndpoint.setFavoriteActivityService(favoriteActivityService);
+    FavouriteActivityEndpoint activityEndpoint = new FavouriteActivityEndpoint();
+    activityEndpoint.setFavouriteActivityService(favouriteActivityService);
   }
 }

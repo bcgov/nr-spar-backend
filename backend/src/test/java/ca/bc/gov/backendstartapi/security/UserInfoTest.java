@@ -12,6 +12,7 @@ class UserInfoTest {
   void createUserInfo() {
     UserInfo userInfo =
         new UserInfo(
+            "123456789@idir",
             "Bilbo",
             "Baggings",
             "bilbo.baggings@gov.bc.ca",
