@@ -90,13 +90,7 @@ class FavouriteActivityEndpointTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(stringifyCreate(ActivityEnum.SEEDLING_REQUEST)))
         .andExpect(status().isOk())
-        .andExpect(
-            jsonPath("$.activity.iconName").value(ActivityEnum.SEEDLING_REQUEST.getIconName()))
-        .andExpect(jsonPath("$.activity.title").value(ActivityEnum.SEEDLING_REQUEST.getTitle()))
-        .andExpect(
-            jsonPath("$.activity.description")
-                .value(ActivityEnum.SEEDLING_REQUEST.getDescription()))
-        .andExpect(jsonPath("$.activity.page").value(ActivityEnum.SEEDLING_REQUEST.getPage()))
+        .andExpect(jsonPath("$.activity").value(ActivityEnum.SEEDLING_REQUEST.toString()))
         .andExpect(jsonPath("$.highlighted").value("false"))
         .andExpect(jsonPath("$.enabled").value("true"))
         .andReturn();
@@ -136,13 +130,7 @@ class FavouriteActivityEndpointTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(contentString))
         .andExpect(status().isOk())
-        .andExpect(
-            jsonPath("$.activity.iconName").value(ActivityEnum.SEEDLING_REQUEST.getIconName()))
-        .andExpect(jsonPath("$.activity.title").value(ActivityEnum.SEEDLING_REQUEST.getTitle()))
-        .andExpect(
-            jsonPath("$.activity.description")
-                .value(ActivityEnum.SEEDLING_REQUEST.getDescription()))
-        .andExpect(jsonPath("$.activity.page").value(ActivityEnum.SEEDLING_REQUEST.getPage()))
+        .andExpect(jsonPath("$.activity").value(ActivityEnum.SEEDLING_REQUEST.toString()))
         .andExpect(jsonPath("$.highlighted").value("false"))
         .andExpect(jsonPath("$.enabled").value("true"))
         .andReturn();
@@ -180,25 +168,10 @@ class FavouriteActivityEndpointTest {
                 .header(CONTENT_HEADER, JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(
-            jsonPath("$[0].activity.iconName").value(ActivityEnum.SEEDLING_REQUEST.getIconName()))
-        .andExpect(jsonPath("$[0].activity.title").value(ActivityEnum.SEEDLING_REQUEST.getTitle()))
-        .andExpect(
-            jsonPath("$[0].activity.description")
-                .value(ActivityEnum.SEEDLING_REQUEST.getDescription()))
-        .andExpect(jsonPath("$[0].activity.page").value(ActivityEnum.SEEDLING_REQUEST.getPage()))
+        .andExpect(jsonPath("$[0].activity").value(ActivityEnum.SEEDLING_REQUEST.toString()))
         .andExpect(jsonPath("$[0].highlighted").value("false"))
         .andExpect(jsonPath("$[0].enabled").value("true"))
-        .andExpect(
-            jsonPath("$[1].activity.iconName")
-                .value(ActivityEnum.SEEDLOT_REGISTRATION.getIconName()))
-        .andExpect(
-            jsonPath("$[1].activity.title").value(ActivityEnum.SEEDLOT_REGISTRATION.getTitle()))
-        .andExpect(
-            jsonPath("$[1].activity.description")
-                .value(ActivityEnum.SEEDLOT_REGISTRATION.getDescription()))
-        .andExpect(
-            jsonPath("$[1].activity.page").value(ActivityEnum.SEEDLOT_REGISTRATION.getPage()))
+        .andExpect(jsonPath("$[1].activity").value(ActivityEnum.SEEDLOT_REGISTRATION.toString()))
         .andExpect(jsonPath("$[1].highlighted").value("true"))
         .andExpect(jsonPath("$[1].enabled").value("true"))
         .andReturn();
@@ -220,13 +193,7 @@ class FavouriteActivityEndpointTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(stringifyCreate(ActivityEnum.PARENT_TREE_ORCHARD)))
         .andExpect(status().isOk())
-        .andExpect(
-            jsonPath("$.activity.iconName").value(ActivityEnum.PARENT_TREE_ORCHARD.getIconName()))
-        .andExpect(jsonPath("$.activity.title").value(ActivityEnum.PARENT_TREE_ORCHARD.getTitle()))
-        .andExpect(
-            jsonPath("$.activity.description")
-                .value(ActivityEnum.PARENT_TREE_ORCHARD.getDescription()))
-        .andExpect(jsonPath("$.activity.page").value(ActivityEnum.PARENT_TREE_ORCHARD.getPage()))
+        .andExpect(jsonPath("$.activity").value(ActivityEnum.PARENT_TREE_ORCHARD.toString()))
         .andExpect(jsonPath("$.highlighted").value("false"))
         .andExpect(jsonPath("$.enabled").value("true"))
         .andReturn();
@@ -243,13 +210,7 @@ class FavouriteActivityEndpointTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(stringifyUpdate(true, true)))
         .andExpect(status().isOk())
-        .andExpect(
-            jsonPath("$.activity.iconName").value(ActivityEnum.PARENT_TREE_ORCHARD.getIconName()))
-        .andExpect(jsonPath("$.activity.title").value(ActivityEnum.PARENT_TREE_ORCHARD.getTitle()))
-        .andExpect(
-            jsonPath("$.activity.description")
-                .value(ActivityEnum.PARENT_TREE_ORCHARD.getDescription()))
-        .andExpect(jsonPath("$.activity.page").value(ActivityEnum.PARENT_TREE_ORCHARD.getPage()))
+        .andExpect(jsonPath("$.activity").value(ActivityEnum.PARENT_TREE_ORCHARD.toString()))
         .andExpect(jsonPath("$.highlighted").value("true"))
         .andExpect(jsonPath("$.enabled").value("true"))
         .andReturn();
@@ -272,13 +233,7 @@ class FavouriteActivityEndpointTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(stringifyCreate(ActivityEnum.PARENT_TREE_ORCHARD)))
         .andExpect(status().isOk())
-        .andExpect(
-            jsonPath("$.activity.iconName").value(ActivityEnum.PARENT_TREE_ORCHARD.getIconName()))
-        .andExpect(jsonPath("$.activity.title").value(ActivityEnum.PARENT_TREE_ORCHARD.getTitle()))
-        .andExpect(
-            jsonPath("$.activity.description")
-                .value(ActivityEnum.PARENT_TREE_ORCHARD.getDescription()))
-        .andExpect(jsonPath("$.activity.page").value(ActivityEnum.PARENT_TREE_ORCHARD.getPage()))
+        .andExpect(jsonPath("$.activity").value(ActivityEnum.PARENT_TREE_ORCHARD.toString()))
         .andExpect(jsonPath("$.highlighted").value("false"))
         .andExpect(jsonPath("$.enabled").value("true"))
         .andReturn();
