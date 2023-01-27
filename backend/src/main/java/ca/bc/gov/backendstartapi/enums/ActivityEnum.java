@@ -1,13 +1,13 @@
 package ca.bc.gov.backendstartapi.enums;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import java.util.Optional;
 import lombok.Getter;
-import lombok.ToString;
 
 /** This enumeration contains all possible activities. */
 @Getter
+@JsonFormat(shape = Shape.OBJECT)
 public enum ActivityEnum {
   SEEDLOT_REGISTRATION(
       "SoilMoistureField",
@@ -52,17 +52,5 @@ public enum ActivityEnum {
       }
     }
     return Optional.empty();
-  }
-
-  @JsonValue
-  @Override
-  public String toString() {
-    String builder = "{"
-        + "iconName:" + "\"" + iconName + "\""
-        + ",title:" + "\"" + title + "\""
-        + ",description:" + "\"" + description + "\""
-        + ",page:" + "\"" + page + "\""
-        + "}";
-    return builder;
   }
 }

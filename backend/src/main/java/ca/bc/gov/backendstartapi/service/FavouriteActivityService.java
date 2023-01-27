@@ -49,7 +49,6 @@ public class FavouriteActivityService {
    */
   public FavouriteActivityEntity createUserActivity(FavouriteActivityCreateDto activityDto) {
     String userId = loggedUserService.getLoggedUserId();
-
     log.info("Creating activity {} to user {}", activityDto.activity(), userId);
 
     if (Objects.isNull(activityDto.activity())) {
@@ -58,6 +57,7 @@ public class FavouriteActivityService {
 
     List<FavouriteActivityEntity> userFavList = favouriteActivityRepository.findAllByUserId(userId);
     if (userFavList.stream().anyMatch(ac -> ac.getActivity().equals(activityDto.activity()))) {
+      log.info("Activity {} already exists to user {}!", activityDto.activity(), userId);
       throw new FavoriteActivityExistsToUser();
     }
 

@@ -4,6 +4,7 @@ import ca.bc.gov.backendstartapi.dto.FavouriteActivityCreateDto;
 import ca.bc.gov.backendstartapi.dto.FavouriteActivityUpdateDto;
 import ca.bc.gov.backendstartapi.entity.FavouriteActivityEntity;
 import ca.bc.gov.backendstartapi.service.FavouriteActivityService;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -42,7 +43,7 @@ public class FavouriteActivityEndpoint {
   @PostMapping(consumes = "application/json", produces = "application/json")
   @PreAuthorize("hasRole('user_write')")
   public FavouriteActivityEntity createUserActivity(
-      @RequestBody FavouriteActivityCreateDto createDto) {
+      @Valid @RequestBody FavouriteActivityCreateDto createDto) {
     return favouriteActivityService.createUserActivity(createDto);
   }
 
@@ -67,7 +68,7 @@ public class FavouriteActivityEndpoint {
   @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
   @PreAuthorize("hasRole('user_write')")
   public FavouriteActivityEntity updateFavoriteActivity(
-      @PathVariable Long id, @RequestBody FavouriteActivityUpdateDto updateDto) {
+      @PathVariable Long id, @Valid @RequestBody FavouriteActivityUpdateDto updateDto) {
     return favouriteActivityService.updateUserActivity(id, updateDto);
   }
 
