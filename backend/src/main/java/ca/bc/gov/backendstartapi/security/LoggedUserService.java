@@ -30,7 +30,7 @@ public class LoggedUserService {
    *
    * @return an optional of {@link UserInfo}. It'll be empty then not logged in
    */
-  public Optional<UserInfo> getLoggerUserInfo() {
+  public Optional<UserInfo> getLoggedUserInfo() {
     return userAuthenticationHelper.getUserInfo();
   }
 

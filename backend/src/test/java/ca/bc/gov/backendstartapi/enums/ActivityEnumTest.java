@@ -39,11 +39,6 @@ class ActivityEnumTest {
 
     ActivityEnum myEnum = ActivityEnum.valueOf("SEEDLOT_REGISTRATION");
 
-    String enumToString = "ActivityEnum.SEEDLOT_REGISTRATION("
-        + "iconName=SoilMoistureField, "
-        + "title=Seedlot registration, "
-        + "description=Start a new registration or check on existing seedlots registrations, "
-        + "page=/seedlot-registration)";
-    Assertions.assertEquals(enumToString, myEnum.toString());
+    Assertions.assertEquals("SEEDLOT_REGISTRATION", myEnum.toString());
   }
 }

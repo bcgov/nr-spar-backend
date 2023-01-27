@@ -72,7 +72,7 @@ class UserServiceTest {
   void getLoggerUserInfoTest() {
     when(userAuthenticationHelper.getUserInfo()).thenReturn(Optional.of(userInfo));
 
-    Optional<UserInfo> userInfoOp = loggedUserService.getLoggerUserInfo();
+    Optional<UserInfo> userInfoOp = loggedUserService.getLoggedUserInfo();
 
     Assertions.assertTrue(userInfoOp.isPresent());
   }

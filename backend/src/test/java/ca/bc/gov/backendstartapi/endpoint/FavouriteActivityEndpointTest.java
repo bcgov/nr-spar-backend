@@ -11,18 +11,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import ca.bc.gov.backendstartapi.dto.FavouriteActivityCreateDto;
-import ca.bc.gov.backendstartapi.dto.FavouriteActivityUpdateDto;
 import ca.bc.gov.backendstartapi.entity.FavouriteActivityEntity;
 import ca.bc.gov.backendstartapi.enums.ActivityEnum;
 import ca.bc.gov.backendstartapi.exception.ActivityNotFoundException;
 import ca.bc.gov.backendstartapi.exception.FavoriteActivityExistsToUser;
-import ca.bc.gov.backendstartapi.exception.UserNotFoundException;
 import ca.bc.gov.backendstartapi.service.FavouriteActivityService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import java.util.List;
+import java.util.Objects;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,11 +43,28 @@ class FavouriteActivityEndpointTest {
 
   private static final String JSON = "application/json";
 
-  private String stringify(Object obj) throws Exception {
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-    ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-    return ow.writeValueAsString(obj);
+  private String stringifyCreate(ActivityEnum activityEnum) {
+    StringBuilder json = new StringBuilder("{");
+    if (!Objects.isNull(activityEnum)) {
+      json.append("\"activity\":\"").append(activityEnum).append("\"");
+    }
+    json.append("}");
+    return json.toString();
+  }
+
+  private String stringifyUpdate(Boolean highlighted, Boolean enabled) {
+    StringBuilder json = new StringBuilder("{");
+    if (!Objects.isNull(highlighted)) {
+      json.append("\"highlighted\":\"").append(highlighted).append("\"");
+    }
+    if (!Objects.isNull(enabled)) {
+      if (!json.toString().equals("{")) {
+        json.append(",");
+      }
+      json.append("\"enabled\":\"").append(enabled).append("\"");
+    }
+    json.append("}");
+    return json.toString();
   }
 
   private FavouriteActivityEntity createEntity(ActivityEnum activityEnum) {
@@ -67,9 +79,6 @@ class FavouriteActivityEndpointTest {
   @DisplayName("createFavoriteActivitySuccessTest")
   @WithMockUser(roles = "user_write")
   void createFavoriteActivitySuccessTest() throws Exception {
-    FavouriteActivityCreateDto activityDto =
-        new FavouriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST);
-
     FavouriteActivityEntity activityEntity = createEntity(ActivityEnum.SEEDLING_REQUEST);
     when(favouriteActivityService.createUserActivity(any())).thenReturn(activityEntity);
 
@@ -79,31 +88,17 @@ class FavouriteActivityEndpointTest {
                 .with(csrf().asHeader())
                 .header(CONTENT_HEADER, JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(stringify(activityDto)))
+                .content(stringifyCreate(ActivityEnum.SEEDLING_REQUEST)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.activity").value("SEEDLING_REQUEST"))
+        .andExpect(
+            jsonPath("$.activity.iconName").value(ActivityEnum.SEEDLING_REQUEST.getIconName()))
+        .andExpect(jsonPath("$.activity.title").value(ActivityEnum.SEEDLING_REQUEST.getTitle()))
+        .andExpect(
+            jsonPath("$.activity.description")
+                .value(ActivityEnum.SEEDLING_REQUEST.getDescription()))
+        .andExpect(jsonPath("$.activity.page").value(ActivityEnum.SEEDLING_REQUEST.getPage()))
         .andExpect(jsonPath("$.highlighted").value("false"))
         .andExpect(jsonPath("$.enabled").value("true"))
-        .andReturn();
-  }
-
-  @Test
-  @DisplayName("createFavoriteActivityUserNotFoundTest")
-  @WithMockUser(roles = "user_write")
-  void createFavoriteActivityUserNotFoundTest() throws Exception {
-    FavouriteActivityCreateDto activityDto =
-        new FavouriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST);
-
-    when(favouriteActivityService.createUserActivity(any())).thenThrow(new UserNotFoundException());
-
-    mockMvc
-        .perform(
-            post(API_PATH)
-                .with(csrf().asHeader())
-                .header(CONTENT_HEADER, JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(stringify(activityDto)))
-        .andExpect(status().isNotFound())
         .andReturn();
   }
 
@@ -111,9 +106,6 @@ class FavouriteActivityEndpointTest {
   @DisplayName("createFavoriteActivityNotFoundTest")
   @WithMockUser(roles = "user_write")
   void createFavoriteActivityNotFoundTest() throws Exception {
-    FavouriteActivityCreateDto activityDto =
-        new FavouriteActivityCreateDto(null);
-
     when(favouriteActivityService.createUserActivity(any()))
         .thenThrow(new ActivityNotFoundException());
 
@@ -123,8 +115,8 @@ class FavouriteActivityEndpointTest {
                 .with(csrf().asHeader())
                 .header(CONTENT_HEADER, JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(stringify(activityDto)))
-        .andExpect(status().isNotFound())
+                .content(stringifyCreate(null)))
+        .andExpect(status().isBadRequest())
         .andReturn();
   }
 
@@ -132,10 +124,7 @@ class FavouriteActivityEndpointTest {
   @DisplayName("createFavoriteActivityDuplicatedTest")
   @WithMockUser(roles = "user_write")
   void createFavoriteActivityDuplicatedTest() throws Exception {
-    FavouriteActivityCreateDto activityDto =
-        new FavouriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST);
-
-    String contentString = stringify(activityDto);
+    String contentString = stringifyCreate(ActivityEnum.SEEDLING_REQUEST);
     FavouriteActivityEntity activityEntity = createEntity(ActivityEnum.SEEDLING_REQUEST);
     when(favouriteActivityService.createUserActivity(any())).thenReturn(activityEntity);
 
@@ -147,7 +136,13 @@ class FavouriteActivityEndpointTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(contentString))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.activity").value("SEEDLING_REQUEST"))
+        .andExpect(
+            jsonPath("$.activity.iconName").value(ActivityEnum.SEEDLING_REQUEST.getIconName()))
+        .andExpect(jsonPath("$.activity.title").value(ActivityEnum.SEEDLING_REQUEST.getTitle()))
+        .andExpect(
+            jsonPath("$.activity.description")
+                .value(ActivityEnum.SEEDLING_REQUEST.getDescription()))
+        .andExpect(jsonPath("$.activity.page").value(ActivityEnum.SEEDLING_REQUEST.getPage()))
         .andExpect(jsonPath("$.highlighted").value("false"))
         .andExpect(jsonPath("$.enabled").value("true"))
         .andReturn();
@@ -185,11 +180,25 @@ class FavouriteActivityEndpointTest {
                 .header(CONTENT_HEADER, JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$[0].activity").value("SEEDLING_REQUEST"))
+        .andExpect(
+            jsonPath("$[0].activity.iconName").value(ActivityEnum.SEEDLING_REQUEST.getIconName()))
+        .andExpect(jsonPath("$[0].activity.title").value(ActivityEnum.SEEDLING_REQUEST.getTitle()))
+        .andExpect(
+            jsonPath("$[0].activity.description")
+                .value(ActivityEnum.SEEDLING_REQUEST.getDescription()))
+        .andExpect(jsonPath("$[0].activity.page").value(ActivityEnum.SEEDLING_REQUEST.getPage()))
         .andExpect(jsonPath("$[0].highlighted").value("false"))
         .andExpect(jsonPath("$[0].enabled").value("true"))
         .andExpect(
-            jsonPath("$[1].activity").value("SEEDLOT_REGISTRATION"))
+            jsonPath("$[1].activity.iconName")
+                .value(ActivityEnum.SEEDLOT_REGISTRATION.getIconName()))
+        .andExpect(
+            jsonPath("$[1].activity.title").value(ActivityEnum.SEEDLOT_REGISTRATION.getTitle()))
+        .andExpect(
+            jsonPath("$[1].activity.description")
+                .value(ActivityEnum.SEEDLOT_REGISTRATION.getDescription()))
+        .andExpect(
+            jsonPath("$[1].activity.page").value(ActivityEnum.SEEDLOT_REGISTRATION.getPage()))
         .andExpect(jsonPath("$[1].highlighted").value("true"))
         .andExpect(jsonPath("$[1].enabled").value("true"))
         .andReturn();
@@ -201,7 +210,6 @@ class FavouriteActivityEndpointTest {
   void updateUserFavoriteActivity() throws Exception {
     FavouriteActivityEntity activityEntity = createEntity(ActivityEnum.PARENT_TREE_ORCHARD);
     activityEntity.setId(10000L);
-
     when(favouriteActivityService.createUserActivity(any())).thenReturn(activityEntity);
 
     mockMvc
@@ -210,9 +218,15 @@ class FavouriteActivityEndpointTest {
                 .with(csrf().asHeader())
                 .header(CONTENT_HEADER, JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(stringify(activityEntity)))
+                .content(stringifyCreate(ActivityEnum.PARENT_TREE_ORCHARD)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.activity").value("PARENT_TREE_ORCHARD"))
+        .andExpect(
+            jsonPath("$.activity.iconName").value(ActivityEnum.PARENT_TREE_ORCHARD.getIconName()))
+        .andExpect(jsonPath("$.activity.title").value(ActivityEnum.PARENT_TREE_ORCHARD.getTitle()))
+        .andExpect(
+            jsonPath("$.activity.description")
+                .value(ActivityEnum.PARENT_TREE_ORCHARD.getDescription()))
+        .andExpect(jsonPath("$.activity.page").value(ActivityEnum.PARENT_TREE_ORCHARD.getPage()))
         .andExpect(jsonPath("$.highlighted").value("false"))
         .andExpect(jsonPath("$.enabled").value("true"))
         .andReturn();
@@ -221,17 +235,21 @@ class FavouriteActivityEndpointTest {
 
     when(favouriteActivityService.updateUserActivity(any(), any())).thenReturn(activityUpdated);
 
-    FavouriteActivityUpdateDto updateDto = new FavouriteActivityUpdateDto(true, true);
-
     mockMvc
         .perform(
             put(API_PATH + "/{id}", activityEntity.getId())
                 .with(csrf().asHeader())
                 .header(CONTENT_HEADER, JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(stringify(updateDto)))
+                .content(stringifyUpdate(true, true)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.activity").value("PARENT_TREE_ORCHARD"))
+        .andExpect(
+            jsonPath("$.activity.iconName").value(ActivityEnum.PARENT_TREE_ORCHARD.getIconName()))
+        .andExpect(jsonPath("$.activity.title").value(ActivityEnum.PARENT_TREE_ORCHARD.getTitle()))
+        .andExpect(
+            jsonPath("$.activity.description")
+                .value(ActivityEnum.PARENT_TREE_ORCHARD.getDescription()))
+        .andExpect(jsonPath("$.activity.page").value(ActivityEnum.PARENT_TREE_ORCHARD.getPage()))
         .andExpect(jsonPath("$.highlighted").value("true"))
         .andExpect(jsonPath("$.enabled").value("true"))
         .andReturn();
@@ -252,9 +270,15 @@ class FavouriteActivityEndpointTest {
                 .with(csrf().asHeader())
                 .header(CONTENT_HEADER, JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(stringify(activityEntity)))
+                .content(stringifyCreate(ActivityEnum.PARENT_TREE_ORCHARD)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.activity").value("PARENT_TREE_ORCHARD"))
+        .andExpect(
+            jsonPath("$.activity.iconName").value(ActivityEnum.PARENT_TREE_ORCHARD.getIconName()))
+        .andExpect(jsonPath("$.activity.title").value(ActivityEnum.PARENT_TREE_ORCHARD.getTitle()))
+        .andExpect(
+            jsonPath("$.activity.description")
+                .value(ActivityEnum.PARENT_TREE_ORCHARD.getDescription()))
+        .andExpect(jsonPath("$.activity.page").value(ActivityEnum.PARENT_TREE_ORCHARD.getPage()))
         .andExpect(jsonPath("$.highlighted").value("false"))
         .andExpect(jsonPath("$.enabled").value("true"))
         .andReturn();
