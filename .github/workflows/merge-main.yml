@@ -5,45 +5,24 @@ on:
     branches:
       - main
     paths-ignore:
+      - ".github/ISSUE_TEMPLATE/*"
       - "**.md"
   workflow_dispatch:
-
-env:
-  REGISTRY: ghcr.io
-  NAME: nr-spar-backend
 
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
 
 jobs:
-  # https://github.com/marketplace/actions/ghcr-io-container-cleanup
-  cleanup-ghcr:
-    name: Cleanup Container Registry
-    runs-on: ubuntu-latest
-    steps:
-      - name: Delete old packages
-        uses: davahome/ghcr-cleanup@v1.1.0.1
-        with:
-          delete_untagged: 1
-          keep_versions: 10
-          keep_versions_untagged: 0
-          minimum_days: 14
-          owner: orgs/bcgov
-          package: ${{ github.event.repository.name }}
-          skip_tags: prod-spar-api
-          token: ${{ secrets.GITHUB_TOKEN }}
-
   codeql:
     name: Semantic Code Analysis
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       actions: read
       contents: read
       security-events: write
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Initialize
         uses: github/codeql-action/init@v2
@@ -201,58 +180,39 @@ jobs:
   deploy-test:
     name: TEST Deployment
     needs:
-      - cleanup-ghcr
       - codeql
       - sonarcloud
       - release
-    runs-on: ubuntu-latest
-    environment:
-      name: test
-    env:
-      ZONE: test
-      NR_SPAR_BACKEND_VERSION: ${{ needs.release.outputs.version }}
+    environment: test
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        name: [ init, database, backend ]
+        include:
+          - name: init
+            file: common/openshift.init.yml
+            overwrite: false
+          - name: database
+            file: database/openshift.deploy.yml
+            overwrite: false
+          - name: backend
+            file: backend/openshift.deploy.yml
+            overwrite: true
+            parameters: -p MIN_REPLICAS=1 -p MAX_REPLICAS=2 -p BUILD=test-${{ needs.release.outputs.version }}
     steps:
-      - uses: actions/checkout@v3
-      - name: Print NR_SPAR_BACKEND_VERSION env
-        run: echo NR_SPAR_BACKEND_VERSION:test-${{ env.NR_SPAR_BACKEND_VERSION }}
-      - name: Deploy
-        run: |
-          # Login to OpenShift and select project
-          oc login --token=${{ secrets.OC_TOKEN }} --server=${{ secrets.OC_SERVER }}
-          oc project ${{ secrets.OC_NAMESPACE }}
-          # Do not replace database; 'oc create' kicks up an error if objects already exist
-          #oc process -f .github/openshift/deploy.database.yml -p ZONE=${{ env.ZONE }} | oc create -f - || true
-          # Process and apply deployment templates
-          oc process -f .github/openshift/deploy.backend.yml -p ZONE=${{ env.ZONE }} \
-            -p NR_SPAR_BACKEND_VERSION=test-${{ env.NR_SPAR_BACKEND_VERSION }} \
-            -p ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }} \
-            -p KEYCLOAK_REALM_URL=${{ secrets.KEYCLOAK_REALM_URL }} \
-            -p PROMOTE=${{ github.repository }}:${{ env.ZONE }}-spar-api | oc apply -f -
-          # Follow any active rollouts (see deploymentconfigs)
-          #oc rollout status dc/${{ env.NAME }}-${{ env.ZONE }}-database -w
-          oc rollout status dc/${{ env.NAME }}-${{ env.ZONE }}-spar-api -w
-          # Remove completed build runs, build pods and deployment pods
-          for p in $(oc get po | grep "Completed" | awk '{print $1}')
-          do
-            oc delete po ${p}
-          done
-
-  zap-spar-api:
-    name: Service API Pen Tests
-    needs:
-      - deploy-test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: ZAP Scan
-        uses: zaproxy/action-full-scan@v0.3.0
+      - uses: bcgov-nr/action-deployer-openshift@v1.0.1
         with:
-          target: https://${{ env.NAME }}-test-spar-api.apps.silver.devops.gov.bc.ca/
-          cmd_options: "-a"
-          allow_issue_writing: false
-          fail_action: false
+          file: ${{ matrix.file }}
+          oc_namespace: ${{ secrets.OC_NAMESPACE }}
+          oc_server: ${{ secrets.OC_SERVER }}
+          oc_token: ${{ secrets.OC_TOKEN }}
+          overwrite: ${{ matrix.overwrite }}
+          penetration_test: false
+          verification_path: "actuator/health"
+          parameters:
+            -p ZONE=test -p NAME=${{ github.event.repository.name }}
+            -p PROMOTE=${{ github.repository }}/${{ matrix.name }}:test
+            ${{ matrix.parameters }}
 
   api-tests:
     name: Newman API tests runner
@@ -291,154 +251,45 @@ jobs:
           name: API test report
           path: testArtifacts
 
-  # https://github.com/snyk/cli, https://github.com/snyk/actions
-  # Note: using free tier - called late in pipeline to limit runs
-  # Disabled snyk because it don't support Java 17 or Maven with JDK 17 yet
-
-  # https://github.com/marketplace/actions/aqua-security-trivy
-  trivy-repo:
-    name: Repository Report
-    needs:
-      - zap-spar-api
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Run Trivy vulnerability scanner in repo mode
-        uses: aquasecurity/trivy-action@0.3.0
-        with:
-          scan-type: "fs"
-          format: "sarif"
-          output: "trivy-results.sarif"
-          ignore-unfixed: true
-          severity: "CRITICAL,HIGH"
-          security-checks: "vuln,secret,config"
-
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: "trivy-results.sarif"
-
-  image-spar-api:
-    name: Service API Image Handling
-    needs:
-      - zap-spar-api
-    outputs:
-      build: ${{ steps.check.outputs.build }}
-    env:
-      COMPONENT: spar-api
-      PREV: test
-      ZONE: prod
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check for image changes
-        id: check
-        run: |
-          # Vars
-          IMG_PREV="${{ env.REGISTRY }}/${{ github.repository }}:${{ env.PREV }}-${{ env.COMPONENT }}"
-          IMG_ZONE="${{ env.REGISTRY }}/${{ github.repository }}:${{ env.ZONE }}-${{ env.COMPONENT }}"
-          # Pull previous image; grab SHA
-          docker pull "${IMG_PREV}"
-          SHA_PREV=$(docker inspect -f '{{.Id}}' "${IMG_PREV}")
-          # Use blank SHA for promoted image, unless a real one exists instead
-          docker pull "${IMG_ZONE}" && \
-            SHA_ZONE=$(docker inspect -f '{{.Id}}' "${IMG_ZONE}") ||
-            SHA_ZONE=""
-          # Output SHAs
-          echo -e "\n${IMG_PREV}: ${SHA_PREV}"
-          echo -e "${IMG_ZONE}: ${SHA_ZONE}\n"
-          # If different, then trigger updates
-          if [[ "${SHA_PREV}" != "${SHA_ZONE}" ]]; then
-            echo "::set-output name=build::true"
-            echo "Image has changed"
-            exit 0
-          fi
-          echo "Image promotion not required"
-      - name: Promote Service API Image
-        if: steps.check.outputs.build == 'true'
-        uses: shrink/actions-docker-registry-tag@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          repository: ${{ github.repository }}
-          target: ${{ env.PREV }}-${{ env.COMPONENT }}
-          tags: |
-            ${{ env.ZONE }}-${{ env.COMPONENT }}
-
   deploy-prod:
     name: PROD Deployment
     needs:
-      - image-spar-api
-      - trivy-repo
-      - release
-    runs-on: ubuntu-latest
-    environment:
-      name: prod
-    env:
-      ZONE: prod
-      PREV: test
-      NR_SPAR_BACKEND_VERSION: ${{ needs.release.outputs.version }}
+      - api-tests
+    environment: prod
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        name: [ init, database, backend ]
+        include:
+          - name: init
+            file: common/openshift.init.yml
+            overwrite: false
+          - name: database
+            file: database/openshift.deploy.yml
+            overwrite: false
+          - name: backend
+            file: backend/openshift.deploy.yml
+            overwrite: true
+            parameters: -p BUILD=prod-${{ needs.release.outputs.version }}
     steps:
-      - name: Remove any stale images
-        if: needs.image-spar-api.outputs.build == 'true'
-        env:
-          COMPONENT: spar-api
-        run: |
-          # Login to OpenShift and select project
-          oc login --token=${{ secrets.OC_TOKEN }} --server=${{ secrets.OC_SERVER }}
-          oc project ${{ secrets.OC_NAMESPACE }}
-          oc delete is/${{ env.NAME }}-${{ env.ZONE}}-${{ env.COMPONENT }} || true
-
-      - uses: actions/checkout@v3
-      - name: Print NR_SPAR_BACKEND_VERSION env
-        run: echo NR_SPAR_BACKEND_VERSION:prod-${{ env.NR_SPAR_BACKEND_VERSION }}
-      - name: Deploy
-        run: |
-          # Login to OpenShift and select project
-          oc login --token=${{ secrets.OC_TOKEN }} --server=${{ secrets.OC_SERVER }}
-          oc project ${{ secrets.OC_NAMESPACE }}
-
-          # Clear stale images for import/replacement
-          if [ $(oc get is -l app=${{ env.NAME }}-${{ env.ZONE }} -o name | grep -v database | wc -l) -gt 0 ]; then
-            oc delete is -l app=${{ env.NAME }}-${{ env.ZONE }}
-          fi
-
-          # Process and apply deployment templates
-          #oc process -f .github/openshift/deploy.database.yml -p ZONE=${{ env.ZONE }} | oc apply -f -
-          oc process -f .github/openshift/deploy.backend.yml -p ZONE=${{ env.ZONE }} \
-            -p NR_SPAR_BACKEND_VERSION=prod-${{ env.NR_SPAR_BACKEND_VERSION }} \
-            -p ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }} \
-            -p KEYCLOAK_REALM_URL=${{ secrets.KEYCLOAK_REALM_URL }} \
-            -p PROMOTE=${{ github.repository }}:${{ env.PREV }}-spar-api | oc apply -f -
-
-          # Follow any active rollouts (see deploymentconfigs)
-          #oc rollout status dc/${{ env.NAME }}-${{ env.ZONE }}-database -w
-          oc rollout status dc/${{ env.NAME }}-${{ env.ZONE }}-spar-api -w
-
-          # Remove completed build runs, build pods and deployment pods
-          for p in $(oc get po | grep "Completed" | awk '{print $1}')
-          do
-            oc delete po ${p}
-          done
+      - uses: bcgov-nr/action-deployer-openshift@v1.0.1
+        with:
+          file: ${{ matrix.file }}
+          oc_namespace: ${{ secrets.OC_NAMESPACE }}
+          oc_server: ${{ secrets.OC_SERVER }}
+          oc_token: ${{ secrets.OC_TOKEN }}
+          overwrite: ${{ matrix.overwrite }}
+          penetration_test: false
+          verification_path: "actuator/health"
+          parameters:
+            -p ZONE=test -p NAME=${{ github.event.repository.name }}
+            -p PROMOTE=${{ github.repository }}/${{ matrix.name }}:test
+            ${{ matrix.parameters }}
 
       - name: Promote Image to PROD
         uses: shrink/actions-docker-registry-tag@v3
         with:
           registry: ${{ env.REGISTRY }}
           repository: ${{ github.repository }}
-          target: ${{ env.PREV }}-spar-api
-          tags: |
-            prod-spar-api
-
-# # Uncomment to for development and troubleshooting
-# # https://docs.github.com/en/actions/learn-github-actions/contexts
-# view-context:
-#   name: View GitHub Context
-#   runs-on: ubuntu-latest
-#   steps:
-#     - name: Echo GitHub context
-#       uses: satackey/action-js-inline@v0.0.2
-#       with:
-#         script: |
-#           const github = require('@actions/github');
-#           console.log(JSON.stringify(github, null, 2));
+          target: backend:test
+          tags: prod
