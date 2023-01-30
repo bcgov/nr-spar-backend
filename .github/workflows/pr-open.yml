@@ -141,7 +141,7 @@ jobs:
             # Current changelog
 
             ${{ steps.changelog.outputs.clean_changelog }}
-          comment_includes: '# Current changelog'
+          comment_tag: 'current-changelog'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   api-tests:
