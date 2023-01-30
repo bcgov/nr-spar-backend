@@ -282,8 +282,8 @@ jobs:
           penetration_test: false
           verification_path: "actuator/health"
           parameters:
-            -p ZONE=test -p NAME=${{ github.event.repository.name }}
-            -p PROMOTE=${{ github.repository }}/${{ matrix.name }}:test
+            -p ZONE=prod -p NAME=${{ github.event.repository.name }}
+            -p PROMOTE=${{ github.repository }}/${{ matrix.name }}:prod
             ${{ matrix.parameters }}
 
       - name: Promote Image to PROD
