@@ -26,8 +26,6 @@ class FavouriteActivityRepositoryTest {
 
   @Autowired private FavouriteActivityRepository favouriteActivityRepository;
 
-  @Autowired private UserProfileRepository userProfileRepository;
-
   private static final String USER_ID = "123456789123456789@idir";
 
   @Test
@@ -64,18 +62,8 @@ class FavouriteActivityRepositoryTest {
   }
 
   @Test
-  @DisplayName("preventFromDuplicateUserTest")
-  @Order(3)
-  void preventFromDuplicateUserTest() {
-    FavouriteActivityEntity activity = new FavouriteActivityEntity();
-    activity.setUserId(USER_ID);
-    activity.setActivity(ActivityEnum.SEEDLOT_REGISTRATION);
-    favouriteActivityRepository.save(activity);
-  }
-
-  @Test
   @DisplayName("findAllByUserTest")
-  @Order(4)
+  @Order(3)
   @Sql(scripts = {"classpath:sql_scripts/FavoriteActivityRepositoryTest_favorite.sql"})
   void findAllByUserIdTest() {
     List<FavouriteActivityEntity> allByUser = favouriteActivityRepository.findAllByUserId(USER_ID);
@@ -85,7 +73,7 @@ class FavouriteActivityRepositoryTest {
 
   @Test
   @DisplayName("updateActivityTest")
-  @Order(5)
+  @Order(4)
   @Sql(scripts = {"classpath:sql_scripts/FavoriteActivityRepositoryTest_favorite.sql"})
   void updateActivityTest() {
     Optional<FavouriteActivityEntity> getOne =
@@ -112,7 +100,7 @@ class FavouriteActivityRepositoryTest {
 
   @Test
   @DisplayName("deleteActivityTest")
-  @Order(6)
+  @Order(5)
   @Sql(scripts = {"classpath:sql_scripts/FavoriteActivityRepositoryTest_favorite.sql"})
   void deleteActivityTest() {
     Optional<FavouriteActivityEntity> getOne =

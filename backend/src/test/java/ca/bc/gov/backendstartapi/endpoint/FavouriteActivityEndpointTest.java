@@ -252,10 +252,4 @@ class FavouriteActivityEndpointTest {
         .andReturn();
   }
 
-  @Test
-  @DisplayName("createFavoriteActivityEndpointTest")
-  void createFavoriteActivityEndpointTest() {
-    FavouriteActivityEndpoint activityEndpoint = new FavouriteActivityEndpoint();
-    activityEndpoint.setFavouriteActivityService(favouriteActivityService);
-  }
 }

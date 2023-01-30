@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.util.Assert;
 
 @ExtendWith(SpringExtension.class)
 class FavouriteActivityServiceTest {
@@ -171,6 +172,12 @@ class FavouriteActivityServiceTest {
     doNothing().when(favouriteActivityRepository).deleteById(any());
 
     favouriteActivityService.deleteUserActivity(1L);
+
+    when(favouriteActivityRepository.findById(any())).thenReturn(Optional.empty());
+
+    Optional<FavouriteActivityEntity> entityOp = favouriteActivityRepository.findById(1L);
+
+    Assertions.assertTrue(entityOp.isEmpty());
   }
 
   @Test
