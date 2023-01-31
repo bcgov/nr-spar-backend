@@ -291,5 +291,5 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           repository: ${{ github.repository }}
-          target: backend:test
+          target: test
           tags: prod
