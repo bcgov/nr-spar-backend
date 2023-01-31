@@ -29,8 +29,8 @@ class UserAuthenticationHelperTest {
   }
 
   @Test
-  @DisplayName("getUserInfoTestSuccess")
-  void getUserInfoTestSuccess() {
+  @DisplayName("getUserInfoIdirTest")
+  void getUserInfoIdirTest() {
     Authentication authentication = mock(Authentication.class);
     SecurityContext securityContext = mock(SecurityContext.class);
     SecurityContextHolder.setContext(securityContext);
@@ -41,15 +41,12 @@ class UserAuthenticationHelperTest {
     Jwt.Builder builder = Jwt.withTokenValue("myTokenValue");
     builder.header("alg", "HS256");
     builder.header("typ", "JWT");
-    builder.claim("name", "Bilbo");
-    builder.claim("email", "bilbo.baggings@gov.bc.ca");
-    builder.claim("identity_provider", "idir");
-    builder.claim("idir_username", "BAGGINGS");
-    builder.claim("businessbceid_username", null);
-    builder.claim("email_verified", "false");
     builder.claim("given_name", "Bilbo");
-    builder.claim("display_name", "Baggings, Bilbo LWRS:EX");
     builder.claim("family_name", "Baggings");
+    builder.claim("email", "bilbo.baggings@gov.bc.ca");
+    builder.claim("display_name", "Baggings, Bilbo LWRS:EX");
+    builder.claim("idir_username", "BAGGINGS");
+    builder.claim("identity_provider", "idir");
 
     when(authentication.getPrincipal()).thenReturn(builder.build());
 
@@ -57,20 +54,17 @@ class UserAuthenticationHelperTest {
     Assertions.assertTrue(userInfoOptional.isPresent());
 
     UserInfo userInfo = userInfoOptional.get();
-    Assertions.assertEquals("Bilbo", userInfo.name());
+    Assertions.assertEquals("Bilbo", userInfo.firstName());
+    Assertions.assertEquals("Baggings", userInfo.lastName());
     Assertions.assertEquals("bilbo.baggings@gov.bc.ca", userInfo.email());
-    Assertions.assertEquals("idir", userInfo.identityProvider());
-    Assertions.assertEquals("BAGGINGS", userInfo.idirUsername());
-    Assertions.assertNull(userInfo.businessbceidUsername());
-    Assertions.assertFalse(userInfo.emailVerified());
-    Assertions.assertEquals("Bilbo", userInfo.givenName());
     Assertions.assertEquals("Baggings, Bilbo LWRS:EX", userInfo.displayName());
-    Assertions.assertEquals("Baggings", userInfo.familyName());
+    Assertions.assertEquals("BAGGINGS", userInfo.idirUsername());
+    Assertions.assertEquals("idir", userInfo.identityProvider());
   }
 
   @Test
-  @DisplayName("getUserInfoTestUserInstance")
-  void getUserInfoTestUserInstance() {
+  @DisplayName("getUserInfoBusinessBceidTest")
+  void getUserInfoBusinessBceidTest() {
     Authentication authentication = mock(Authentication.class);
     SecurityContext securityContext = mock(SecurityContext.class);
     SecurityContextHolder.setContext(securityContext);
@@ -78,31 +72,26 @@ class UserAuthenticationHelperTest {
     when(securityContext.getAuthentication()).thenReturn(authentication);
     when(authentication.isAuthenticated()).thenReturn(true);
 
-    User user = new User(
-        "Gimli",
-        "myAxe",
-        true,
-        false,
-        false,
-        true,
-        List.of(new SimpleGrantedAuthority("ROLE_user_read"))
-    );
+    Jwt.Builder builder = Jwt.withTokenValue("myTokenValue");
+    builder.header("alg", "HS256");
+    builder.header("typ", "JWT");
+    builder.claim("email", "lord.sauron@mordor.middleearth");
+    builder.claim("display_name", "Sauron, Mordor LWRS:EX");
+    builder.claim("bceid_business_name", "Mordor LLC");
+    builder.claim("identity_provider", "businessbceid");
 
-    when(authentication.getPrincipal()).thenReturn(user);
+    when(authentication.getPrincipal()).thenReturn(builder.build());
 
     Optional<UserInfo> userInfoOptional = userAuthenticationHelper.getUserInfo();
     Assertions.assertTrue(userInfoOptional.isPresent());
 
     UserInfo userInfo = userInfoOptional.get();
-    Assertions.assertEquals("Test User", userInfo.name());
-    Assertions.assertEquals("user@test.com", userInfo.email());
-    Assertions.assertEquals("idir", userInfo.identityProvider());
-    Assertions.assertEquals("test", userInfo.idirUsername());
-    Assertions.assertEquals("test", userInfo.businessbceidUsername());
-    Assertions.assertFalse(userInfo.emailVerified());
-    Assertions.assertEquals("User", userInfo.givenName());
-    Assertions.assertEquals("Test User", userInfo.displayName());
-    Assertions.assertEquals("Test", userInfo.familyName());
+    Assertions.assertNull(userInfo.firstName());
+    Assertions.assertNull(userInfo.lastName());
+    Assertions.assertEquals("lord.sauron@mordor.middleearth", userInfo.email());
+    Assertions.assertEquals("Sauron, Mordor LWRS:EX", userInfo.displayName());
+    Assertions.assertEquals("Mordor LLC", userInfo.businessName());
+    Assertions.assertEquals("businessbceid", userInfo.identityProvider());
   }
 
   @Test

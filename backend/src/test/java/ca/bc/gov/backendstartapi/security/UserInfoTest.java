@@ -12,26 +12,24 @@ class UserInfoTest {
   void createUserInfo() {
     UserInfo userInfo =
         new UserInfo(
+            "123456789@idir",
             "Bilbo",
+            "Baggings",
             "bilbo.baggings@gov.bc.ca",
-            new HashSet<>(),
-            "idir",
+            "Baggings, Bilbo LWRS:EX",
             "BAGGINGS",
             null,
-            false,
-            "Bilbo",
-            "Baggings, Bilbo LWRS:EX",
-            "Baggings");
+            "idir",
+            new HashSet<>());
 
     Assertions.assertNotNull(userInfo);
-    Assertions.assertEquals("Bilbo", userInfo.name());
+    Assertions.assertEquals("Bilbo", userInfo.firstName());
+    Assertions.assertEquals("Baggings", userInfo.lastName());
     Assertions.assertEquals("bilbo.baggings@gov.bc.ca", userInfo.email());
-    Assertions.assertEquals("idir", userInfo.identityProvider());
-    Assertions.assertEquals("BAGGINGS", userInfo.idirUsername());
-    Assertions.assertNull(userInfo.businessbceidUsername());
-    Assertions.assertFalse(userInfo.emailVerified());
-    Assertions.assertEquals("Bilbo", userInfo.givenName());
     Assertions.assertEquals("Baggings, Bilbo LWRS:EX", userInfo.displayName());
-    Assertions.assertEquals("Baggings", userInfo.familyName());
+    Assertions.assertEquals("BAGGINGS", userInfo.idirUsername());
+    Assertions.assertNull(userInfo.businessName());
+    Assertions.assertEquals("idir", userInfo.identityProvider());
+    Assertions.assertTrue(userInfo.roles().isEmpty());
   }
 }
