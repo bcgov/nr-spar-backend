@@ -283,13 +283,13 @@ jobs:
           verification_path: "actuator/health"
           parameters:
             -p ZONE=prod -p NAME=${{ github.event.repository.name }}
-            -p PROMOTE=${{ github.repository }}/${{ matrix.name }}:prod
+            -p PROMOTE=${{ github.repository }}/${{ matrix.name }}:test
             ${{ matrix.parameters }}
 
       - name: Promote Image to PROD
         uses: shrink/actions-docker-registry-tag@v3
         with:
-          registry: ${{ env.REGISTRY }}
-          repository: ${{ github.repository }}
-          target: backend:test
+          registry: ghcr.io
+          repository: ${{ github.repository }}/${{ matrix.component }}
+          target: test
           tags: prod
