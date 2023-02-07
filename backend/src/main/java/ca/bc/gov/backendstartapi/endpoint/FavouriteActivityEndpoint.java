@@ -9,6 +9,8 @@ import java.util.List;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,8 +56,13 @@ public class FavouriteActivityEndpoint {
    */
   @GetMapping(produces = "application/json")
   @PreAuthorize("hasRole('user_read')")
-  public List<FavouriteActivityEntity> getUserActivities() {
-    return favouriteActivityService.getAllUserFavoriteActivities();
+  public ResponseEntity<List<FavouriteActivityEntity>> getUserActivities() {
+    List<FavouriteActivityEntity> activityEntities =
+        favouriteActivityService.getAllUserFavoriteActivities();
+    if (activityEntities.isEmpty()) {
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).body(activityEntities);
+    }
+    return ResponseEntity.ok(activityEntities);
   }
 
   /**

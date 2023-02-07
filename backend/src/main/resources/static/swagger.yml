@@ -1,0 +1,203 @@
+openapi: 3.0.0
+info:
+  title: SPAR Postgres REST API
+  description: A REST API to store new SPAR information into Postgres database.
+  version: 0.0.1
+  termsOfService: https://www2.gov.bc.ca/gov/content/data/open-data/api-terms-of-use-for-ogl-information
+  contact:
+    name: Team Encora
+    email: michelle.douville@gov.bc.ca
+    url: https://github.com/orgs/bcgov/teams/encora
+  license:
+    name: OGL-BC
+    url: https://www2.gov.bc.ca/gov/content/data/open-data/api-terms-of-use-for-ogl-information
+  externalDocs:
+    description: Encora Team Jira Board
+    url: https://apps.nrs.gov.bc.ca/int/jira/projects/FSADT2
+
+paths:
+  /api/favourite-activities:
+    post:
+      tags:
+        - FavouriteActivityEndpoint
+      summary: Creates a Favourite Activity
+      description: >
+        Creates a Favourite Activity to the logged user based on the activity title that
+        should be one of ActivityEnum.
+      requestBody:
+        description: Body containing the activity name that will be created
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FavouriteActivityCreateDto'
+      responses:
+        '201':
+          description: The Favourite Activity entity was successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavouriteActivityEntity'
+        '400':
+          description: The activity doesn't exists or already is defined to that user
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/DefaultSpringExceptionResponse'
+                  - $ref: '#/components/schemas/ValidationExceptionResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    get:
+      tags:
+        - FavouriteActivityEndpoint
+      summary: Retrieves all users' favourite activities
+      description: Retrieve all favourite activities bound to the logged user
+      responses:
+        '200':
+          description: An array of all registered favourite activities to the logged user.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FavouriteActivityEntity'
+        '204':
+          description: No activities registered to the user
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /api/favourite-activities/{id}:
+    put:
+      tags:
+        - FavouriteActivityEndpoint
+      summary: Updates a Favourite Activity
+      description: >
+        Updates a Favourite Activity to the logged user based on the activity `id` present
+        at the address URL, in the path.
+      requestBody:
+        description: Body containing the activity enabled and highlighted property values
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FavouriteActivityUpdateDto'
+      parameters:
+        - name: id
+          in: path
+          description: FavouriteActivityEntity ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: The FavouriteActivityEntity was successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavouriteActivityEntity'
+        '400':
+          description: The request body is not properly formatted with boolean values
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultSpringExceptionResponse'
+        '404':
+          description: The FavouriteActivityEntity was not found
+    delete:
+      tags:
+        - FavouriteActivityEndpoint
+      summary: Delete a Favourite Activity
+      description: >
+        Remove a Favourite Activity to the logged user based on the activity `id` present
+        at the address URL, in the path
+      parameters:
+        - name: id
+          in: path
+          description: lala
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: The FavouriteActivityEntity was successfully deleted
+        '404':
+          description: The FavouriteActivityEntity was not found
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+  schemas:
+    ActivityEnum:
+      type: string
+      enum:
+        - SEEDLOT_REGISTRATION
+        - PARENT_TREE_ORCHARD
+        - SEEDLING_REQUEST
+    DefaultSpringExceptionResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+        path:
+          type: string
+    FavouriteActivityCreateDto:
+      type: object
+      properties:
+        activity:
+          $ref: '#/components/schemas/ActivityEnum'
+    FavouriteActivityUpdateDto:
+      type: object
+      properties:
+        highlighted:
+          type: boolean
+        enabled:
+          type: boolean
+    FavouriteActivityEntity:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        userId:
+          type: string
+        activity:
+          $ref: '#/components/schemas/ActivityEnum'
+        highlighted:
+          type: boolean
+        enabled:
+          type: boolean
+    FieldIssue:
+      type: object
+      properties:
+        fieldName:
+          type: string
+        fieldMessage:
+          type: string
+    ValidationExceptionResponse:
+      type: object
+      properties:
+        errorMessage:
+          type: string
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldIssue'
+
+security:
+  - bearerAuth: []
