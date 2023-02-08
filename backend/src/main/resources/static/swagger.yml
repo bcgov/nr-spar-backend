@@ -55,15 +55,15 @@ paths:
       description: Retrieve all favourite activities bound to the logged user
       responses:
         '200':
-          description: An array of all registered favourite activities to the logged user.
+          description: >
+            An array with all registered favourite activities to the logged user or
+            an empty array.
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/FavouriteActivityEntity'
-        '204':
-          description: No activities registered to the user
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 

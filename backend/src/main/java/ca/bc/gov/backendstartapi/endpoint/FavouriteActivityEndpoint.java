@@ -44,9 +44,11 @@ public class FavouriteActivityEndpoint {
    */
   @PostMapping(consumes = "application/json", produces = "application/json")
   @PreAuthorize("hasRole('user_write')")
-  public FavouriteActivityEntity createUserActivity(
+  public ResponseEntity<FavouriteActivityEntity> createUserActivity(
       @Valid @RequestBody FavouriteActivityCreateDto createDto) {
-    return favouriteActivityService.createUserActivity(createDto);
+
+    FavouriteActivityEntity entity = favouriteActivityService.createUserActivity(createDto);
+    return ResponseEntity.status(HttpStatus.CREATED).body(entity);
   }
 
   /**
@@ -56,13 +58,8 @@ public class FavouriteActivityEndpoint {
    */
   @GetMapping(produces = "application/json")
   @PreAuthorize("hasRole('user_read')")
-  public ResponseEntity<List<FavouriteActivityEntity>> getUserActivities() {
-    List<FavouriteActivityEntity> activityEntities =
-        favouriteActivityService.getAllUserFavoriteActivities();
-    if (activityEntities.isEmpty()) {
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).body(activityEntities);
-    }
-    return ResponseEntity.ok(activityEntities);
+  public List<FavouriteActivityEntity> getUserActivities() {
+    return favouriteActivityService.getAllUserFavoriteActivities();
   }
 
   /**
