@@ -12,6 +12,7 @@ import io.swagger.v3.oas.models.security.SecurityScheme.Type;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/** This class contains base configuration for Swagger API documentation. */
 @Configuration
 public class SwaggerConfig {
 
@@ -22,6 +23,11 @@ public class SwaggerConfig {
   private static final String LICENSE_URL =
       "https://www2.gov.bc.ca/gov/content/data/open-data/open-government-licence-bc";
 
+  /**
+   * Creates an {@link OpenAPI} with all needed and related information.
+   *
+   * @return An {@link OpenAPI} instance
+   */
   @Bean
   public OpenAPI theRestApi() {
     Info info = new Info();
@@ -53,11 +59,11 @@ public class SwaggerConfig {
     Components components = new Components();
     components.addSecuritySchemes("bearerAuth", securityScheme);
 
-    OpenAPI openAPI = new OpenAPI();
-    openAPI.setInfo(info);
-    openAPI.setExternalDocs(externalDoc);
-    openAPI.addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
+    OpenAPI openApi = new OpenAPI();
+    openApi.setInfo(info);
+    openApi.setExternalDocs(externalDoc);
+    openApi.addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
 
-    return openAPI;
+    return openApi;
   }
 }

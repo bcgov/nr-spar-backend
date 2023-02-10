@@ -3,7 +3,7 @@ package ca.bc.gov.backendstartapi.endpoint;
 import ca.bc.gov.backendstartapi.dto.FavouriteActivityCreateDto;
 import ca.bc.gov.backendstartapi.dto.FavouriteActivityUpdateDto;
 import ca.bc.gov.backendstartapi.entity.FavouriteActivityEntity;
-import ca.bc.gov.backendstartapi.exception.DefaultSpringExceptionResponse;
+import ca.bc.gov.backendstartapi.response.DefaultSpringExceptionResponse;
 import ca.bc.gov.backendstartapi.response.ValidationExceptionResponse;
 import ca.bc.gov.backendstartapi.service.FavouriteActivityService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -118,15 +118,16 @@ public class FavouriteActivityEndpoint {
         @ApiResponse(
             responseCode = "200",
             description =
-                "An array with all registered favourite activities to the logged user or an empty array",
+                "An array with all registered favourite activities to the logged "
+                    + "user or an empty array",
             content =
                 @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = FavouriteActivityEntity.class))),
-          @ApiResponse(
-              responseCode = "401",
-              description = "Access token is missing or invalid",
-              content = @Content(schema = @Schema(implementation = Void.class)))
+        @ApiResponse(
+            responseCode = "401",
+            description = "Access token is missing or invalid",
+            content = @Content(schema = @Schema(implementation = Void.class)))
       })
   public List<FavouriteActivityEntity> getUserActivities() {
     return favouriteActivityService.getAllUserFavoriteActivities();
@@ -155,10 +156,10 @@ public class FavouriteActivityEndpoint {
                 @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = FavouriteActivityEntity.class))),
-          @ApiResponse(
-              responseCode = "401",
-              description = "Access token is missing or invalid",
-              content = @Content(schema = @Schema(implementation = Void.class))),
+        @ApiResponse(
+            responseCode = "401",
+            description = "Access token is missing or invalid",
+            content = @Content(schema = @Schema(implementation = Void.class))),
         @ApiResponse(
             responseCode = "404",
             description = "The FavouriteActivityEntity was not found",
@@ -200,10 +201,10 @@ public class FavouriteActivityEndpoint {
             responseCode = "200",
             description = "The FavouriteActivityEntity was successfully deleted",
             content = @Content(schema = @Schema(implementation = Void.class))),
-          @ApiResponse(
-              responseCode = "401",
-              description = "Access token is missing or invalid",
-              content = @Content(schema = @Schema(implementation = Void.class))),
+        @ApiResponse(
+            responseCode = "401",
+            description = "Access token is missing or invalid",
+            content = @Content(schema = @Schema(implementation = Void.class))),
         @ApiResponse(
             responseCode = "404",
             description = "The FavouriteActivityEntity was not found",

@@ -1,9 +1,13 @@
-package ca.bc.gov.backendstartapi.exception;
+package ca.bc.gov.backendstartapi.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Represents a validation object with detailed information in case of errors when receiving
+ * requests.
+ */
 @Getter
 @Setter
 @Schema(description = "Represents a general error object")
