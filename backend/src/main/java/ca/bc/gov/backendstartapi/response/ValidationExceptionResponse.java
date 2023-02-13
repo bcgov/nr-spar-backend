@@ -1,21 +1,26 @@
 package ca.bc.gov.backendstartapi.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.Getter;
 import org.springframework.validation.FieldError;
 
 /**
  * Used as error responses for REST endpoints when validation constraints (from {@link
- * javax.validation.constraints}) problems occur.
+ * jakarta.validation.Validation}) problems occur.
  *
  * <p>This class is to be constructed from {@link FieldError FieldErrors}.
  */
 @Getter
+@Schema(description = "An object containing the error message and the invalid fields")
 public class ValidationExceptionResponse {
 
   private static final String MESSAGE_TEMPLATE = "%d field(s) with validation problems!";
 
+  @Schema(description = "The error message")
   private final String errorMessage;
+
+  @Schema(description = "An array of 'FieldIssue' with the invalid fields")
   private final List<FieldIssue> fields;
 
   /**

@@ -1,6 +1,7 @@
 package ca.bc.gov.backendstartapi.entity;
 
 import ca.bc.gov.backendstartapi.enums.ActivityEnum;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,22 +22,36 @@ import lombok.With;
 @With
 @AllArgsConstructor
 @Table(name = "favourite_activity")
+@Schema(description = "An object representing a user's favourite activity in the database")
 public class FavouriteActivityEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Schema(description = "The ID of the entity in the database, also the PK.", example = "42")
   private Long id;
 
   @Column(name = "user_id")
+  @Schema(
+      description = "The user ID. This value comes from the JWT Token, from the 'sub' claim.",
+      example = "d1c0c0d1fab34a19816bb0a506ab705b@idir")
   private String userId;
 
   @Column(name = "activity", updatable = false)
   @Enumerated(value = EnumType.STRING)
+  @Schema(description = "An activity the user can do", example = "SEEDLOT_REGISTRATION")
   private ActivityEnum activity;
 
-  @Column private Boolean highlighted;
+  @Column
+  @Schema(
+      description = "Defines if the favourite activity is highlighted on the dashboard",
+      example = "false")
+  private Boolean highlighted;
 
-  @Column private Boolean enabled;
+  @Column
+  @Schema(
+      description = "Defines if the favourite activity is enabled on the dashboard",
+      example = "true")
+  private Boolean enabled;
 
   public FavouriteActivityEntity() {
     this.highlighted = false;
