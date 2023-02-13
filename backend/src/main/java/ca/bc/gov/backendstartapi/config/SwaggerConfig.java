@@ -31,7 +31,7 @@ public class SwaggerConfig {
   @Bean
   public OpenAPI theRestApi() {
     Info info = new Info();
-    info.setTitle("SPAR Postgres REST API-lala");
+    info.setTitle("SPAR Postgres REST API");
     info.setDescription(DESCRIPTION);
     info.setVersion("0.0.1");
     info.setTermsOfService(TERMS_OF_SERVICE);
