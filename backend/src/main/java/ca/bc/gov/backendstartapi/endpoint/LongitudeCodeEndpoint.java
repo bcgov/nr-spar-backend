@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 /** This class exposes resources to handle all longitude codes. */
 @RestController
 @RequestMapping("/api/longitude-codes")
-@Tag(name = "CollectionLongitudeEndpoint", description = "Resources to handle all longitude codes")
+@Tag(name = "LongitudeCodeEndpoint", description = "Resources to handle all longitude codes")
 public class LongitudeCodeEndpoint {
 
   /**

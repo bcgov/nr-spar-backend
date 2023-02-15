@@ -19,14 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/genetic-classes")
 @Tag(
-    name = "CollectionLatitudeEndpoint",
+    name = "GeneticClassEndpoint",
     description = "Resources to handle all genetic class codes")
 public class GeneticClassEndpoint {
 
   /**
    * Get all genetic class codes.
    *
-   * @return A list of {@link LatitudeCodeEnum}
+   * @return A list of {@link GeneticClassEnum}
    */
   @GetMapping(produces = "application/json")
   @PreAuthorize("hasRole('user_read')")
