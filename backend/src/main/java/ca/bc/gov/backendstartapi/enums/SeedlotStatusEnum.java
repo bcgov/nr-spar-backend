@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /** Possible status for Seed lots. */
 @Schema(description = "The possible status for a seed lot.")
-public enum SeedlotStatus implements DescribedEnum {
+public enum SeedlotStatusEnum implements DescribedEnum {
   APP("Approved"),
   CAN("Cancelled"),
   COM("Complete"),
@@ -15,7 +15,7 @@ public enum SeedlotStatus implements DescribedEnum {
 
   private final String description;
 
-  SeedlotStatus(String description) {
+  SeedlotStatusEnum(String description) {
     this.description = description;
   }
 
