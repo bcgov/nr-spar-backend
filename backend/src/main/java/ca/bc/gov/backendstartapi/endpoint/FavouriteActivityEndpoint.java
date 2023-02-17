@@ -36,9 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 @NoArgsConstructor
 @RestController
 @RequestMapping("/api/favourite-activities")
-@Tag(
-    name = "FavouriteActivityEndpoint",
-    description = "Resources to handle users' favourite activities")
+@Tag(name = "FavouriteActivity", description = "Resources to handle users' favourite activities")
 public class FavouriteActivityEndpoint {
 
   private FavouriteActivityService favouriteActivityService;
