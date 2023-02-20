@@ -17,37 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** This class exposes resources to handle all genetic class codes. */
 @RestController
-@RequestMapping("/api/genetic-classes")
+@RequestMapping(path = "/api/genetic-classes", produces = "application/json")
 @Tag(name = "GeneticClass")
 public class GeneticClassEndpoint implements DescribedEnumEndpoint<GeneticClassEnum> {
-
-  /**
-   * Get all genetic class codes.
-   *
-   * @return A list of {@link GeneticClassEnum}
-   */
-  @GetMapping(produces = "application/json")
-  @PreAuthorize("hasRole('user_read')")
-  @Operation(
-      summary = "Retrieves all genetic class codes",
-      description = "Returns a list containing all genetic class codes.")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "An array of objects containing code and description for each value.",
-            content =
-                @Content(
-                    array = @ArraySchema(schema = @Schema(implementation = GeneticClassEnum.class)),
-                    mediaType = "application/json")),
-        @ApiResponse(
-            responseCode = "401",
-            description = "Access token is missing or invalid",
-            content = @Content(schema = @Schema(implementation = Void.class)))
-      })
-  public List<GeneticClassEnum> getAllGeneticClasses() {
-    return List.of(GeneticClassEnum.values());
-  }
 
   @Override
   public Class<GeneticClassEnum> enumClass() {

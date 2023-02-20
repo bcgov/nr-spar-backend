@@ -16,38 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** This class exposes resources to handle all latitude codes. */
 @RestController
-@RequestMapping("/api/latitude-codes")
+@RequestMapping(path = "/api/latitude-codes", produces = "application/json")
 @Tag(name = "LatitudeCode", description = "Resources to handle all latitude codes")
 public class LatitudeCodeEndpoint implements DescribedEnumEndpoint<LatitudeCodeEnum> {
-
-  /**
-   * Get all latitude codes.
-   *
-   * @return A list of {@link LatitudeCodeEnum}
-   */
-  @GetMapping(produces = "application/json")
-  @PreAuthorize("hasRole('user_read')")
-  @Operation(
-      summary = "Retrieves all latitude codes",
-      description = "Returns a list containing all latitude codes.")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "An array of objects containing code and description for each value.",
-            content =
-                @Content(
-                    array =
-                        @ArraySchema(schema = @Schema(implementation = LatitudeCodeEnum.class)),
-                    mediaType = "application/json")),
-        @ApiResponse(
-            responseCode = "401",
-            description = "Access token is missing or invalid",
-            content = @Content(schema = @Schema(implementation = Void.class)))
-      })
-  public List<LatitudeCodeEnum> getAllCollectionLatitudes() {
-    return List.of(LatitudeCodeEnum.values());
-  }
 
   @Override
   public Class<LatitudeCodeEnum> enumClass() {
