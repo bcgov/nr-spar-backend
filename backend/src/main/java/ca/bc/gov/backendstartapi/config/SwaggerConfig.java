@@ -69,27 +69,96 @@ public class SwaggerConfig {
     openApi.setComponents(components);
 
     // TODO: find a way to keep this closer to the controllers themselves.
-    openApi.paths(
-        new Paths()
-            .addPathItem(
-                "/api/seedlot-status",
-                new PathItem()
-                    .get(
-                        new Operation()
-                            .operationId("fetchAllSeedlotStatus")
-                            .summary("Fetch all the possible seed lot status")
-                            .description(
-                                """
-Fetch all the possible status for a seed lot and their descriptions.""")))
-            .addPathItem(
-                "/api/seedlot-status/{code}",
-                new PathItem()
-                    .get(
-                        new Operation()
-                            .operationId("fetchSeedlotStatus")
-                            .summary("Fetch a single seed lot status")
-                            .description("Fetch a seed lot status by its code."))));
-
+    Paths paths = new Paths();
+    createSeedlotStatusPathItem(paths);
+    createGeneticClassPathItem(paths);
+    createLatitudeCodePathItem(paths);
+    createLongitudeCodePathItem(paths);
+    openApi.setPaths(paths);
     return openApi;
+  }
+
+  private void createSeedlotStatusPathItem(Paths paths) {
+    paths.addPathItem(
+        "/api/seedlot-status",
+        new PathItem()
+            .get(
+                new Operation()
+                    .operationId("fetchAllSeedlotStatus")
+                    .summary("Fetch all the possible seed lot status")
+                    .description(
+                        "Fetch all the possible status for a seed lot and their descriptions.")));
+
+    paths.addPathItem(
+        "/api/seedlot-status/{code}",
+        new PathItem()
+            .get(
+                new Operation()
+                    .operationId("fetchSeedlotStatus")
+                    .summary("Fetch a single seed lot status")
+                    .description("Fetch a seed lot status by its code.")));
+  }
+
+  // GeneticClass OK
+  private void createGeneticClassPathItem(Paths paths) {
+    paths.addPathItem(
+        "/api/genetic-classes",
+        new PathItem()
+            .get(
+                new Operation()
+                    .operationId("fetchAllGeneticClasses")
+                    .summary("Fetch all the genetic classes")
+                    .description(
+                        "Fetch all the possible genetic class for a seedlot registration.")));
+
+    paths.addPathItem(
+        "/api/genetic-status/{code}",
+        new PathItem()
+            .get(
+                new Operation()
+                    .operationId("fetchGeneticClass")
+                    .summary("Fetch a single genetic class")
+                    .description("Fetch a genetic class by its code.")));
+  }
+
+  private void createLatitudeCodePathItem(Paths paths) {
+    paths.addPathItem(
+        "/api/latitude-codes",
+        new PathItem()
+            .get(
+                new Operation()
+                    .operationId("fetchAllLatitudeCodes")
+                    .summary("Fetch all latitude codes")
+                    .description("Fetch all the possible latitude codes and their descriptions.")));
+
+    paths.addPathItem(
+        "/api/latitude-codes/{code}",
+        new PathItem()
+            .get(
+                new Operation()
+                    .operationId("fetchLatitudeCode")
+                    .summary("Fetch a single latitude code")
+                    .description("Fetch a latitude code by its code.")));
+  }
+
+  private void createLongitudeCodePathItem(Paths paths) {
+    paths.addPathItem(
+        "/api/longitude-codes",
+        new PathItem()
+            .get(
+                new Operation()
+                    .operationId("fetchAllLongitudeCodes")
+                    .summary("Fetch all longitude codes")
+                    .description(
+                        "Fetch all the possible longitude codes and their descriptions.")));
+
+    paths.addPathItem(
+        "/api/longitude-codes/{code}",
+        new PathItem()
+            .get(
+                new Operation()
+                    .operationId("fetchLongitudeCode")
+                    .summary("Fetch a single longitude code")
+                    .description("Fetch a longitude code by its code.")));
   }
 }

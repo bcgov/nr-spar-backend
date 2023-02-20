@@ -18,10 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 /** This class exposes resources to handle all genetic class codes. */
 @RestController
 @RequestMapping("/api/genetic-classes")
-@Tag(
-    name = "GeneticClassEndpoint",
-    description = "Resources to handle all genetic class codes")
-public class GeneticClassEndpoint {
+@Tag(name = "GeneticClass")
+public class GeneticClassEndpoint implements DescribedEnumEndpoint<GeneticClassEnum> {
 
   /**
    * Get all genetic class codes.
@@ -49,5 +47,10 @@ public class GeneticClassEndpoint {
       })
   public List<GeneticClassEnum> getAllGeneticClasses() {
     return List.of(GeneticClassEnum.values());
+  }
+
+  @Override
+  public Class<GeneticClassEnum> enumClass() {
+    return GeneticClassEnum.class;
   }
 }

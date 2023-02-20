@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 /** This class exposes resources to handle all latitude codes. */
 @RestController
 @RequestMapping("/api/latitude-codes")
-@Tag(name = "LatitudeCodeEndpoint", description = "Resources to handle all latitude codes")
-public class LatitudeCodeEndpoint {
+@Tag(name = "LatitudeCode", description = "Resources to handle all latitude codes")
+public class LatitudeCodeEndpoint implements DescribedEnumEndpoint<LatitudeCodeEnum> {
 
   /**
    * Get all latitude codes.
@@ -47,5 +47,10 @@ public class LatitudeCodeEndpoint {
       })
   public List<LatitudeCodeEnum> getAllCollectionLatitudes() {
     return List.of(LatitudeCodeEnum.values());
+  }
+
+  @Override
+  public Class<LatitudeCodeEnum> enumClass() {
+    return LatitudeCodeEnum.class;
   }
 }
