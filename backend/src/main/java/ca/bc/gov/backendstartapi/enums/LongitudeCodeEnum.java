@@ -5,8 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 /** This enumeration represents a longitude code. */
 @Schema(description = "This object represents a longitude code.")
 public enum LongitudeCodeEnum implements DescribedEnum {
-  EAST("East"),
-  WEST("West");
+  E("East"),
+  W("West");
 
   private final String description;
 
