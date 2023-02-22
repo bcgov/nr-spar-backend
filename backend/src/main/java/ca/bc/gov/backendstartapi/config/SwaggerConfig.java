@@ -99,7 +99,6 @@ public class SwaggerConfig {
                     .description("Fetch a seed lot status by its code.")));
   }
 
-  // GeneticClass OK
   private void createGeneticClassPathItem(Paths paths) {
     paths.addPathItem(
         "/api/genetic-classes",
@@ -112,7 +111,7 @@ public class SwaggerConfig {
                         "Fetch all the possible genetic class for a seedlot registration.")));
 
     paths.addPathItem(
-        "/api/genetic-status/{code}",
+        "/api/genetic-classes/{code}",
         new PathItem()
             .get(
                 new Operation()
