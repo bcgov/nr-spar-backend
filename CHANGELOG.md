@@ -1,3 +1,7 @@
+## [0.9.3](https://github.com/bcgov/nr-spar-backend/compare/v0.9.2...v0.9.3) (2023-02-22)
+
+
+
 ## [0.9.2](https://github.com/bcgov/nr-spar-backend/compare/v0.9.1...v0.9.2) (2023-02-21)
 
 
@@ -21,10 +25,6 @@
 ### Bug Fixes
 
 * add authorization swagger component ([#52](https://github.com/bcgov/nr-spar-backend/issues/52)) ([080d6aa](https://github.com/bcgov/nr-spar-backend/commit/080d6aaeea95cffa8567bc7b67531e1afe2a38be))
-
-
-
-## [0.8.22](https://github.com/bcgov/nr-spar-backend/compare/v0.8.21...v0.8.22) (2023-02-13)
 
 
 
