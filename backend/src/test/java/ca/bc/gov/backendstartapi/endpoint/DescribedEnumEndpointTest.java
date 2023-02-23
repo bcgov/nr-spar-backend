@@ -57,8 +57,8 @@ abstract class DescribedEnumEndpointTest<E extends Enum<E> & DescribedEnum> {
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpectAll(
-            jsonPath("code", IsEqual.equalTo("APP")),
-            jsonPath("description", IsEqual.equalTo("Approved")));
+            jsonPath("code", IsEqual.equalTo(value.toString())),
+            jsonPath("description", IsEqual.equalTo(value.description())));
   }
 
   @Test
