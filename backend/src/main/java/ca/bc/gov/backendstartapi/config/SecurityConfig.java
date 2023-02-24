@@ -1,10 +1,8 @@
 package ca.bc.gov.backendstartapi.config;
 
-import com.nimbusds.jose.shaded.gson.JsonArray;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
