@@ -1,3 +1,7 @@
+## [0.10.1](https://github.com/bcgov/nr-spar-backend/compare/v0.10.0...v0.10.1) (2023-02-24)
+
+
+
 # [0.10.0](https://github.com/bcgov/nr-spar-backend/compare/v0.9.3...v0.10.0) (2023-02-23)
 
 
@@ -16,15 +20,6 @@
 
 
 ## [0.9.1](https://github.com/bcgov/nr-spar-backend/compare/v0.9.0...v0.9.1) (2023-02-21)
-
-
-
-# [0.9.0](https://github.com/bcgov/nr-spar-backend/compare/v0.8.23...v0.9.0) (2023-02-17)
-
-
-### Features
-
-* endpoints for seedlot status ([#53](https://github.com/bcgov/nr-spar-backend/issues/53)) ([00b365f](https://github.com/bcgov/nr-spar-backend/commit/00b365f8dfc79b0e3735a1345be0e069504b36d5))
 
 
 

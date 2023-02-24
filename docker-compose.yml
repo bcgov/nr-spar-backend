@@ -9,6 +9,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD}
       POSTGRES_DB: ${POSTGRESQL_DATABASE}
     hostname: database
+    ports:
+      - "5432:5432"
     restart: always
     volumes:
       - /pgdata
@@ -34,6 +36,7 @@ services:
       POSTGRESQL_DATABASE: ${POSTGRESQL_DATABASE}
       POSTGRESQL_USER: ${POSTGRESQL_USER}
       POSTGRESQL_PASSWORD: ${POSTGRESQL_PASSWORD}
+      JAVA_OPTS: ${JAVA_OPTS}
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8090/actuator/health" ]
       interval: 1m30s
