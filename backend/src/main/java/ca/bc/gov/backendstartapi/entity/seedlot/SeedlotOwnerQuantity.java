@@ -13,6 +13,7 @@ import jakarta.persistence.Table;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -29,7 +30,7 @@ import lombok.Setter;
 @Setter
 public class SeedlotOwnerQuantity implements Serializable {
 
-  @Serial private static final long serialVersionUID = 3502144543715103911L;
+  @Generated @Serial private static final long serialVersionUID = 3502144543715103911L;
 
   // region Identifier
   @Id

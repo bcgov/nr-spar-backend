@@ -12,6 +12,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -27,7 +28,7 @@ import lombok.Setter;
 @Setter
 public class Seedlot implements Serializable {
 
-  @Serial private static final long serialVersionUID = -8731389710757531855L;
+  @Generated @Serial private static final long serialVersionUID = -8731389710757531855L;
 
   @Id
   @Column(name = "seedlot_number", length = 5)

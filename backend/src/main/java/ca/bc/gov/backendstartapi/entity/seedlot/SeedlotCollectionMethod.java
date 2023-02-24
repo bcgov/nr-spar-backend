@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import java.io.Serial;
 import java.io.Serializable;
 import lombok.AccessLevel;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -30,7 +31,7 @@ import lombok.Setter;
 @Setter
 public class SeedlotCollectionMethod implements Serializable {
 
-  @Serial private static final long serialVersionUID = 4440025991282910997L;
+  @Generated @Serial private static final long serialVersionUID = 4440025991282910997L;
 
   // region Identifier
   @Id
