@@ -14,6 +14,6 @@ class GeneticWorthEndpointTest extends DescribedEnumEndpointTest<GeneticWorthEnu
   GeneticWorthEndpointTest(WebApplicationContext webApplicationContext) {
     super(webApplicationContext);
     enumClass = GeneticWorthEnum.class;
-    endpointPrefix = "/api/genetic-worths";
+    endpointPrefix = "/api/genetic-worth";
   }
 }
