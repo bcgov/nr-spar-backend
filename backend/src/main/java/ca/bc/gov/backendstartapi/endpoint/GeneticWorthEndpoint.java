@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** Endpoints to fetch {@link GeneticWorthEnum}. */
 @RestController
-@RequestMapping(path = "/api/genetic-worthies", produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/genetic-worths", produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
 @Tag(name = "GeneticWorth")
 public class GeneticWorthEndpoint implements DescribedEnumEndpoint<GeneticWorthEnum> {
 

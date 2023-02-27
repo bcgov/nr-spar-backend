@@ -167,7 +167,7 @@ public class SwaggerConfig {
 
   private void createGeneticWorthPathItem(Paths paths) {
     paths.addPathItem(
-        "/api/genetic-worthies",
+        "/api/genetic-worths",
         new PathItem()
             .get(
                 new Operation()
@@ -177,7 +177,7 @@ public class SwaggerConfig {
                         "Fetch all the possible genetic worth codes and their descriptions.")));
 
     paths.addPathItem(
-        "/api/genetic-worthies/{code}",
+        "/api/genetic-worths/{code}",
         new PathItem()
             .get(
                 new Operation()
