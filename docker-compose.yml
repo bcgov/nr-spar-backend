@@ -3,11 +3,10 @@ version: '3.9'
 services:
   database:
     container_name: database
-    image: ghcr.io/bcgov/nr-spar-backend-database:test
     environment:
-      POSTGRES_USER: ${POSTGRESQL_USER}
-      POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD}
-      POSTGRES_DB: ${POSTGRESQL_DATABASE}
+      POSTGRES_USER: default
+      POSTGRES_PASSWORD: default
+      POSTGRES_DB: default
     hostname: database
     ports:
       - "5432:5432"
@@ -18,24 +17,23 @@ services:
       context: ./database
       dockerfile: Dockerfile
     healthcheck:
-      test: [ "CMD-SHELL", "psql -q -U $POSTGRESQL_USER -d $POSTGRESQL_DATABASE -c 'SELECT 1'" ]
+      test: [ "CMD-SHELL", "psql -q -U default -d default -c 'SELECT 1'" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
   backend:
     container_name: backend
-    image: ghcr.io/bcgov/nr-spar-backend-backend:test
     depends_on:
       database:
         condition: service_healthy
     environment:
       NR_SPAR_BACKEND_VERSION: snapshot
-      KEYCLOAK_REALM_URL: ${KEYCLOAK_REALM_URL}
+      KEYCLOAK_REALM_URL: https://dev.loginproxy.gov.bc.ca/auth/realms/standard
       POSTGRESQL_HOST: database
-      POSTGRESQL_DATABASE: ${POSTGRESQL_DATABASE}
-      POSTGRESQL_USER: ${POSTGRESQL_USER}
-      POSTGRESQL_PASSWORD: ${POSTGRESQL_PASSWORD}
+      POSTGRESQL_DATABASE: default
+      POSTGRESQL_USER: default
+      POSTGRESQL_PASSWORD: default
       JAVA_OPTS: ${JAVA_OPTS}
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8090/actuator/health" ]
