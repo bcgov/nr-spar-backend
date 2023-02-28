@@ -68,20 +68,9 @@ tests, please take a moment and check out our [CONTRIBUTING](CONTRIBUTING.md) gu
 
 ## Quick look
 
-But if all you want is to take a quick look on the running service, you can do it by
-using Docker or Docker Composer.
+But if all you want is to take a quick look on the running service, you can do it by using Docker Compose.
 
-Note that you'll need these environment variables:
-```
-export NR_SPAR_BACKEND_VERSION=local
-export KEYCLOAK_REALM_URL=https://dev.loginproxy.gov.bc.ca/auth/realms/standard
-export POSTGRESQL_HOST=localhost
-export POSTGRESQL_USER=some-user
-export POSTGRESQL_PASSWORD=some-secret
-export POSTGRESQL_DATABASE=some-name
-```
-
-If Docker Compose is an option, with one command you get it up and running:
+Run with:
 ```
 docker-compose up --build
 ```
@@ -95,25 +84,6 @@ But if not, You can build the Docker images:
 ```
 cd backend && docker build -t bcgov/nr-spar-backend-backend:snapshot . && cd ..
 cd database && docker build -t bcgov/nr-spar-backend-database:snapshot . && cd ..
-```
-
-And then run with:
-```
-docker run -d -p 5432:5432 \
-  --name nr-spar-database \
-  -e POSTGRES_USER=${POSTGRESQL_USER} \
-  -e POSTGRES_DB=${POSTGRESQL_DATABASE} \
-  -e POSTGRES_PASSWORD=${POSTGRESQL_PASSWORD} \
-  bcgov/nr-spar-backend-database:snapshot
-
-docker run -t -i --net=host \
-  --name nr-spar-backend \
-  -e KEYCLOAK_REALM_URL=${KEYCLOAK_REALM_URL} \
-  -e POSTGRESQL_HOST=${POSTGRESQL_HOST} \
-  -e POSTGRESQL_DATABASE=${POSTGRESQL_DATABASE} \
-  -e POSTGRESQL_USER=${POSTGRESQL_USER} \
-  -e POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD} \
-  bcgov/nr-spar-backend-backend:snapshot
 ```
 
 ## Getting help
