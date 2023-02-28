@@ -1,3 +1,7 @@
+## [0.11.1](https://github.com/bcgov/nr-spar-backend/compare/v0.11.0...v0.11.1) (2023-02-28)
+
+
+
 # [0.11.0](https://github.com/bcgov/nr-spar-backend/compare/v0.10.1...v0.11.0) (2023-02-27)
 
 
@@ -21,10 +25,6 @@
 
 
 ## [0.9.3](https://github.com/bcgov/nr-spar-backend/compare/v0.9.2...v0.9.3) (2023-02-22)
-
-
-
-## [0.9.2](https://github.com/bcgov/nr-spar-backend/compare/v0.9.1...v0.9.2) (2023-02-21)
 
 
 
