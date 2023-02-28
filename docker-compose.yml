@@ -46,6 +46,8 @@ services:
       - database
     ports:
       - "8090:8090"
+    volumes:
+      - ./backend:/usr/share/service/backend
     build:
       context: ./backend
       dockerfile: Dockerfile
