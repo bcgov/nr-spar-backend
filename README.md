@@ -68,7 +68,7 @@ tests, please take a moment and check out our [CONTRIBUTING](CONTRIBUTING.md) gu
 
 ## Quick look
 
-But if all you want is to take a quick look on the running service, you can do it by using Docker Compose.
+But if all you want is to take a quick look at the running service, you can do it by using Docker Compose.
 
 Run with:
 ```
