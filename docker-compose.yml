@@ -29,7 +29,7 @@ services:
         condition: service_healthy
     environment:
       NR_SPAR_BACKEND_VERSION: snapshot
-      KEYCLOAK_REALM_URL: https://dev.loginproxy.gov.bc.ca/auth/realms/standard
+      KEYCLOAK_REALM_URL: https://test.loginproxy.gov.bc.ca/auth/realms/standard
       POSTGRESQL_HOST: database
       POSTGRESQL_DATABASE: default
       POSTGRESQL_USER: default
