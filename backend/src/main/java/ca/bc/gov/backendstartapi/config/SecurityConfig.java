@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,7 +21,7 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 /** This class contains all configurations related to security and authentication. */
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity(prePostEnabled = false)
 public class SecurityConfig {
 
   @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
@@ -43,20 +42,8 @@ public class SecurityConfig {
         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
         .and()
         .authorizeHttpRequests()
-        .requestMatchers("/api/**")
-        .authenticated()
-        .requestMatchers(HttpMethod.OPTIONS, "/**")
-        .permitAll()
         .anyRequest()
-        .permitAll()
-        .and()
-        .httpBasic()
-        .disable()
-        .formLogin()
-        .disable()
-        .oauth2ResourceServer()
-        .jwt(jwt -> jwt.jwtAuthenticationConverter(converter()).jwkSetUri(jwkSetUri));
-
+        .permitAll();
     return http.build();
   }
 

@@ -127,6 +127,15 @@ objects:
                     secretKeyRef:
                       name: ${NAME}-${ZONE}-database
                       key: database-user
+                - name: FORESTCLIENTAPI_ADDRESS
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${NAME}
+                      key: forest-client-api.address
+                - name: FORESTCLIENTAPI_KEY
+                  valueFrom:
+                    secretKeyRef: ${NAME}
+                    key: forest-client-api.key
               ports:
                 - containerPort: 8090
                   protocol: TCP
