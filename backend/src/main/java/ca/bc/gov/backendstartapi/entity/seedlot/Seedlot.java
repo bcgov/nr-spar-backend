@@ -2,10 +2,13 @@ package ca.bc.gov.backendstartapi.entity.seedlot;
 
 import ca.bc.gov.backendstartapi.entity.embeddable.AuditInformation;
 import ca.bc.gov.backendstartapi.enums.GeneticClassEnum;
+import ca.bc.gov.backendstartapi.enums.SeedlotSourceEnum;
 import ca.bc.gov.backendstartapi.enums.SeedlotStatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.io.Serial;
@@ -36,6 +39,7 @@ public class Seedlot implements Serializable {
   private String id;
 
   @Column(name = "seedlot_status_code", length = 3, nullable = false)
+  @Enumerated(value = EnumType.STRING)
   @NonNull
   private SeedlotStatusEnum status;
 
@@ -58,10 +62,12 @@ public class Seedlot implements Serializable {
   private String vegetationCode;
 
   @Column(name = "genetic_class_code", length = 1)
+  @Enumerated(EnumType.STRING)
   private GeneticClassEnum geneticClassCode;
 
-  @Column(name = "seedlot_souce_code", length = 3)
-  private String seedlotSourceCode;
+  @Column(name = "seedlot_source_code", length = 3)
+  @Enumerated(EnumType.STRING)
+  private SeedlotSourceEnum seedlotSourceCode;
 
   @Column(name = "to_be_registrd_ind")
   private Boolean intendedForCrownLand;
