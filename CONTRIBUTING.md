@@ -27,7 +27,7 @@ Make sure you have Git installed on your machine. You can follow
 
 We containerize our application with Docker images. 
 
-Note: things are way 
+Note: things are way
 easier if you don't need to run docker commands with sudo. Take a look
 [here](https://docs.docker.com/engine/install/#server) to learn how to
 install. Note that Docker Desktop shouldn't be used for this project,
@@ -78,23 +78,10 @@ In case you want to debug with remote JVM, you can do it with this command:
 Note: You need a running Postgres service to have a fully working environment. You
 can do that with Docker or Docker Compose. Follow these steps
 
-With Docker, build and run:
-
-```shell
-cd database && docker build -t bcgov/nr-spar-backend-database:snapshot . && cd ..
-
-docker run -t -i -p 5432:5432 \
-  --name nr-spar-database \
-  -e POSTGRES_USER=${POSTGRESQL_USER} \
-  -e POSTGRES_DB=${POSTGRESQL_DATABASE} \
-  -e POSTGRES_PASSWORD=${POSTGRESQL_PASSWORD} \
-  bcgov/nr-spar-backend-database:snapshot
-```
-
 With Docker Compose:
 
 ```shell
-docker-compose -f database/docker-compose.yml up --build
+docker-compose up --build
 ```
 
 ## Run tests
@@ -103,9 +90,12 @@ For unit tests, please use this command: `./mvnw test --file pom.xml`
 
 And for integration tests, this one: `./mvnw verify -P integration-test --file pom.xml`
 
-Tests coverage reports can be seen on your commits and pull requests. But in case you 
-want to check locally, use this command to run all tests `./mvnw --no-transfer-progress clean verify -P all-tests --file pom.xml`,
+Tests coverage reports can be seen on your commits and pull requests. But in case you want to check locally, use this command to run all tests `./mvnw --no-transfer-progress clean verify -P all-tests --file pom.xml`,
 and check out the files inside `target/coverage-reports/`
+
+Enter the running Docker container: `docker exec -ti backend sh`
+
+The backend folder is mounted to `/usr/share/service/backend`
 
 ## Submit pull requests
 

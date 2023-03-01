@@ -74,6 +74,10 @@ public class SwaggerConfig {
     createGeneticClassPathItem(paths);
     createLatitudeCodePathItem(paths);
     createLongitudeCodePathItem(paths);
+    createGeneticWorthPathItem(paths);
+    createMaleFemaleMethodologyPathItem(paths);
+    createPaymentMethodPathItem(paths);
+    createSeedlotSourcePathItem(paths);
     openApi.setPaths(paths);
     return openApi;
   }
@@ -159,5 +163,91 @@ public class SwaggerConfig {
                     .operationId("fetchLongitudeCode")
                     .summary("Fetch a single longitude code")
                     .description("Fetch a longitude code by its code.")));
+  }
+
+  private void createGeneticWorthPathItem(Paths paths) {
+    paths.addPathItem(
+        "/api/genetic-worth",
+        new PathItem()
+            .get(
+                new Operation()
+                    .operationId("fetchAllGeneticWorthCodes")
+                    .summary("Fetch all genetic worth codes")
+                    .description(
+                        "Fetch all the possible genetic worth codes and their descriptions.")));
+
+    paths.addPathItem(
+        "/api/genetic-worth/{code}",
+        new PathItem()
+            .get(
+                new Operation()
+                    .operationId("fetchGeneticWorthCode")
+                    .summary("Fetch a single genetic worth code")
+                    .description("Fetch a genetic worth code by its code.")));
+  }
+
+  private void createMaleFemaleMethodologyPathItem(Paths paths) {
+    paths.addPathItem(
+        "/api/male-female-methodologies",
+        new PathItem()
+            .get(
+                new Operation()
+                    .operationId("fetchAllMaleFemaleMethodologyCodes")
+                    .summary("Fetch all male/female methodology codes")
+                    .description(
+                        """
+                        Fetch all the possible male/female methodology codes and their descriptions.
+                        """)));
+
+    paths.addPathItem(
+        "/api/male-female-methodologies/{code}",
+        new PathItem()
+            .get(
+                new Operation()
+                    .operationId("fetchMaleFemaleMethodologyCode")
+                    .summary("Fetch a single male/female methodology code")
+                    .description("Fetch a male/female methodology code by its code.")));
+  }
+
+  private void createPaymentMethodPathItem(Paths paths) {
+    paths.addPathItem(
+        "/api/payment-methods",
+        new PathItem()
+            .get(
+                new Operation()
+                    .operationId("fetchAllPaymentMethodCodes")
+                    .summary("Fetch all payment method codes")
+                    .description(
+                        "Fetch all the possible payment method codes and their descriptions.")));
+
+    paths.addPathItem(
+        "/api/payment-methods/{code}",
+        new PathItem()
+            .get(
+                new Operation()
+                    .operationId("fetchPaymentMethodCode")
+                    .summary("Fetch a single payment method code")
+                    .description("Fetch a payment method code by its code.")));
+  }
+
+  private void createSeedlotSourcePathItem(Paths paths) {
+    paths.addPathItem(
+        "/api/seedlot-sources",
+        new PathItem()
+            .get(
+                new Operation()
+                    .operationId("fetchAllSeedlotSourceCodes")
+                    .summary("Fetch all seedlot source codes")
+                    .description(
+                        "Fetch all the possible seedlot source codes and their descriptions.")));
+
+    paths.addPathItem(
+        "/api/seedlot-sources/{code}",
+        new PathItem()
+            .get(
+                new Operation()
+                    .operationId("fetchSeedlotSourceCode")
+                    .summary("Fetch a single seedlot source code")
+                    .description("Fetch a seedlot source code by its code.")));
   }
 }

@@ -5,12 +5,12 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.0.2</version>
+		<version>3.0.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ca.bc.gov</groupId>
 	<artifactId>nr-spar-backend</artifactId>
-	<version>0.10.1</version>
+	<version>0.11.4</version>
 	<name>nr-spar-backend</name>
 	<description>Starting backend API project</description>
 
@@ -370,7 +370,7 @@
 					<dependency>
 						<groupId>com.puppycrawl.tools</groupId>
 						<artifactId>checkstyle</artifactId>
-						<version>10.7.0</version>
+						<version>10.8.0</version>
 					</dependency>
 				</dependencies>
 				<configuration>
