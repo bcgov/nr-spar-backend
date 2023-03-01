@@ -21,5 +21,5 @@ COPY --from=build /home/spring/target/nr-spar-backend.jar /usr/share/service/ser
 COPY dockerfile-entrypoint.sh /usr/share/service/dockerfile-entrypoint.sh
 
 EXPOSE 8090
-
+USER 1001
 ENTRYPOINT ["/usr/share/service/dockerfile-entrypoint.sh"]
