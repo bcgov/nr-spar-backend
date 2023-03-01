@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.util.Assert;
 
 @ExtendWith(SpringExtension.class)
 class FavouriteActivityServiceTest {
@@ -47,17 +46,17 @@ class FavouriteActivityServiceTest {
     when(loggedUserService.getLoggedUserId()).thenReturn(USER_ID);
 
     FavouriteActivityEntity entity = new FavouriteActivityEntity();
-    entity.setActivity(ActivityEnum.SEEDLING_REQUEST);
+    entity.setActivity(ActivityEnum.CREATE_A_CLASS_SEEDLOT);
     entity.setHighlighted(false);
     entity.setEnabled(true);
     when(favouriteActivityRepository.save(any())).thenReturn(entity);
 
     FavouriteActivityCreateDto createDto =
-        new FavouriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST);
+        new FavouriteActivityCreateDto(ActivityEnum.CREATE_A_CLASS_SEEDLOT);
     FavouriteActivityEntity entitySaved = favouriteActivityService.createUserActivity(createDto);
 
     Assertions.assertNotNull(entitySaved);
-    Assertions.assertEquals(ActivityEnum.SEEDLING_REQUEST, entitySaved.getActivity());
+    Assertions.assertEquals(ActivityEnum.CREATE_A_CLASS_SEEDLOT, entitySaved.getActivity());
     Assertions.assertFalse(entitySaved.getHighlighted());
     Assertions.assertTrue(entitySaved.getEnabled());
   }
@@ -68,7 +67,7 @@ class FavouriteActivityServiceTest {
     when(loggedUserService.getLoggedUserId()).thenReturn(USER_ID);
 
     FavouriteActivityEntity entity = new FavouriteActivityEntity();
-    entity.setActivity(ActivityEnum.SEEDLING_REQUEST);
+    entity.setActivity(ActivityEnum.CREATE_A_CLASS_SEEDLOT);
     entity.setHighlighted(false);
     entity.setEnabled(true);
     when(favouriteActivityRepository.save(any())).thenReturn(entity);
@@ -86,7 +85,7 @@ class FavouriteActivityServiceTest {
     when(favouriteActivityRepository.findAllByUserId(any())).thenReturn(userFavList);
 
     FavouriteActivityCreateDto createAnotherDto =
-        new FavouriteActivityCreateDto(ActivityEnum.SEEDLING_REQUEST);
+        new FavouriteActivityCreateDto(ActivityEnum.CREATE_A_CLASS_SEEDLOT);
 
     Exception activityExists =
         Assertions.assertThrows(
@@ -122,7 +121,7 @@ class FavouriteActivityServiceTest {
     when(loggedUserService.getLoggedUserId()).thenReturn(USER_ID);
 
     FavouriteActivityEntity entity = new FavouriteActivityEntity();
-    entity.setActivity(ActivityEnum.SEEDLING_REQUEST);
+    entity.setActivity(ActivityEnum.CREATE_A_CLASS_SEEDLOT);
     entity.setHighlighted(false);
     entity.setEnabled(true);
     when(favouriteActivityRepository.findById(any())).thenReturn(Optional.of(entity));
@@ -141,7 +140,7 @@ class FavouriteActivityServiceTest {
     when(loggedUserService.getLoggedUserId()).thenReturn(USER_ID);
 
     FavouriteActivityEntity entity = new FavouriteActivityEntity();
-    entity.setActivity(ActivityEnum.SEEDLING_REQUEST);
+    entity.setActivity(ActivityEnum.CREATE_A_CLASS_SEEDLOT);
     entity.setHighlighted(false);
     entity.setEnabled(true);
     when(favouriteActivityRepository.findById(any())).thenReturn(Optional.empty());
@@ -164,7 +163,7 @@ class FavouriteActivityServiceTest {
     when(loggedUserService.getLoggedUserId()).thenReturn(USER_ID);
 
     FavouriteActivityEntity entity = new FavouriteActivityEntity();
-    entity.setActivity(ActivityEnum.SEEDLING_REQUEST);
+    entity.setActivity(ActivityEnum.CREATE_A_CLASS_SEEDLOT);
     entity.setHighlighted(false);
     entity.setEnabled(true);
     when(favouriteActivityRepository.findById(any())).thenReturn(Optional.of(entity));
@@ -191,8 +190,7 @@ class FavouriteActivityServiceTest {
 
     Exception e =
         Assertions.assertThrows(
-            ActivityNotFoundException.class,
-            () -> favouriteActivityService.deleteUserActivity(1L));
+            ActivityNotFoundException.class, () -> favouriteActivityService.deleteUserActivity(1L));
 
     Assertions.assertEquals("404 NOT_FOUND \"Activity don't exist!\"", e.getMessage());
   }
