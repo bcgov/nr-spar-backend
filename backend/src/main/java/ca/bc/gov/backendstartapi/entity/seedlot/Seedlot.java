@@ -11,6 +11,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -39,7 +40,7 @@ public class Seedlot implements Serializable {
   private String id;
 
   @Column(name = "seedlot_status_code", length = 3, nullable = false)
-  @Enumerated(value = EnumType.STRING)
+  @Enumerated(EnumType.STRING)
   @NonNull
   private SeedlotStatusEnum status;
 
@@ -61,7 +62,7 @@ public class Seedlot implements Serializable {
   @Column(name = "vegetation_code", length = 8)
   private String vegetationCode;
 
-  @Column(name = "genetic_class_code", length = 1)
+  @Column(name = "genetic_class_code", length = 2)
   @Enumerated(EnumType.STRING)
   private GeneticClassEnum geneticClassCode;
 
@@ -205,5 +206,9 @@ public class Seedlot implements Serializable {
   private LocalDateTime declarationOfTrueInformationTimestamp;
 
   @Embedded private AuditInformation auditInformation;
+
+  @Column(name = "revision_count", nullable = false)
+  @Version
+  private int revisionCount;
   // endregion
 }

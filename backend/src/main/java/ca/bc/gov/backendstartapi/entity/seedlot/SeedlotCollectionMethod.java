@@ -11,6 +11,7 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import java.io.Serial;
 import java.io.Serializable;
 import lombok.AccessLevel;
@@ -18,7 +19,6 @@ import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 /** The method used for the collection of a lot of seeds. */
@@ -26,7 +26,6 @@ import lombok.Setter;
 @Table(name = "seedlot_collection_method")
 @IdClass(SeedlotCollectionMethodId.class)
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Getter
 @Setter
 public class SeedlotCollectionMethod implements Serializable {
@@ -53,11 +52,21 @@ public class SeedlotCollectionMethod implements Serializable {
 
   @Embedded private AuditInformation auditInformation;
 
+  @Column(name = "revision_count", nullable = false)
+  @Version
+  private int revisionCount;
+
+  public SeedlotCollectionMethod(
+      @NonNull Seedlot seedlot, @NonNull ConeCollectionMethodEnum collectionMethod) {
+    this.seedlot = seedlot;
+    setConeCollectionMethodCode(collectionMethod);
+  }
+
   public ConeCollectionMethodEnum getConeCollectionMethodCode() {
     return ConeCollectionMethodEnum.getByCode(coneCollectionMethodCode).orElseThrow();
   }
 
-  public void setConeCollectionMethodCode(ConeCollectionMethodEnum method) {
+  public void setConeCollectionMethodCode(@NonNull ConeCollectionMethodEnum method) {
     coneCollectionMethodCode = method.getCode();
   }
 }

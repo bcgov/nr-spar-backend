@@ -13,6 +13,7 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -70,4 +71,8 @@ public class SeedlotOwnerQuantity implements Serializable {
   private String fundingSourceCode;
 
   @Embedded private AuditInformation auditInformation;
+
+  @Column(name = "revision_count", nullable = false)
+  @Version
+  private int revisionCount;
 }
