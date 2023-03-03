@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-public class SeedlotOwnerQuantityJpaTest extends SeedlotEntityJpaTest {
+class SeedlotOwnerQuantityJpaTest extends SeedlotEntityJpaTest {
 
   private final SeedlotOwnerQuantityRepository repository;
 
@@ -35,6 +35,6 @@ public class SeedlotOwnerQuantityJpaTest extends SeedlotEntityJpaTest {
     seedlotOwnerQuantity.setFundingSourceCode("ABC");
     seedlotOwnerQuantity.setAuditInformation(new AuditInformation("user1"));
 
-    var savedSeedlotOwnerQuantity = repository.saveAndFlush(seedlotOwnerQuantity);
+    repository.saveAndFlush(seedlotOwnerQuantity);
   }
 }

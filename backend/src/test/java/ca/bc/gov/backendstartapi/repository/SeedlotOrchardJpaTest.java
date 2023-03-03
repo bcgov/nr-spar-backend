@@ -28,6 +28,6 @@ class SeedlotOrchardJpaTest extends SeedlotEntityJpaTest {
     seedlotOrchard.setPrimary(true);
     seedlotOrchard.setAuditInformation(new AuditInformation("user1"));
 
-    var savedSeedlotCollectionMethod = repository.saveAndFlush(seedlotOrchard);
+    repository.saveAndFlush(seedlotOrchard);
   }
 }

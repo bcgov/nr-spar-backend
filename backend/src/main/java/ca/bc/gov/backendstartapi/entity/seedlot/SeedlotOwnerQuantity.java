@@ -17,6 +17,7 @@ import jakarta.persistence.Version;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import lombok.AccessLevel;
 import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +29,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "seedlot_owner_quantity")
 @IdClass(SeedlotOwnerQuantityId.class)
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 @Getter
 @Setter

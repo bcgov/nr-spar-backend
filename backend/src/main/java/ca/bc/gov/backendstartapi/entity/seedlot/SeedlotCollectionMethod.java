@@ -25,7 +25,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "seedlot_collection_method")
 @IdClass(SeedlotCollectionMethodId.class)
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @Setter
 public class SeedlotCollectionMethod implements Serializable {

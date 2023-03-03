@@ -31,6 +31,6 @@ class SeedlotCollectionMethodJpaTest extends SeedlotEntityJpaTest {
     seedlotCollectionMethod.setConeCollectionMethodDescription("Climbing.");
     seedlotCollectionMethod.setAuditInformation(new AuditInformation("user1"));
 
-    var savedSeedlotCollectionMethod = repository.saveAndFlush(seedlotCollectionMethod);
+    repository.saveAndFlush(seedlotCollectionMethod);
   }
 }

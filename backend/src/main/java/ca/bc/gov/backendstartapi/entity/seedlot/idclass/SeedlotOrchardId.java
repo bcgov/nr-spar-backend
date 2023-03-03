@@ -3,6 +3,7 @@ package ca.bc.gov.backendstartapi.entity.seedlot.idclass;
 import ca.bc.gov.backendstartapi.entity.seedlot.Seedlot;
 import java.io.Serial;
 import java.io.Serializable;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 /** Composite key for {@link ca.bc.gov.backendstartapi.entity.seedlot.SeedlotOrchard}. */
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 @Getter
 @Setter

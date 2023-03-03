@@ -39,11 +39,11 @@ class SeedlotJpaTest extends SeedlotEntityJpaTest {
     var savedSeedlot = createSeedlot("00000", SeedlotStatusEnum.SUB);
     var auditInfo = savedSeedlot.getAuditInformation();
 
-    var entryUserId = auditInfo.getEntryUserId();
-    var entryTimestamp = auditInfo.getEntryTimestamp();
-    var updateUserId = auditInfo.getUpdateUserId();
-    var updateTimestamp = auditInfo.getUpdateTimestamp();
-    var revisionCount = savedSeedlot.getRevisionCount();
+    final var entryUserId = auditInfo.getEntryUserId();
+    final var entryTimestamp = auditInfo.getEntryTimestamp();
+    final var updateUserId = auditInfo.getUpdateUserId();
+    final var updateTimestamp = auditInfo.getUpdateTimestamp();
+    final var revisionCount = savedSeedlot.getRevisionCount();
 
     var newUpdateUserId = updateUserId + 1;
     auditInfo.setUpdateUserId(newUpdateUserId);
