@@ -144,7 +144,7 @@ objects:
                   path: /actuator/health
                   port: 8090
                   scheme: HTTP
-                initialDelaySeconds: 300
+                initialDelaySeconds: 150
                 periodSeconds: 15
                 timeoutSeconds: 10
               livenessProbe:
@@ -154,7 +154,7 @@ objects:
                   path: /actuator/health
                   port: 8090
                   scheme: HTTP
-                initialDelaySeconds: 300
+                initialDelaySeconds: 150
                 periodSeconds: 30
                 timeoutSeconds: 10
   - apiVersion: v1
