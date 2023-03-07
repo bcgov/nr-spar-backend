@@ -9,11 +9,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Pattern;
 import java.io.Serializable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeTypeUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +26,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 @RestController
 @RequestMapping(path = "/api/forest-clients", produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
+@Validated
 @Slf4j
 @Tag(name = "ForestClient", description = "The many agencies that work with the ministry.")
 public class ForestClientEndpoint {
@@ -48,6 +51,7 @@ public class ForestClientEndpoint {
       })
   public ResponseEntity<Serializable> fetchClient(
       @PathVariable("number")
+          @Pattern(regexp = "\\d{8}")
           @Parameter(
               name = "number",
               in = ParameterIn.PATH,
