@@ -134,8 +134,9 @@ objects:
                       key: forest-client-api.address
                 - name: FORESTCLIENTAPI_KEY
                   valueFrom:
-                    secretKeyRef: ${NAME}
-                    key: forest-client-api.key
+                    secretKeyRef:
+                      name: ${NAME}
+                      key: forest-client-api.key
               ports:
                 - containerPort: 8090
                   protocol: TCP
