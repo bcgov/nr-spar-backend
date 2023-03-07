@@ -5,6 +5,8 @@ import static org.springframework.http.HttpHeaders.ACCEPT;
 import ca.bc.gov.backendstartapi.dto.ForestClientDto;
 import java.time.Duration;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,9 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @Slf4j
 public class ForestClientApiProvider {
+
+  private static final Predicate<String> numberPredicate =
+      Pattern.compile("\\d{8}").asMatchPredicate();
 
   private final RestTemplate restTemplate;
 
@@ -45,6 +50,10 @@ public class ForestClientApiProvider {
    * @return the forest client with client number {@code number}, if one exists
    */
   public Optional<ForestClientDto> fetchByClientNumber(String number) {
+    if (!numberPredicate.test(number)) {
+      throw new IllegalArgumentException();
+    }
+
     log.debug(String.format("Fetching client %s", number));
     var response =
         restTemplate.getForEntity("/clients/findByClientNumber/" + number, ForestClientDto.class);
