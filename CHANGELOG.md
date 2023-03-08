@@ -1,3 +1,11 @@
+## [0.12.3](https://github.com/bcgov/nr-spar-backend/compare/v0.12.2...v0.12.3) (2023-03-08)
+
+
+
+## [0.12.2](https://github.com/bcgov/nr-spar-backend/compare/v0.12.1...v0.12.2) (2023-03-08)
+
+
+
 ## [0.12.1](https://github.com/bcgov/nr-spar-backend/compare/v0.12.0...v0.12.1) (2023-03-07)
 
 
@@ -17,14 +25,6 @@
 ### Bug Fixes
 
 * docker compose ([#70](https://github.com/bcgov/nr-spar-backend/issues/70)) ([0b2cd42](https://github.com/bcgov/nr-spar-backend/commit/0b2cd4206c08b9935c4460d2364a54104c1b5339))
-
-
-
-## [0.11.3](https://github.com/bcgov/nr-spar-backend/compare/v0.11.2...v0.11.3) (2023-03-01)
-
-
-
-## [0.11.2](https://github.com/bcgov/nr-spar-backend/compare/v0.11.1...v0.11.2) (2023-03-01)
 
 
 
