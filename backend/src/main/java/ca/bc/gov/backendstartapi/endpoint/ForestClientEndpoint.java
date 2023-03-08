@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Pattern;
 import java.io.Serializable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +51,7 @@ public class ForestClientEndpoint {
       })
   public ResponseEntity<Serializable> fetchClient(
       @PathVariable("number")
+          @Pattern(regexp = "\\d{8}")
           @Parameter(
               name = "number",
               in = ParameterIn.PATH,

@@ -51,12 +51,13 @@ public class ForestClientApiProvider {
    */
   public Optional<ForestClientDto> fetchByClientNumber(String number) {
     if (numberPredicate.test(number)) {
-      log.debug(String.format("Fetching client %s", number));
-      var response =
-          restTemplate.getForEntity("/clients/findByClientNumber/" + number, ForestClientDto.class);
-      log.debug(String.format("Result for client %s: %s", number, response));
-      return Optional.of(response.getBody());
+      throw new IllegalArgumentException("The client number must be an 8-digit string.");
     }
-    throw new IllegalArgumentException("The client number must be an 8-digit string.");
+
+    log.debug(String.format("Fetching client %s", number));
+    var response =
+        restTemplate.getForEntity("/clients/findByClientNumber/" + number, ForestClientDto.class);
+    log.debug(String.format("Result for client %s: %s", number, response));
+    return Optional.of(response.getBody());
   }
 }
