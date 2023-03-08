@@ -50,12 +50,12 @@ class FavouriteActivityRepositoryTest {
   void createWithAllValuesTest() {
     FavouriteActivityEntity activity = new FavouriteActivityEntity();
     activity.setUserId(USER_ID);
-    activity.setActivity(ActivityEnum.SEEDLING_REQUEST);
+    activity.setActivity(ActivityEnum.CREATE_A_CLASS_SEEDLOT);
     activity.setHighlighted(true);
     activity.setEnabled(false);
     FavouriteActivityEntity created = favouriteActivityRepository.save(activity);
 
-    Assertions.assertEquals(ActivityEnum.SEEDLING_REQUEST, created.getActivity());
+    Assertions.assertEquals(ActivityEnum.CREATE_A_CLASS_SEEDLOT, created.getActivity());
     Assertions.assertEquals(USER_ID, created.getUserId());
     Assertions.assertTrue(created.getHighlighted());
     Assertions.assertFalse(created.getEnabled());
