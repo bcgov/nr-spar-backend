@@ -14,11 +14,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
-import java.io.Serial;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import lombok.AccessLevel;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -33,9 +30,7 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class SeedlotOwnerQuantity implements Serializable {
-
-  @Generated @Serial private static final long serialVersionUID = 3502144543715103911L;
+public class SeedlotOwnerQuantity {
 
   // region Identifier
   @Id

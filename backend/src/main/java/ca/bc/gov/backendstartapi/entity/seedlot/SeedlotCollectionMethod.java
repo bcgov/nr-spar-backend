@@ -12,10 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
-import java.io.Serial;
-import java.io.Serializable;
 import lombok.AccessLevel;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -28,9 +25,7 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @Setter
-public class SeedlotCollectionMethod implements Serializable {
-
-  @Generated @Serial private static final long serialVersionUID = 4440025991282910997L;
+public class SeedlotCollectionMethod {
 
   // region Identifier
   @Id
