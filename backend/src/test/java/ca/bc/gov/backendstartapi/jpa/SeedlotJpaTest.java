@@ -1,10 +1,11 @@
-package ca.bc.gov.backendstartapi.repository;
+package ca.bc.gov.backendstartapi.jpa;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import ca.bc.gov.backendstartapi.enums.SeedlotStatusEnum;
+import ca.bc.gov.backendstartapi.repository.SeedlotRepository;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.Test;

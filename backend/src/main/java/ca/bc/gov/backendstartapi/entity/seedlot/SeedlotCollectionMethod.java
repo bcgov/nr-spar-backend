@@ -16,21 +16,23 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 /** The method used for the collection of a lot of seeds. */
 @Entity
 @Table(name = "seedlot_collection_method")
 @IdClass(SeedlotCollectionMethodId.class)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor
 @Getter
 @Setter
 public class SeedlotCollectionMethod {
 
   // region Identifier
   @Id
-  @ManyToOne(optional = false)
-  @JoinColumn(name = "seedlot_number", nullable = false)
+  @JoinColumn(name = "seedlot_number")
+  @ManyToOne
   @NonNull
   private Seedlot seedlot;
 

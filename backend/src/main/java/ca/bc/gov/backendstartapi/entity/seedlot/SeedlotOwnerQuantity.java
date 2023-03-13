@@ -34,8 +34,8 @@ public class SeedlotOwnerQuantity {
 
   // region Identifier
   @Id
-  @ManyToOne(optional = false)
-  @JoinColumn(name = "seedlot_number", nullable = false)
+  @JoinColumn(name = "seedlot_number")
+  @ManyToOne
   @NonNull
   private Seedlot seedlot;
 
