@@ -50,7 +50,7 @@ public class ForestClientApiProvider {
    * @return the forest client with client number {@code number}, if one exists
    */
   public Optional<ForestClientDto> fetchByClientNumber(String number) {
-    if (numberPredicate.test(number)) {
+    if (!numberPredicate.test(number)) {
       throw new IllegalArgumentException("The client number must be an 8-digit string.");
     }
 
