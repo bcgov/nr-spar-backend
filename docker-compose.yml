@@ -34,6 +34,8 @@ services:
       POSTGRESQL_DATABASE: default
       POSTGRESQL_USER: default
       POSTGRESQL_PASSWORD: default
+      FORESTCLIENTAPI_ADDRESS: ${FORESTCLIENTAPI_ADDRESS}
+      FORESTCLIENTAPI_KEY: ${FORESTCLIENTAPI_KEY}
       JAVA_OPTS: ${JAVA_OPTS}
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8090/actuator/health" ]
@@ -46,8 +48,7 @@ services:
       - database
     ports:
       - "8090:8090"
-    volumes:
-      - ./backend:/usr/share/service/backend
+      - "5005:5005"
     build:
       context: ./backend
       dockerfile: Dockerfile
