@@ -1,9 +1,14 @@
-package ca.bc.gov.backendstartapi.repository;
+package ca.bc.gov.backendstartapi.jpa;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import ca.bc.gov.backendstartapi.entity.embeddable.AuditInformation;
 import ca.bc.gov.backendstartapi.entity.seedlot.SeedlotOwnerQuantity;
+import ca.bc.gov.backendstartapi.entity.seedlot.idclass.SeedlotOwnerQuantityId;
 import ca.bc.gov.backendstartapi.enums.PaymentMethodEnum;
 import ca.bc.gov.backendstartapi.enums.SeedlotStatusEnum;
+import ca.bc.gov.backendstartapi.repository.SeedlotOwnerQuantityRepository;
+import ca.bc.gov.backendstartapi.repository.SeedlotRepository;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,5 +41,13 @@ class SeedlotOwnerQuantityJpaTest extends SeedlotEntityJpaTest {
     seedlotOwnerQuantity.setAuditInformation(new AuditInformation("user1"));
 
     repository.saveAndFlush(seedlotOwnerQuantity);
+
+    var savedSeedlotOwnerQuantity =
+        repository.findById(
+            new SeedlotOwnerQuantityId(
+                seedlot.getId(),
+                seedlotOwnerQuantity.getOwnerClientNumber(),
+                seedlotOwnerQuantity.getOwnerLocationCode()));
+    assertTrue(savedSeedlotOwnerQuantity.isPresent());
   }
 }

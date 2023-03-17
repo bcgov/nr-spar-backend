@@ -1,15 +1,16 @@
-package ca.bc.gov.backendstartapi.repository;
+package ca.bc.gov.backendstartapi.jpa;
 
 import ca.bc.gov.backendstartapi.entity.embeddable.AuditInformation;
 import ca.bc.gov.backendstartapi.entity.seedlot.Seedlot;
 import ca.bc.gov.backendstartapi.enums.GeneticClassEnum;
 import ca.bc.gov.backendstartapi.enums.SeedlotSourceEnum;
 import ca.bc.gov.backendstartapi.enums.SeedlotStatusEnum;
+import ca.bc.gov.backendstartapi.repository.SeedlotRepository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class SeedlotEntityJpaTest {
+abstract class SeedlotEntityJpaTest {
 
   protected final SeedlotRepository repository;
 
