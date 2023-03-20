@@ -48,5 +48,6 @@ public class SeedlotOrchard {
 
   @Column(name = "revision_count", nullable = false)
   @Version
+  @Setter(AccessLevel.NONE)
   private int revisionCount;
 }

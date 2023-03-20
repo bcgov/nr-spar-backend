@@ -4,9 +4,6 @@ import static org.mockito.Mockito.when;
 
 import ca.bc.gov.backendstartapi.exception.UserNotFoundException;
 import ca.bc.gov.backendstartapi.repository.UserProfileRepository;
-import ca.bc.gov.backendstartapi.security.LoggedUserService;
-import ca.bc.gov.backendstartapi.security.UserAuthenticationHelper;
-import ca.bc.gov.backendstartapi.security.UserInfo;
 import java.util.HashSet;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
@@ -40,7 +37,7 @@ class UserServiceTest {
             "Test, User: LWRS:EX",
             "USERT",
             null,
-            "idir",
+            IdentityProvider.IDIR,
             new HashSet<>());
   }
 

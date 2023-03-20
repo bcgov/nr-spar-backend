@@ -36,6 +36,7 @@ class UserAuthenticationHelperTest {
     when(authentication.isAuthenticated()).thenReturn(true);
 
     Jwt.Builder builder = Jwt.withTokenValue("myTokenValue");
+    builder.subject("bbaggins@idir");
     builder.header("alg", "HS256");
     builder.header("typ", "JWT");
     builder.claim("given_name", "Bilbo");
@@ -51,12 +52,13 @@ class UserAuthenticationHelperTest {
     Assertions.assertTrue(userInfoOptional.isPresent());
 
     UserInfo userInfo = userInfoOptional.get();
+    Assertions.assertEquals("bbaggins@idir", userInfo.id());
     Assertions.assertEquals("Bilbo", userInfo.firstName());
     Assertions.assertEquals("Baggings", userInfo.lastName());
     Assertions.assertEquals("bilbo.baggings@gov.bc.ca", userInfo.email());
     Assertions.assertEquals("Baggings, Bilbo LWRS:EX", userInfo.displayName());
     Assertions.assertEquals("BAGGINGS", userInfo.idirUsername());
-    Assertions.assertEquals("idir", userInfo.identityProvider());
+    Assertions.assertEquals(IdentityProvider.IDIR, userInfo.identityProvider());
   }
 
   @Test
@@ -70,12 +72,13 @@ class UserAuthenticationHelperTest {
     when(authentication.isAuthenticated()).thenReturn(true);
 
     Jwt.Builder builder = Jwt.withTokenValue("myTokenValue");
+    builder.subject("mordor@bceid");
     builder.header("alg", "HS256");
     builder.header("typ", "JWT");
     builder.claim("email", "lord.sauron@mordor.middleearth");
     builder.claim("display_name", "Sauron, Mordor LWRS:EX");
     builder.claim("bceid_business_name", "Mordor LLC");
-    builder.claim("identity_provider", "businessbceid");
+    builder.claim("identity_provider", "bceidbusiness");
 
     when(authentication.getPrincipal()).thenReturn(builder.build());
 
@@ -83,12 +86,13 @@ class UserAuthenticationHelperTest {
     Assertions.assertTrue(userInfoOptional.isPresent());
 
     UserInfo userInfo = userInfoOptional.get();
+    Assertions.assertEquals("mordor@bceid", userInfo.id());
     Assertions.assertNull(userInfo.firstName());
     Assertions.assertNull(userInfo.lastName());
     Assertions.assertEquals("lord.sauron@mordor.middleearth", userInfo.email());
     Assertions.assertEquals("Sauron, Mordor LWRS:EX", userInfo.displayName());
     Assertions.assertEquals("Mordor LLC", userInfo.businessName());
-    Assertions.assertEquals("businessbceid", userInfo.identityProvider());
+    Assertions.assertEquals(IdentityProvider.BUSINESS_BCEID, userInfo.identityProvider());
   }
 
   @Test

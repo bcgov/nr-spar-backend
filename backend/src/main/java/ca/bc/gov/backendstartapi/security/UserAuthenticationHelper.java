@@ -28,7 +28,7 @@ public class UserAuthenticationHelper {
 
       Set<String> roles = new HashSet<>();
       if (jwtPrincipal.getClaims().containsKey("client_roles")) {
-        roles = new HashSet<>(jwtPrincipal.getClaimAsStringList("client_roles"));
+        roles.addAll(jwtPrincipal.getClaimAsStringList("client_roles"));
       }
 
       UserInfo userInfo =
@@ -40,7 +40,7 @@ public class UserAuthenticationHelper {
               jwtPrincipal.getClaimAsString("display_name"),
               jwtPrincipal.getClaimAsString("idir_username"),
               jwtPrincipal.getClaimAsString("bceid_business_name"),
-              jwtPrincipal.getClaimAsString("identity_provider"),
+              IdentityProvider.fromClaim(jwtPrincipal).orElseThrow(),
               roles);
 
       return Optional.of(userInfo);

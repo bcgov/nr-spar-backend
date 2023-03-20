@@ -19,7 +19,7 @@ class UserInfoTest {
             "Baggings, Bilbo LWRS:EX",
             "BAGGINGS",
             null,
-            "idir",
+            IdentityProvider.IDIR,
             new HashSet<>());
 
     Assertions.assertNotNull(userInfo);
@@ -29,7 +29,7 @@ class UserInfoTest {
     Assertions.assertEquals("Baggings, Bilbo LWRS:EX", userInfo.displayName());
     Assertions.assertEquals("BAGGINGS", userInfo.idirUsername());
     Assertions.assertNull(userInfo.businessName());
-    Assertions.assertEquals("idir", userInfo.identityProvider());
+    Assertions.assertEquals(IdentityProvider.IDIR, userInfo.identityProvider());
     Assertions.assertTrue(userInfo.roles().isEmpty());
   }
 }
