@@ -83,7 +83,8 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<optional>true</optional>
+      <version>1.18.26</version>
+      <optional>true</optional>
 		</dependency>
 
 		<!-- Authentication and Security -->
@@ -110,18 +111,28 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<scope>test</scope>
+      <version>2.1.214</version>
+      <scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
+      <version>42.5.4</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
+      <version>9.16.1</version>
 			<scope>runtime</scope>
 		</dependency>
+
+    <!-- Functionalities -->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>5.2.3</version>
+    </dependency>
 
 		<!-- Testing -->
 		<dependency>
