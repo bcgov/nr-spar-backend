@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>ca.bc.gov</groupId>
 	<artifactId>nr-spar-backend</artifactId>
-	<version>0.15.0</version>
+	<version>0.15.2</version>
 	<name>nr-spar-backend</name>
 	<description>Starting backend API project</description>
 
@@ -370,7 +370,7 @@
 					<dependency>
 						<groupId>com.puppycrawl.tools</groupId>
 						<artifactId>checkstyle</artifactId>
-						<version>10.8.1</version>
+						<version>10.9.2</version>
 					</dependency>
 				</dependencies>
 				<configuration>
