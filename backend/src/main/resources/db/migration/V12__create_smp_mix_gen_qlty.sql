@@ -4,7 +4,7 @@ create table spar.smp_mix_gen_qlty (
     genetic_type_code 		varchar(2) not null,
     genetic_worth_code 		varchar(3) not null,
     genetic_quality_value 	decimal(4, 1) not null,
-    estimated_ind 		boolean,
+    estimated_ind 		boolean not null,
     entry_userid		varchar(30) not null,
     entry_timestamp		timestamp not null,
     update_userid		varchar(30) not null,

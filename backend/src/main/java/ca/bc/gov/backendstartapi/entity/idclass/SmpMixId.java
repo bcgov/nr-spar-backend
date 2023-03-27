@@ -20,5 +20,5 @@ public class SmpMixId implements Serializable {
 
   @NonNull private String seedlot;
 
-  @NonNull private Integer parentTreeId;
+  @NonNull private int parentTreeId;
 }

@@ -56,8 +56,9 @@ public class SmpMixGeneticQuality {
   @NonNull
   private BigDecimal geneticQualityValue;
 
-  @Column(name = "estimated_ind")
-  public Boolean estimatedIndicator;
+  @Column(name = "estimated_ind", nullable = false)
+  @NonNull
+  public boolean qualityValueEstimated;
 
   @Embedded @NonNull private AuditInformation auditInformation;
 

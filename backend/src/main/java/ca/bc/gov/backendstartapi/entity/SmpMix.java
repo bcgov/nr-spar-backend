@@ -43,14 +43,14 @@ public class SmpMix {
   @Id
   @Column(name = "parent_tree_id", nullable = false)
   @NonNull
-  private Integer parentTreeId;
+  private int parentTreeId;
   // endregion
 
   @Column(name = "amount_of_material", nullable = false)
   @NonNull
   private Integer amountOfMaterial;
 
-  @Column(name = "proportion", precision = 20, scale = 10, nullable = false)
+  @Column(name = "proportion", precision = 20, scale = 10)
   private BigDecimal proportion;
 
   @Embedded @NonNull private AuditInformation auditInformation;

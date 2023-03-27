@@ -46,8 +46,12 @@ class SmpMixGeneticQualityJpaTest extends SeedlotEntityJpaTest {
 
     var smpMixGeneticQuality =
         new SmpMixGeneticQuality(
-            smpMix, "GC", GeneticWorthEnum.AD, new BigDecimal(10), new AuditInformation("user1"));
-    smpMixGeneticQuality.setEstimatedIndicator(true);
+            smpMix,
+            "GC",
+            GeneticWorthEnum.AD,
+            new BigDecimal(10),
+            true,
+            new AuditInformation("user1"));
 
     repository.saveAndFlush(smpMixGeneticQuality);
 
