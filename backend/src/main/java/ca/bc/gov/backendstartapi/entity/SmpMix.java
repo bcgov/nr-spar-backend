@@ -48,7 +48,7 @@ public class SmpMix {
 
   @Column(name = "amount_of_material", nullable = false)
   @NonNull
-  private Integer amountOfMaterial;
+  private int amountOfMaterial;
 
   @Column(name = "proportion", precision = 20, scale = 10)
   private BigDecimal proportion;
