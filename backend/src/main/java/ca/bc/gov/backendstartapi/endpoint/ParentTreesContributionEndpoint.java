@@ -35,6 +35,9 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class ParentTreesContributionEndpoint {
 
+  /** File size limit (1 MB). */
+  private static final int FILE_SIZE_LIMIT = (int) 1E6;
+
   private final ConeAndPollenCountCsvTableParser contributionTableCsvParser;
 
   private final SmpCalculationCsvTableParser smpCalculationTableParser;
@@ -129,6 +132,9 @@ public class ParentTreesContributionEndpoint {
   }
 
   private Resource getFileResource(MultipartFile file) {
+    if (file.getSize() > FILE_SIZE_LIMIT) {
+      throw new IllegalArgumentException("File is too large! 1MB maximum");
+    }
     var resource = file.getResource();
     var filename = resource.getFilename();
     if (filename == null || !filename.substring(filename.lastIndexOf('.')).equals(".csv")) {

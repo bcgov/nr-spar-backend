@@ -42,6 +42,7 @@ class CsvTableRowParser<H extends Enum<H> & CsvParsingHeader, R extends CsvParsi
               i -> data.put(headers.get(i), Double.valueOf(cells[i].isBlank() ? "0" : cells[i])));
     } catch (NumberFormatException e) {
       throw new CsvTableParsingException("All values in the table must be numbers", e);
+      // FIXME: we could say what is the faulty value
     }
 
     return create.apply(data);
