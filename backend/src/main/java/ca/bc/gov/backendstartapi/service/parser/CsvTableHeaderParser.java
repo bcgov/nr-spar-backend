@@ -31,7 +31,7 @@ class CsvTableHeaderParser<H extends Enum<H> & CsvParsingHeader> {
    *     into {@link H}
    */
   public List<H> parse(String tableHeader) {
-    return Arrays.stream(tableHeader.split(","))
+    return Arrays.stream(tableHeader.split(",", -1))
         .peek(
             h -> {
               if (h.isBlank()) {

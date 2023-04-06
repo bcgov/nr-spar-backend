@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.UrlResource;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 @SpringBootTest
 class ConeAndPollenCountCsvTableParserTest {
@@ -49,5 +51,18 @@ class ConeAndPollenCountCsvTableParserTest {
                 new UrlResource(
                     Objects.requireNonNull(
                         classLoader.getResource("csv/contribution/firstLineNotHeader.csv")))));
+  }
+
+  @Test
+  void missingHeaderValue() {
+    MultipartFile file =
+        new MockMultipartFile(
+            "file",
+            """
+        Parent Tree number,Pollen count,Cone count
+        1,2.0,3""".getBytes());
+    var exception =
+        assertThrowsExactly(CsvTableParsingException.class, () -> parser.parse(file.getResource()));
+    assertEquals("SMP success, Pollen contamination", exception.getMessage().split(": ")[1]);
   }
 }

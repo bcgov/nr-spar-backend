@@ -3,7 +3,6 @@ package ca.bc.gov.backendstartapi.service.parser;
 import ca.bc.gov.backendstartapi.enums.parser.CsvParsingHeader;
 import ca.bc.gov.backendstartapi.exception.CsvTableParsingException;
 import ca.bc.gov.backendstartapi.vo.parser.CsvParsingResult;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,13 @@ class CsvTableRowParser<H extends Enum<H> & CsvParsingHeader, R extends CsvParsi
    * @throws CsvTableParsingException if any value of {@code row} cannot be parsed into {@link R}
    */
   public R parse(String row, List<H> headers) {
-    String[] cells = fillCells(row.split(","), headers.size());
+    String[] cells = row.split(",", -1);
+
+    if (cells.length > headers.size()) {
+      throw new CsvTableParsingException(
+          String.format(
+              "There are more columns (%d) than headers (%d)", cells.length, headers.size()));
+    }
 
     Map<H, Number> data = new HashMap<>();
 
@@ -41,33 +46,10 @@ class CsvTableRowParser<H extends Enum<H> & CsvParsingHeader, R extends CsvParsi
           .forEach(
               i -> data.put(headers.get(i), Double.valueOf(cells[i].isBlank() ? "0" : cells[i])));
     } catch (NumberFormatException e) {
-      throw new CsvTableParsingException("All values in the table must be numbers", e);
-      // FIXME: we could say what is the faulty value
+      throw new CsvTableParsingException(
+          String.format("All values in the table must be numbers; line at fault: %s", row), e);
     }
 
     return create.apply(data);
-  }
-
-  /**
-   * Make sure we have the right amount cells: if we have fewer cells then we should have, pad it
-   * with blank strings at the end of the array.
-   *
-   * @param cells an array with the value of each cell
-   * @param columns the number of columns we should have
-   * @return an array with the same values as {@code cell}, padded with blank strings at its end, if
-   *     necessary
-   * @throws CsvTableParsingException if {@code cells}' length is greater than {@code columns}
-   */
-  private String[] fillCells(String[] cells, int columns) {
-    if (cells.length > columns) {
-      throw new CsvTableParsingException(
-          String.format("There are more columns (%d) than headers (%d)", cells.length, columns));
-    }
-    if (cells.length < columns) {
-      var newCells = Arrays.copyOf(cells, columns);
-      Arrays.fill(newCells, cells.length, columns, "");
-      return newCells;
-    }
-    return cells;
   }
 }

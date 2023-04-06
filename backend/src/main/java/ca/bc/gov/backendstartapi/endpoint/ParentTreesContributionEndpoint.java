@@ -133,7 +133,7 @@ public class ParentTreesContributionEndpoint {
 
   private Resource getFileResource(MultipartFile file) {
     if (file.getSize() > FILE_SIZE_LIMIT) {
-      throw new IllegalArgumentException("File is too large! 1MB maximum");
+      throw new CsvTableParsingException("File is too large: maximum size is 1MB");
     }
     var resource = file.getResource();
     var filename = resource.getFilename();

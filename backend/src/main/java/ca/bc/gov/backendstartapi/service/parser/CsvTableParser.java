@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.NonNull;
@@ -50,13 +49,13 @@ class CsvTableParser<H extends Enum<H> & CsvParsingHeader, R extends CsvParsingR
     final var headers = headerParser.parse(fileReader.readLine());
 
     var allHeaders = Arrays.asList(headerParser.getHeaderClass().getEnumConstants());
-    if (Collections.disjoint(headers, allHeaders)) {
+    if (!headers.containsAll(allHeaders)) {
       throw new CsvTableParsingException(
           "The CSV table is missing the following headers: "
               + allHeaders.stream()
                   .filter(not(headers::contains))
                   .map(H::toString)
-                  .collect(Collectors.joining(",")));
+                  .collect(Collectors.joining(", ")));
     }
 
     return fileReader
