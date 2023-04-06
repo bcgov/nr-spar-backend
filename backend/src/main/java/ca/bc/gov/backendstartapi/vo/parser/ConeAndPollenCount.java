@@ -34,9 +34,9 @@ public record ConeAndPollenCount(
                 Estimated percentage of success of the supplemental mass pollination mix on the
                 parent tree.""",
             minimum = "0")
-        int smpSuccessOnParent,
-    @Schema(description = "Percentage on-orchard pollen contamination.", minimum = "0")
-        int nonOrchardPollenContamination)
+        int smpSuccess,
+    @Schema(description = "Percentage of non-orchard pollen contamination.", minimum = "0")
+        int pollenContamination)
     implements CsvParsingResult {
 
   /** Create an instance from the information of the map. */
@@ -60,10 +60,10 @@ public record ConeAndPollenCount(
     if (pollenCount.compareTo(BigDecimal.ZERO) < 0) {
       throw new IllegalArgumentException(POLLEN_COUNT + " cannot be negative");
     }
-    if (smpSuccessOnParent < 0) {
+    if (smpSuccess < 0) {
       throw new IllegalArgumentException(SMP_SUCCESS + " cannot be negative");
     }
-    if (nonOrchardPollenContamination < 0) {
+    if (pollenContamination < 0) {
       throw new IllegalArgumentException(POLLEN_CONTAMINATION + " cannot be negative");
     }
   }
