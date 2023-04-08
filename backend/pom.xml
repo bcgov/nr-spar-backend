@@ -222,7 +222,6 @@
 						<exclude>**/entity/**</exclude>
 						<exclude>**/exception/**</exclude>
 						<exclude>**/response/**</exclude>
-						<exclude>**/vo/**</exclude>
 						<exclude>**/*$*Builder*</exclude>
 						<exclude>**/RestExceptionEndpoint.*</exclude>
 						<exclude>**/BackendStartApiApplication.*</exclude>
