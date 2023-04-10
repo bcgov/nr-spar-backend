@@ -49,4 +49,13 @@ class CsvTableRowParserTest {
             parser.parse(
                 "1,2,3", List.of(SmpMixHeader.PARENT_TREE_NUMBER, SmpMixHeader.POLLEN_VOLUME_ML)));
   }
+
+  @Test
+  void moreHeadersThanColumns() {
+    assertThrowsExactly(
+        CsvTableParsingException.class,
+        () ->
+            parser.parse(
+                "1", List.of(SmpMixHeader.PARENT_TREE_NUMBER, SmpMixHeader.POLLEN_VOLUME_ML)));
+  }
 }

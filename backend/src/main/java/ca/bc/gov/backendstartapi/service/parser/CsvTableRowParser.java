@@ -37,6 +37,10 @@ class CsvTableRowParser<H extends Enum<H> & CsvParsingHeader, R extends CsvParsi
       throw new CsvTableParsingException(
           String.format(
               "There are more columns (%d) than headers (%d)", cells.length, headers.size()));
+    } else if (cells.length < headers.size()) {
+      throw new CsvTableParsingException(
+          String.format(
+              "There are more headers (%d) than columns (%d)", headers.size(), cells.length));
     }
 
     Map<H, Number> data = new HashMap<>();

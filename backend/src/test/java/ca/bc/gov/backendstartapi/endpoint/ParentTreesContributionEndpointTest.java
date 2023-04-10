@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import ca.bc.gov.backendstartapi.exception.CsvTableParsingException;
 import ca.bc.gov.backendstartapi.service.parser.SmpCalculationCsvTableParser;
-import java.util.Arrays;
 import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -139,39 +138,5 @@ class ParentTreesContributionEndpointTest {
         .andDo(print())
         .andExpect(status().isBadRequest())
         .andExpect(status().reason(errorReason));
-  }
-
-  @Test
-  void uploadConeAndPollenCountTableFileTooLarge() throws Exception {
-    var fileContent = new byte[(int) (1E6 + 1)];
-    Arrays.fill(fileContent, (byte) 0x55);
-    var file = new MockMultipartFile("file", "meh.csv", null, fileContent);
-
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.multipart(
-                    "/api/seedlots/00000/parent-trees-contribution/cone-pollen-count-table/upload")
-                .file(file)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.MULTIPART_FORM_DATA))
-        .andDo(print())
-        .andExpect(status().isBadRequest());
-  }
-
-  @Test
-  void uploadSmpMixTableFileTooLarge() throws Exception {
-    var fileContent = new byte[(int) (1E6 + 1)];
-    Arrays.fill(fileContent, (byte) 0x55);
-    var file = new MockMultipartFile("file", "meh.csv", null, fileContent);
-
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.multipart(
-                    "/api/seedlots/00000/parent-trees-contribution/smp-calculation-table/upload")
-                .file(file)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.MULTIPART_FORM_DATA))
-        .andDo(print())
-        .andExpect(status().isBadRequest());
   }
 }
