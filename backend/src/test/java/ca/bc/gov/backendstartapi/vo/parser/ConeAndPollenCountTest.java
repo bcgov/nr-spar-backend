@@ -1,31 +1,10 @@
 package ca.bc.gov.backendstartapi.vo.parser;
 
-import static ca.bc.gov.backendstartapi.enums.parser.ConeAndPollenCountHeader.CONE_COUNT;
-import static ca.bc.gov.backendstartapi.enums.parser.ConeAndPollenCountHeader.PARENT_TREE_NUMBER;
-import static ca.bc.gov.backendstartapi.enums.parser.ConeAndPollenCountHeader.POLLEN_CONTAMINATION;
-import static ca.bc.gov.backendstartapi.enums.parser.ConeAndPollenCountHeader.POLLEN_COUNT;
-import static ca.bc.gov.backendstartapi.enums.parser.ConeAndPollenCountHeader.SMP_SUCCESS;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
-import java.util.Map;
 import org.junit.jupiter.api.Test;
 
-class ConeAndPollenCountTest extends CsvParsingResultTest {
-
-  @Override
-  @Test
-  void testFromMapMethod() {
-    var vo =
-        ConeAndPollenCount.fromMap(
-            Map.of(
-                PARENT_TREE_NUMBER, 1,
-                CONE_COUNT, 2,
-                POLLEN_COUNT, 3,
-                SMP_SUCCESS, 4,
-                POLLEN_CONTAMINATION, 5));
-    assertEquals(new ConeAndPollenCount(1, 2d, 3d, 4, 5), vo);
-  }
+class ConeAndPollenCountTest {
 
   @Test
   void parentTreeNumberMustBePositive() {
