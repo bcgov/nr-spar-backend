@@ -8,9 +8,7 @@ import static ca.bc.gov.backendstartapi.enums.parser.ConeAndPollenCountHeader.SM
 
 import ca.bc.gov.backendstartapi.enums.parser.ConeAndPollenCountHeader;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.math.BigDecimal;
 import java.util.Map;
-import lombok.NonNull;
 
 /** Information about the contribution of a parent tree to a seedlot. */
 public record ConeAndPollenCount(
@@ -20,14 +18,12 @@ public record ConeAndPollenCount(
             description =
                 "The number of cones counted or estimated from this parent tree in the seedlot.",
             minimum = "0")
-        @NonNull
-        BigDecimal coneCount,
+        double coneCount,
     @Schema(
             description =
                 "The amount of pollen counted or estimated for each parent tree in the seedlot.",
             minimum = "0")
-        @NonNull
-        BigDecimal pollenCount,
+        double pollenCount,
     @Schema(
             description =
                 """
@@ -43,8 +39,8 @@ public record ConeAndPollenCount(
   public static ConeAndPollenCount fromMap(Map<ConeAndPollenCountHeader, Number> map) {
     return new ConeAndPollenCount(
         map.get(PARENT_TREE_NUMBER).intValue(),
-        BigDecimal.valueOf(map.get(CONE_COUNT).doubleValue()),
-        BigDecimal.valueOf(map.get(POLLEN_COUNT).doubleValue()),
+        map.get(CONE_COUNT).doubleValue(),
+        map.get(POLLEN_COUNT).doubleValue(),
         map.get(SMP_SUCCESS).intValue(),
         map.get(POLLEN_CONTAMINATION).intValue());
   }
@@ -54,10 +50,10 @@ public record ConeAndPollenCount(
     if (parentTreeNumber <= 0) {
       throw new IllegalArgumentException(PARENT_TREE_NUMBER + " number must be positive");
     }
-    if (coneCount.compareTo(BigDecimal.ZERO) < 0) {
+    if (coneCount < 0) {
       throw new IllegalArgumentException(CONE_COUNT + " cannot be negative");
     }
-    if (pollenCount.compareTo(BigDecimal.ZERO) < 0) {
+    if (pollenCount < 0) {
       throw new IllegalArgumentException(POLLEN_COUNT + " cannot be negative");
     }
     if (smpSuccess < 0) {

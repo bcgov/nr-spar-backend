@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import ca.bc.gov.backendstartapi.exception.CsvTableParsingException;
 import ca.bc.gov.backendstartapi.vo.parser.SmpMixVolume;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import org.junit.jupiter.api.Test;
@@ -32,11 +31,7 @@ class SmpCalculationCsvTableParserTest {
         parser.parse(
             new UrlResource(
                 Objects.requireNonNull(classLoader.getResource("csv/smpmix/finalEmptyLine.csv"))));
-    assertEquals(
-        List.of(
-            new SmpMixVolume(1, BigDecimal.valueOf(2.5)),
-            new SmpMixVolume(2, BigDecimal.valueOf(1.3))),
-        mixes);
+    assertEquals(List.of(new SmpMixVolume(1, 2.5), new SmpMixVolume(2, 1.3)), mixes);
   }
 
   @Test

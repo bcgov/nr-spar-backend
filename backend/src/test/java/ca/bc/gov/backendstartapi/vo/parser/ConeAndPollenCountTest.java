@@ -8,7 +8,6 @@ import static ca.bc.gov.backendstartapi.enums.parser.ConeAndPollenCountHeader.SM
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
-import java.math.BigDecimal;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
@@ -25,42 +24,36 @@ class ConeAndPollenCountTest extends CsvParsingResultTest {
                 POLLEN_COUNT, 3,
                 SMP_SUCCESS, 4,
                 POLLEN_CONTAMINATION, 5));
-    assertEquals(
-        new ConeAndPollenCount(1, BigDecimal.valueOf(2d), BigDecimal.valueOf(3d), 4, 5), vo);
+    assertEquals(new ConeAndPollenCount(1, 2d, 3d, 4, 5), vo);
   }
 
   @Test
   void parentTreeNumberMustBePositive() {
     assertThrowsExactly(
-        IllegalArgumentException.class,
-        () -> new ConeAndPollenCount(0, BigDecimal.valueOf(1d), BigDecimal.valueOf(1d), 1, 1));
+        IllegalArgumentException.class, () -> new ConeAndPollenCount(0, 1d, 1d, 1, 1));
   }
 
   @Test
   void coneCountMustBeNonNegative() {
     assertThrowsExactly(
-        IllegalArgumentException.class,
-        () -> new ConeAndPollenCount(1, BigDecimal.valueOf(-1d), BigDecimal.valueOf(1d), 1, 1));
+        IllegalArgumentException.class, () -> new ConeAndPollenCount(1, -1d, 1d, 1, 1));
   }
 
   @Test
   void pollenCountMustBeNonNegative() {
     assertThrowsExactly(
-        IllegalArgumentException.class,
-        () -> new ConeAndPollenCount(1, BigDecimal.valueOf(1d), BigDecimal.valueOf(-1d), 1, 1));
+        IllegalArgumentException.class, () -> new ConeAndPollenCount(1, 1d, -1d, 1, 1));
   }
 
   @Test
   void smpSuccessMustBeNonNegative() {
     assertThrowsExactly(
-        IllegalArgumentException.class,
-        () -> new ConeAndPollenCount(1, BigDecimal.valueOf(1d), BigDecimal.valueOf(1d), -1, 1));
+        IllegalArgumentException.class, () -> new ConeAndPollenCount(1, 1d, 1d, -1, 1));
   }
 
   @Test
   void pollenContaminationMustBeNonNegative() {
     assertThrowsExactly(
-        IllegalArgumentException.class,
-        () -> new ConeAndPollenCount(1, BigDecimal.valueOf(1d), BigDecimal.valueOf(1d), 1, -1));
+        IllegalArgumentException.class, () -> new ConeAndPollenCount(1, 1d, 1d, 1, -1));
   }
 }
