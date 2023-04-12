@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -64,6 +65,7 @@ public class ParentTreesContributionEndpoint {
   @PostMapping(
       path = "/{seedlotNumber}/parent-trees-contribution/cone-pollen-count-table/upload",
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PreAuthorize("hasRole('user_read')")
   public ResponseEntity<List<ConeAndPollenCount>> handleConeAndPollenCountTableUpload(
       @PathVariable("seedlotNumber")
           @Parameter(
@@ -107,6 +109,7 @@ public class ParentTreesContributionEndpoint {
   @PostMapping(
       path = "/{seedlotNumber}/parent-trees-contribution/smp-calculation-table/upload",
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PreAuthorize("hasRole('user_read')")
   public ResponseEntity<List<SmpMixVolume>> handleSmpCalculationTableUpload(
       @PathVariable("seedlotNumber")
           @Parameter(

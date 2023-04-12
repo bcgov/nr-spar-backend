@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -37,6 +38,7 @@ interface DescribedEnumEndpoint<E extends Enum<E> & DescribedEnum> {
    * @return a list with all the possible values for {@code E} and their description
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('user_read')")
   @Operation(
       responses = {
         @ApiResponse(
@@ -56,6 +58,7 @@ interface DescribedEnumEndpoint<E extends Enum<E> & DescribedEnum> {
    * @return the enum value named {@code code}, if it exists
    */
   @GetMapping(path = "/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('user_read')")
   @Operation(
       responses = {
         @ApiResponse(responseCode = "200", description = "The code that was found."),

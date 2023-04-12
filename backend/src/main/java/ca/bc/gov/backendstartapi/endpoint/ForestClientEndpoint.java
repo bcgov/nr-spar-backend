@@ -14,6 +14,7 @@ import java.io.Serializable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +41,7 @@ public class ForestClientEndpoint {
    * @return the forest client with client number {@code number}, if it exists
    */
   @GetMapping(path = "/{number}")
+  @PreAuthorize("hasRole('user_read')")
   @Operation(
       summary = "Fetch a forest client",
       description = "Returns the forest client identified by `number`, if there is one.",
