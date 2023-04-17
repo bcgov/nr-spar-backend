@@ -67,7 +67,7 @@ class ForestClientEndpointTest {
             jsonPath("$.legalMiddleName").value(client.legalMiddleName()),
             jsonPath("$.clientStatusCode").value(client.clientStatusCode().name()),
             jsonPath("$.clientTypeCode").value(client.clientTypeCode().name()),
-            jsonPath("$.clientAcronym").value(client.clientAcronym()));
+            jsonPath("$.acronym").value(client.acronym()));
   }
 
   @Test

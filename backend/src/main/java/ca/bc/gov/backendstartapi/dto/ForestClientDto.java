@@ -14,8 +14,8 @@ import java.io.Serializable;
  * @param legalMiddleName the party's middle name, if it's an individual; null, otherwise
  * @param clientStatusCode the current status of this client
  * @param clientTypeCode the type of this client (individual, corporation, etc.)
- * @param clientAcronym an acronym that uniquely identifies this client; can ce used as an
- *     alternative to the client number
+ * @param acronym an acronym that uniquely identifies this client; can ce used as an alternative to
+ *     the client number
  */
 @Schema(description = "One of the many agencies that work with the ministry.")
 public record ForestClientDto(
@@ -31,5 +31,5 @@ public record ForestClientDto(
     ForestClientStatusEnum clientStatusCode,
     ForestClientTypeEnum clientTypeCode,
     @Schema(description = "An acronym for this client; works as an alternative identifier.")
-        String clientAcronym)
+        String acronym)
     implements Serializable {}
