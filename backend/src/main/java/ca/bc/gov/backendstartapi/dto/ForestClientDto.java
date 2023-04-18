@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @param legalMiddleName the party's middle name, if it's an individual; null, otherwise
  * @param clientStatusCode the current status of this client
  * @param clientTypeCode the type of this client (individual, corporation, etc.)
- * @param acronym an acronym that uniquely identifies this client; can ce used as an alternative to
+ * @param acronym an acronym that uniquely identifies this client; can be used as an alternative to
  *     the client number
  */
 @Schema(description = "One of the many agencies that work with the ministry.")
