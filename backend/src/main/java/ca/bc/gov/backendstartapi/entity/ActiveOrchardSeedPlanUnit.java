@@ -1,6 +1,7 @@
 package ca.bc.gov.backendstartapi.entity;
 
 import ca.bc.gov.backendstartapi.entity.idclass.ActiveOrchardSeedPlanUnitId;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -21,6 +22,7 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @Getter
 @Setter
+@Schema(description = "An association between an orchard and a Seed Plan Unit (SPU).")
 public class ActiveOrchardSeedPlanUnit {
 
   @Id
@@ -35,10 +37,14 @@ public class ActiveOrchardSeedPlanUnit {
 
   @Column(name = "active_ind", nullable = false)
   @NonNull
+  @Schema(description = "If this association is active.")
   private boolean active;
 
   @Column(name = "retired_ind", nullable = false)
   @NonNull
+  @Schema(
+      description =
+          "If the orchard has been retired; if so, **it should not be used for new registries**.")
   private boolean retired;
 
   /**
@@ -47,5 +53,6 @@ public class ActiveOrchardSeedPlanUnit {
    */
   @Column(name = "no_spu_ind", nullable = false)
   @NonNull
+  @Schema(description = "If this orchard has never had a SPU assigned to it.")
   private boolean spuNotAssigned;
 }
