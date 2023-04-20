@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +36,7 @@ public class ActiveOrchardSeedPlanUnitEndpoint {
             description = "A list of the associations between the orchard and seed plan units.")
       })
   @GetMapping(path = "/{orchardId}/seed-plan-units")
+  @PreAuthorize("hasRole('user_read')")
   public List<ActiveOrchardSeedPlanUnit> findByOrchard(
       @Parameter(description = "The identifier of an orchard") @PathVariable(name = "orchardId")
           String orchardId,
