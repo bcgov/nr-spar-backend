@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import ca.bc.gov.backendstartapi.dto.FavouriteActivityCreateDto;
 import ca.bc.gov.backendstartapi.dto.FavouriteActivityUpdateDto;
 import ca.bc.gov.backendstartapi.entity.FavouriteActivityEntity;
-import ca.bc.gov.backendstartapi.enums.ActivityEnum;
 import ca.bc.gov.backendstartapi.exception.FavoriteActivityExistsToUser;
 import ca.bc.gov.backendstartapi.exception.InvalidActivityException;
 import ca.bc.gov.backendstartapi.repository.FavouriteActivityRepository;
@@ -46,17 +45,16 @@ class FavouriteActivityServiceTest {
     when(loggedUserService.getLoggedUserId()).thenReturn(USER_ID);
 
     FavouriteActivityEntity entity = new FavouriteActivityEntity();
-    entity.setActivity(ActivityEnum.CREATE_A_CLASS_SEEDLOT);
+    entity.setActivity("CREATE_A_CLASS_SEEDLOT");
     entity.setHighlighted(false);
     entity.setEnabled(true);
     when(favouriteActivityRepository.save(any())).thenReturn(entity);
 
-    FavouriteActivityCreateDto createDto =
-        new FavouriteActivityCreateDto(ActivityEnum.CREATE_A_CLASS_SEEDLOT);
+    FavouriteActivityCreateDto createDto = new FavouriteActivityCreateDto("CREATE_A_CLASS_SEEDLOT");
     FavouriteActivityEntity entitySaved = favouriteActivityService.createUserActivity(createDto);
 
     Assertions.assertNotNull(entitySaved);
-    Assertions.assertEquals(ActivityEnum.CREATE_A_CLASS_SEEDLOT, entitySaved.getActivity());
+    Assertions.assertEquals("CREATE_A_CLASS_SEEDLOT", entitySaved.getActivity());
     Assertions.assertFalse(entitySaved.getHighlighted());
     Assertions.assertTrue(entitySaved.getEnabled());
   }
@@ -67,7 +65,7 @@ class FavouriteActivityServiceTest {
     when(loggedUserService.getLoggedUserId()).thenReturn(USER_ID);
 
     FavouriteActivityEntity entity = new FavouriteActivityEntity();
-    entity.setActivity(ActivityEnum.CREATE_A_CLASS_SEEDLOT);
+    entity.setActivity("CREATE_A_CLASS_SEEDLOT");
     entity.setHighlighted(false);
     entity.setEnabled(true);
     when(favouriteActivityRepository.save(any())).thenReturn(entity);
@@ -79,13 +77,14 @@ class FavouriteActivityServiceTest {
             InvalidActivityException.class,
             () -> favouriteActivityService.createUserActivity(createDto));
 
-    Assertions.assertEquals("404 NOT_FOUND \"Activity don't exist!\"", notFoundExc.getMessage());
+    Assertions.assertEquals(
+        "404 NOT_FOUND \"Invalid activity or page name!\"", notFoundExc.getMessage());
 
     List<FavouriteActivityEntity> userFavList = List.of(entity);
     when(favouriteActivityRepository.findAllByUserId(any())).thenReturn(userFavList);
 
     FavouriteActivityCreateDto createAnotherDto =
-        new FavouriteActivityCreateDto(ActivityEnum.CREATE_A_CLASS_SEEDLOT);
+        new FavouriteActivityCreateDto("CREATE_A_CLASS_SEEDLOT");
 
     Exception activityExists =
         Assertions.assertThrows(
@@ -121,7 +120,7 @@ class FavouriteActivityServiceTest {
     when(loggedUserService.getLoggedUserId()).thenReturn(USER_ID);
 
     FavouriteActivityEntity entity = new FavouriteActivityEntity();
-    entity.setActivity(ActivityEnum.CREATE_A_CLASS_SEEDLOT);
+    entity.setActivity("CREATE_A_CLASS_SEEDLOT");
     entity.setHighlighted(false);
     entity.setEnabled(true);
     when(favouriteActivityRepository.findById(any())).thenReturn(Optional.of(entity));
@@ -140,7 +139,7 @@ class FavouriteActivityServiceTest {
     when(loggedUserService.getLoggedUserId()).thenReturn(USER_ID);
 
     FavouriteActivityEntity entity = new FavouriteActivityEntity();
-    entity.setActivity(ActivityEnum.CREATE_A_CLASS_SEEDLOT);
+    entity.setActivity("CREATE_A_CLASS_SEEDLOT");
     entity.setHighlighted(false);
     entity.setEnabled(true);
     when(favouriteActivityRepository.findById(any())).thenReturn(Optional.empty());
@@ -154,7 +153,7 @@ class FavouriteActivityServiceTest {
             InvalidActivityException.class,
             () -> favouriteActivityService.updateUserActivity(1L, updateDto));
 
-    Assertions.assertEquals("404 NOT_FOUND \"Activity don't exist!\"", e.getMessage());
+    Assertions.assertEquals("404 NOT_FOUND \"Invalid activity or page name!\"", e.getMessage());
   }
 
   @Test
@@ -163,7 +162,7 @@ class FavouriteActivityServiceTest {
     when(loggedUserService.getLoggedUserId()).thenReturn(USER_ID);
 
     FavouriteActivityEntity entity = new FavouriteActivityEntity();
-    entity.setActivity(ActivityEnum.CREATE_A_CLASS_SEEDLOT);
+    entity.setActivity("CREATE_A_CLASS_SEEDLOT");
     entity.setHighlighted(false);
     entity.setEnabled(true);
     when(favouriteActivityRepository.findById(any())).thenReturn(Optional.of(entity));
@@ -192,7 +191,7 @@ class FavouriteActivityServiceTest {
         Assertions.assertThrows(
             InvalidActivityException.class, () -> favouriteActivityService.deleteUserActivity(1L));
 
-    Assertions.assertEquals("404 NOT_FOUND \"Activity don't exist!\"", e.getMessage());
+    Assertions.assertEquals("404 NOT_FOUND \"Invalid activity or page name!\"", e.getMessage());
   }
 
   @Test

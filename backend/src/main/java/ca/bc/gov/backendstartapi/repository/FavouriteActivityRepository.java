@@ -1,7 +1,6 @@
 package ca.bc.gov.backendstartapi.repository;
 
 import ca.bc.gov.backendstartapi.entity.FavouriteActivityEntity;
-import ca.bc.gov.backendstartapi.enums.ActivityEnum;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
@@ -13,5 +12,5 @@ public interface FavouriteActivityRepository extends CrudRepository<FavouriteAct
 
   List<FavouriteActivityEntity> findAllByEnabledAndUserId(Boolean enabled, String userId);
 
-  Optional<FavouriteActivityEntity> findByActivity(ActivityEnum activity);
+  Optional<FavouriteActivityEntity> findByActivity(String activity);
 }
