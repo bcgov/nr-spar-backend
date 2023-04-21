@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 /** This class represents a not found activity from ActivityEnum. */
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class ActivityNotFoundException extends ResponseStatusException {
+@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+public class InvalidActivityException extends ResponseStatusException {
 
-  public ActivityNotFoundException() {
-    super(HttpStatus.NOT_FOUND, "Activity don't exist!");
+  public InvalidActivityException() {
+    super(HttpStatus.NOT_FOUND, "Invalid activity or page name!");
   }
 }

@@ -13,8 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import ca.bc.gov.backendstartapi.entity.FavouriteActivityEntity;
 import ca.bc.gov.backendstartapi.enums.ActivityEnum;
-import ca.bc.gov.backendstartapi.exception.ActivityNotFoundException;
 import ca.bc.gov.backendstartapi.exception.FavoriteActivityExistsToUser;
+import ca.bc.gov.backendstartapi.exception.InvalidActivityException;
 import ca.bc.gov.backendstartapi.service.FavouriteActivityService;
 import java.util.List;
 import java.util.Objects;
@@ -101,7 +101,7 @@ class FavouriteActivityEndpointTest {
   @WithMockUser(roles = "user_write")
   void createFavoriteActivityNotFoundTest() throws Exception {
     when(favouriteActivityService.createUserActivity(any()))
-        .thenThrow(new ActivityNotFoundException());
+        .thenThrow(new InvalidActivityException());
 
     mockMvc
         .perform(

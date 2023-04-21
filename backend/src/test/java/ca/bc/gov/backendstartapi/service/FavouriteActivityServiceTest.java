@@ -8,8 +8,8 @@ import ca.bc.gov.backendstartapi.dto.FavouriteActivityCreateDto;
 import ca.bc.gov.backendstartapi.dto.FavouriteActivityUpdateDto;
 import ca.bc.gov.backendstartapi.entity.FavouriteActivityEntity;
 import ca.bc.gov.backendstartapi.enums.ActivityEnum;
-import ca.bc.gov.backendstartapi.exception.ActivityNotFoundException;
 import ca.bc.gov.backendstartapi.exception.FavoriteActivityExistsToUser;
+import ca.bc.gov.backendstartapi.exception.InvalidActivityException;
 import ca.bc.gov.backendstartapi.repository.FavouriteActivityRepository;
 import ca.bc.gov.backendstartapi.security.LoggedUserService;
 import java.util.ArrayList;
@@ -76,7 +76,7 @@ class FavouriteActivityServiceTest {
 
     Exception notFoundExc =
         Assertions.assertThrows(
-            ActivityNotFoundException.class,
+            InvalidActivityException.class,
             () -> favouriteActivityService.createUserActivity(createDto));
 
     Assertions.assertEquals("404 NOT_FOUND \"Activity don't exist!\"", notFoundExc.getMessage());
@@ -151,7 +151,7 @@ class FavouriteActivityServiceTest {
 
     Exception e =
         Assertions.assertThrows(
-            ActivityNotFoundException.class,
+            InvalidActivityException.class,
             () -> favouriteActivityService.updateUserActivity(1L, updateDto));
 
     Assertions.assertEquals("404 NOT_FOUND \"Activity don't exist!\"", e.getMessage());
@@ -190,7 +190,7 @@ class FavouriteActivityServiceTest {
 
     Exception e =
         Assertions.assertThrows(
-            ActivityNotFoundException.class, () -> favouriteActivityService.deleteUserActivity(1L));
+            InvalidActivityException.class, () -> favouriteActivityService.deleteUserActivity(1L));
 
     Assertions.assertEquals("404 NOT_FOUND \"Activity don't exist!\"", e.getMessage());
   }
