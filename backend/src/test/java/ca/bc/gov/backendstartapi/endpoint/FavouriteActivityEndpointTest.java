@@ -42,18 +42,18 @@ class FavouriteActivityEndpointTest {
 
   private static final String JSON = "application/json";
 
-  private String stringifyCreate(String activityEnum) {
+  private String stringifyCreate(String activity) {
     StringBuilder json = new StringBuilder("{");
-    if (!Objects.isNull(activityEnum)) {
-      json.append("\"activity\":\"").append(activityEnum).append("\"");
+    if (!Objects.isNull(activity)) {
+      json.append("\"activity\":\"").append(activity).append("\"");
     }
     json.append("}");
     return json.toString();
   }
 
-  private FavouriteActivityEntity createEntity(String activityEnum) {
+  private FavouriteActivityEntity createEntity(String activity) {
     FavouriteActivityEntity activityEntity = new FavouriteActivityEntity();
-    activityEntity.setActivity(activityEnum);
+    activityEntity.setActivity(activity);
     activityEntity.setHighlighted(Boolean.FALSE);
     activityEntity.setEnabled(Boolean.TRUE);
     return activityEntity;
