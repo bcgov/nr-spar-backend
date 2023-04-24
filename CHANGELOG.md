@@ -1,3 +1,7 @@
+## [0.17.4](https://github.com/bcgov/nr-spar-backend/compare/v0.17.3...v0.17.4) (2023-04-24)
+
+
+
 ## [0.17.3](https://github.com/bcgov/nr-spar-backend/compare/v0.17.2...v0.17.3) (2023-04-24)
 
 
@@ -16,10 +20,6 @@
 ### Features
 
 * CSV tables upload and parsing ([#90](https://github.com/bcgov/nr-spar-backend/issues/90)) ([dd5be75](https://github.com/bcgov/nr-spar-backend/commit/dd5be757eb9519ec1ddad6391ecd00943ec7086c))
-
-
-
-## [0.16.3](https://github.com/bcgov/nr-spar-backend/compare/v0.16.2...v0.16.3) (2023-04-11)
 
 
 
