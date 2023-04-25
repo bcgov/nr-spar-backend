@@ -1,11 +1,8 @@
 package ca.bc.gov.backendstartapi.entity;
 
-import ca.bc.gov.backendstartapi.enums.ActivityEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,9 +34,10 @@ public class FavouriteActivityEntity {
   private String userId;
 
   @Column(name = "activity", updatable = false)
-  @Enumerated(value = EnumType.STRING)
-  @Schema(description = "An activity the user can do", example = "SEEDLOT_REGISTRATION")
-  private ActivityEnum activity;
+  @Schema(
+      description = "An activity or a page name the user can access or favourite",
+      example = "My Seedlots")
+  private String activity;
 
   @Column
   @Schema(
