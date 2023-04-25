@@ -1,3 +1,12 @@
+# [0.18.0](https://github.com/bcgov/nr-spar-backend/compare/v0.17.4...v0.18.0) (2023-04-25)
+
+
+### Features
+
+* remove hardcoded activities ([#99](https://github.com/bcgov/nr-spar-backend/issues/99)) ([05f5cd8](https://github.com/bcgov/nr-spar-backend/commit/05f5cd8b93a307d08487db58470edf6f55e85f10))
+
+
+
 ## [0.17.4](https://github.com/bcgov/nr-spar-backend/compare/v0.17.3...v0.17.4) (2023-04-24)
 
 
@@ -11,15 +20,6 @@
 
 
 ## [0.17.1](https://github.com/bcgov/nr-spar-backend/compare/v0.17.0...v0.17.1) (2023-04-12)
-
-
-
-# [0.17.0](https://github.com/bcgov/nr-spar-backend/compare/v0.16.3...v0.17.0) (2023-04-12)
-
-
-### Features
-
-* CSV tables upload and parsing ([#90](https://github.com/bcgov/nr-spar-backend/issues/90)) ([dd5be75](https://github.com/bcgov/nr-spar-backend/commit/dd5be757eb9519ec1ddad6391ecd00943ec7086c))
 
 
 
