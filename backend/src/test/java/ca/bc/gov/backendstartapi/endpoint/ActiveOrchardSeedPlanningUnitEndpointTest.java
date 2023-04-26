@@ -6,8 +6,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import ca.bc.gov.backendstartapi.entity.ActiveOrchardSeedPlanUnit;
-import ca.bc.gov.backendstartapi.repository.ActiveOrchardSeedPlanUnitRepository;
+import ca.bc.gov.backendstartapi.entity.ActiveOrchardSeedPlanningUnit;
+import ca.bc.gov.backendstartapi.repository.ActiveOrchardSeedPlanningUnitRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,15 +25,15 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @WithMockUser(roles = "user_read")
-class ActiveOrchardSeedPlanUnitEndpointTest {
+class ActiveOrchardSeedPlanningUnitEndpointTest {
 
-  @MockBean private ActiveOrchardSeedPlanUnitRepository repository;
+  @MockBean private ActiveOrchardSeedPlanningUnitRepository repository;
 
   private MockMvc mockMvc;
 
   private final WebApplicationContext webApplicationContext;
 
-  ActiveOrchardSeedPlanUnitEndpointTest(WebApplicationContext webApplicationContext) {
+  ActiveOrchardSeedPlanningUnitEndpointTest(WebApplicationContext webApplicationContext) {
     this.webApplicationContext = webApplicationContext;
   }
 
@@ -44,10 +44,10 @@ class ActiveOrchardSeedPlanUnitEndpointTest {
 
   @Test
   void testSearchActiveDefault() throws Exception {
-    List<ActiveOrchardSeedPlanUnit> actives =
-        List.of(new ActiveOrchardSeedPlanUnit("000", 1, true, false, false));
-    List<ActiveOrchardSeedPlanUnit> inactives =
-        List.of(new ActiveOrchardSeedPlanUnit("000", 2, false, false, false));
+    List<ActiveOrchardSeedPlanningUnit> actives =
+        List.of(new ActiveOrchardSeedPlanningUnit("000", 1, true, false, false));
+    List<ActiveOrchardSeedPlanningUnit> inactives =
+        List.of(new ActiveOrchardSeedPlanningUnit("000", 2, false, false, false));
     given(repository.findByOrchardIdAndActive("000", true)).willReturn(actives);
     given(repository.findByOrchardIdAndActive("000", false)).willReturn(inactives);
 
@@ -56,15 +56,15 @@ class ActiveOrchardSeedPlanUnitEndpointTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpectAll(
-            jsonPath("$[0].active").value("true"), jsonPath("$[0].seedPlanUnitId").value("1"));
+            jsonPath("$[0].active").value("true"), jsonPath("$[0].seedPlanningUnitId").value("1"));
   }
 
   @Test
   void testSearchInactiveDefault() throws Exception {
-    List<ActiveOrchardSeedPlanUnit> actives =
-        List.of(new ActiveOrchardSeedPlanUnit("000", 1, true, false, false));
-    List<ActiveOrchardSeedPlanUnit> inactives =
-        List.of(new ActiveOrchardSeedPlanUnit("000", 2, false, false, false));
+    List<ActiveOrchardSeedPlanningUnit> actives =
+        List.of(new ActiveOrchardSeedPlanningUnit("000", 1, true, false, false));
+    List<ActiveOrchardSeedPlanningUnit> inactives =
+        List.of(new ActiveOrchardSeedPlanningUnit("000", 2, false, false, false));
     given(repository.findByOrchardIdAndActive("000", true)).willReturn(actives);
     given(repository.findByOrchardIdAndActive("000", false)).willReturn(inactives);
 
@@ -75,6 +75,6 @@ class ActiveOrchardSeedPlanUnitEndpointTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpectAll(
-            jsonPath("$[0].active").value("false"), jsonPath("$[0].seedPlanUnitId").value("2"));
+            jsonPath("$[0].active").value("false"), jsonPath("$[0].seedPlanningUnitId").value("2"));
   }
 }

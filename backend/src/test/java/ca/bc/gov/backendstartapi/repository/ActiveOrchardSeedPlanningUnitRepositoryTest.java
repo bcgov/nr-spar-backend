@@ -9,14 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ActiveOrchardSeedPlanUnitRepositoryTest {
+class ActiveOrchardSeedPlanningUnitRepositoryTest {
 
-  private final ActiveOrchardSeedPlanUnitRepository repository;
+  private final ActiveOrchardSeedPlanningUnitRepository repository;
 
   @Autowired
-  ActiveOrchardSeedPlanUnitRepositoryTest(
-      ActiveOrchardSeedPlanUnitRepository activeOrchardSeedPlanUnitRepository) {
-    repository = activeOrchardSeedPlanUnitRepository;
+  ActiveOrchardSeedPlanningUnitRepositoryTest(
+      ActiveOrchardSeedPlanningUnitRepository activeOrchardSeedPlanningUnitRepository) {
+    repository = activeOrchardSeedPlanningUnitRepository;
   }
 
   @Test
@@ -26,7 +26,7 @@ class ActiveOrchardSeedPlanUnitRepositoryTest {
 
     var active = actives.get(0);
     assertEquals("110", active.getOrchardId());
-    assertEquals(7, active.getSeedPlanUnitId());
+    assertEquals(7, active.getSeedPlanningUnitId());
     assertTrue(active.isActive());
     assertTrue(active.isRetired());
     assertFalse(active.isSpuNotAssigned());
@@ -36,7 +36,7 @@ class ActiveOrchardSeedPlanUnitRepositoryTest {
 
     var inactive = inactives.get(0);
     assertEquals("110", inactive.getOrchardId());
-    assertEquals(6, inactive.getSeedPlanUnitId());
+    assertEquals(6, inactive.getSeedPlanningUnitId());
     assertFalse(inactive.isActive());
     assertTrue(inactive.isRetired());
     assertFalse(inactive.isSpuNotAssigned());
