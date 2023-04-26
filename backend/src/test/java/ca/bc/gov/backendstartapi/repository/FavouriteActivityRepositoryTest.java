@@ -1,7 +1,6 @@
 package ca.bc.gov.backendstartapi.repository;
 
 import ca.bc.gov.backendstartapi.entity.FavouriteActivityEntity;
-import ca.bc.gov.backendstartapi.enums.ActivityEnum;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
@@ -34,12 +33,12 @@ class FavouriteActivityRepositoryTest {
   void createWithDefaultValuesTest() {
     FavouriteActivityEntity activity = new FavouriteActivityEntity();
     activity.setUserId(USER_ID);
-    activity.setActivity(ActivityEnum.SEEDLOT_REGISTRATION);
+    activity.setActivity("SEEDLOT_REGISTRATION");
     FavouriteActivityEntity created = favouriteActivityRepository.save(activity);
 
     Assertions.assertEquals(1L, created.getId());
     Assertions.assertEquals(USER_ID, created.getUserId());
-    Assertions.assertEquals(ActivityEnum.SEEDLOT_REGISTRATION, created.getActivity());
+    Assertions.assertEquals("SEEDLOT_REGISTRATION", created.getActivity());
     Assertions.assertFalse(created.getHighlighted());
     Assertions.assertTrue(created.getEnabled());
   }
@@ -50,12 +49,12 @@ class FavouriteActivityRepositoryTest {
   void createWithAllValuesTest() {
     FavouriteActivityEntity activity = new FavouriteActivityEntity();
     activity.setUserId(USER_ID);
-    activity.setActivity(ActivityEnum.CREATE_A_CLASS_SEEDLOT);
+    activity.setActivity("CREATE_A_CLASS_SEEDLOT");
     activity.setHighlighted(true);
     activity.setEnabled(false);
     FavouriteActivityEntity created = favouriteActivityRepository.save(activity);
 
-    Assertions.assertEquals(ActivityEnum.CREATE_A_CLASS_SEEDLOT, created.getActivity());
+    Assertions.assertEquals("CREATE_A_CLASS_SEEDLOT", created.getActivity());
     Assertions.assertEquals(USER_ID, created.getUserId());
     Assertions.assertTrue(created.getHighlighted());
     Assertions.assertFalse(created.getEnabled());
@@ -77,12 +76,12 @@ class FavouriteActivityRepositoryTest {
   @Sql(scripts = {"classpath:sql_scripts/FavoriteActivityRepositoryTest_favorite.sql"})
   void updateActivityTest() {
     Optional<FavouriteActivityEntity> getOne =
-        favouriteActivityRepository.findByActivity(ActivityEnum.SEEDLOT_REGISTRATION);
+        favouriteActivityRepository.findByActivity("SEEDLOT_REGISTRATION");
     Assertions.assertTrue(getOne.isPresent());
 
     FavouriteActivityEntity activity = getOne.get();
     Assertions.assertEquals(USER_ID, activity.getUserId());
-    Assertions.assertEquals(ActivityEnum.SEEDLOT_REGISTRATION, activity.getActivity());
+    Assertions.assertEquals("SEEDLOT_REGISTRATION", activity.getActivity());
     Assertions.assertFalse(activity.getHighlighted());
     Assertions.assertTrue(activity.getEnabled());
 
@@ -93,7 +92,7 @@ class FavouriteActivityRepositoryTest {
     Long activityId = activity.getId();
     Assertions.assertEquals(activityId, saved.getId());
     Assertions.assertEquals(USER_ID, saved.getUserId());
-    Assertions.assertEquals(ActivityEnum.SEEDLOT_REGISTRATION, saved.getActivity());
+    Assertions.assertEquals("SEEDLOT_REGISTRATION", saved.getActivity());
     Assertions.assertTrue(saved.getHighlighted());
     Assertions.assertFalse(saved.getEnabled());
   }
@@ -104,13 +103,13 @@ class FavouriteActivityRepositoryTest {
   @Sql(scripts = {"classpath:sql_scripts/FavoriteActivityRepositoryTest_favorite.sql"})
   void deleteActivityTest() {
     Optional<FavouriteActivityEntity> getOne =
-        favouriteActivityRepository.findByActivity(ActivityEnum.SEEDLOT_REGISTRATION);
+        favouriteActivityRepository.findByActivity("SEEDLOT_REGISTRATION");
     Assertions.assertTrue(getOne.isPresent());
 
     favouriteActivityRepository.delete(getOne.get());
 
     Optional<FavouriteActivityEntity> removed =
-        favouriteActivityRepository.findByActivity(ActivityEnum.SEEDLOT_REGISTRATION);
+        favouriteActivityRepository.findByActivity("SEEDLOT_REGISTRATION");
     Assertions.assertTrue(removed.isEmpty());
   }
 }

@@ -3,8 +3,8 @@ package ca.bc.gov.backendstartapi.service;
 import ca.bc.gov.backendstartapi.dto.FavouriteActivityCreateDto;
 import ca.bc.gov.backendstartapi.dto.FavouriteActivityUpdateDto;
 import ca.bc.gov.backendstartapi.entity.FavouriteActivityEntity;
-import ca.bc.gov.backendstartapi.exception.ActivityNotFoundException;
 import ca.bc.gov.backendstartapi.exception.FavoriteActivityExistsToUser;
+import ca.bc.gov.backendstartapi.exception.InvalidActivityException;
 import ca.bc.gov.backendstartapi.repository.FavouriteActivityRepository;
 import ca.bc.gov.backendstartapi.security.LoggedUserService;
 import java.util.List;
@@ -51,8 +51,8 @@ public class FavouriteActivityService {
     String userId = loggedUserService.getLoggedUserId();
     log.info("Creating activity {} to user {}", activityDto.activity(), userId);
 
-    if (Objects.isNull(activityDto.activity())) {
-      throw new ActivityNotFoundException();
+    if (Objects.isNull(activityDto.activity()) || activityDto.activity().isBlank()) {
+      throw new InvalidActivityException();
     }
 
     List<FavouriteActivityEntity> userFavList = favouriteActivityRepository.findAllByUserId(userId);
@@ -84,7 +84,7 @@ public class FavouriteActivityService {
    * @param id the {@link Long} value as the id of the activity to be updated
    * @param updateDto a {@link FavouriteActivityUpdateDto} containing the values to be updated
    * @return a {@link FavouriteActivityEntity} updated
-   * @throws ActivityNotFoundException if the activity doesn't exist
+   * @throws InvalidActivityException if the activity doesn't exist
    */
   public FavouriteActivityEntity updateUserActivity(Long id, FavouriteActivityUpdateDto updateDto) {
     String userId = loggedUserService.getLoggedUserId();
@@ -92,7 +92,7 @@ public class FavouriteActivityService {
     log.info("Updating activity {} to user {}", id, userId);
     Optional<FavouriteActivityEntity> activityEntity = favouriteActivityRepository.findById(id);
     if (activityEntity.isEmpty()) {
-      throw new ActivityNotFoundException();
+      throw new InvalidActivityException();
     }
 
     FavouriteActivityEntity entity =
@@ -115,7 +115,7 @@ public class FavouriteActivityService {
     log.info("Deleting activity {} to user {}", id, userId);
     Optional<FavouriteActivityEntity> activityEntity = favouriteActivityRepository.findById(id);
     if (activityEntity.isEmpty()) {
-      throw new ActivityNotFoundException();
+      throw new InvalidActivityException();
     }
 
     favouriteActivityRepository.deleteById(id);
