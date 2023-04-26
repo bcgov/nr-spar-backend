@@ -1,8 +1,5 @@
 FROM maven:3.8.7-eclipse-temurin-17 AS build
 
-RUN addgroup --system spring && adduser --system spring --ingroup spring
-USER spring:spring
-
 COPY src /home/spring/src
 COPY pom.xml /home/spring
 
@@ -20,6 +17,12 @@ WORKDIR /usr/share/service/
 COPY --from=build /home/spring/target/nr-spar-backend.jar /usr/share/service/service.jar
 COPY dockerfile-entrypoint.sh /usr/share/service/dockerfile-entrypoint.sh
 
+RUN addgroup --system spring && adduser --system spring --ingroup spring
+RUN mkdir -p /logs
+RUN chown -R spring:spring /logs
+RUN chmod 755 /logs
+
+USER spring
+
 EXPOSE 8090
-USER 1001
 ENTRYPOINT ["/usr/share/service/dockerfile-entrypoint.sh"]

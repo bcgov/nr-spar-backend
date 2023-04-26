@@ -97,6 +97,9 @@ objects:
             - image: ${NAME}-${ZONE}-${COMPONENT}:${IMAGE_TAG}
               imagePullPolicy: Always
               name: ${NAME}
+              volumeMounts:
+                - name: log-storage
+                  mountPath: /logs
               env:
                 - name: NR_SPAR_BACKEND_VERSION
                   value: ${BUILD}
