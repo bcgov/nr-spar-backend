@@ -47,8 +47,8 @@ public class ActiveOrchardSeedPlanningUnit {
   @Schema(
       description =
           """
-              If the orchard has been retired (e.g. is out of business) and isn't ; could be the
-              reason for the inactivity of this association.""")
+              If the orchard has been retired (e.g. is out of business); could be the reason for the
+              inactivity of this association.""")
   private boolean retired;
 
   /**
