@@ -1,4 +1,4 @@
-insert into active_orchard_spu
+insert into spar.active_orchard_spu
     (orchard_id, seed_plan_unit_id, active_ind, retired_ind, no_spu_ind)
     values ('101', 7, 'False', 'True', 'False'),
            ('102', 5, 'True', 'False', 'False'),
