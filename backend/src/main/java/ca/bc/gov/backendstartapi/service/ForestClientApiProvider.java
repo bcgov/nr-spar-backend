@@ -57,7 +57,6 @@ public class ForestClientApiProvider {
     log.debug(String.format("Fetching client %s", number));
     var response =
         restTemplate.getForEntity("/clients/findByClientNumber/" + number, ForestClientDto.class);
-    log.debug(String.format("Result for client %s: %s", number, response));
     return Optional.of(response.getBody());
   }
 }
