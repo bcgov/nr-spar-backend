@@ -21,24 +21,24 @@ class ActiveOrchardSeedPlanningUnitRepositoryTest {
 
   @Test
   void testFindByOrchardIdAndActive() {
-    var actives = repository.findByOrchardIdAndActive("110", true);
+    var actives = repository.findByOrchardIdAndActive("144", true);
     assertEquals(1, actives.size());
 
     var active = actives.get(0);
-    assertEquals("110", active.getOrchardId());
-    assertEquals(7, active.getSeedPlanningUnitId());
+    assertEquals("144", active.getOrchardId());
+    assertEquals(108, active.getSeedPlanningUnitId());
     assertTrue(active.isActive());
-    assertTrue(active.isRetired());
+    assertFalse(active.isRetired());
     assertFalse(active.isSpuNotAssigned());
 
-    var inactives = repository.findByOrchardIdAndActive("110", false);
+    var inactives = repository.findByOrchardIdAndActive("144", false);
     assertEquals(1, inactives.size());
 
     var inactive = inactives.get(0);
-    assertEquals("110", inactive.getOrchardId());
-    assertEquals(6, inactive.getSeedPlanningUnitId());
+    assertEquals("144", inactive.getOrchardId());
+    assertEquals(55, inactive.getSeedPlanningUnitId());
     assertFalse(inactive.isActive());
-    assertTrue(inactive.isRetired());
+    assertFalse(inactive.isRetired());
     assertFalse(inactive.isSpuNotAssigned());
   }
 }
