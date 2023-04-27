@@ -47,8 +47,8 @@ public class FavouriteActivityEndpoint {
   }
 
   /**
-   * Creates to the logged user a {@link FavouriteActivityEntity} based on the activity title, that
-   * comes from {@link ca.bc.gov.backendstartapi.enums.ActivityEnum}.
+   * Creates to the logged user a {@link FavouriteActivityEntity} record based on the activity or
+   * page title.
    *
    * @param createDto a {@link FavouriteActivityCreateDto} with the activity title
    * @return a {@link FavouriteActivityEntity} created
@@ -60,7 +60,7 @@ public class FavouriteActivityEndpoint {
       description =
           """
           Creates a Favourite Activity to the logged user based on the activity
-          title that should be one of ActivityEnum.
+          title or page name.
           """)
   @ApiResponses(
       value = {

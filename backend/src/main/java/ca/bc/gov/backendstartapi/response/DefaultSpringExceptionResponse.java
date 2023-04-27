@@ -31,9 +31,9 @@ public class DefaultSpringExceptionResponse {
       example =
           """
           JSON parse error: Cannot deserialize value of type
-          'ca.bc.gov.backendstartapi.enums.ActivityEnum' from String 'any text here':
+          'ca.bc.gov.backendstartapi.enums.SampleEnum' from String 'any text here':
           not one of the values accepted for Enum class:
-          [SEEDLOT_REGISTRATION, PARENT_TREE_ORCHARD, SEEDLING_REQUEST]
+          [Sample one, Sample two, Sample three]
           """)
   private String message;
 
