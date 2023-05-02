@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 /** Composite key for {@link ActiveOrchardSeedPlanningUnit}. */
 @Data
-@NoArgsConstructor(access = AccessLevel.PACKAGE, force = true)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 public class ActiveOrchardSeedPlanningUnitId {
 

@@ -18,7 +18,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "active_orchard_spu")
 @IdClass(ActiveOrchardSeedPlanningUnitId.class)
-@NoArgsConstructor(access = AccessLevel.PACKAGE, force = true)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 @Getter
 @Setter
