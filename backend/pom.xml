@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>ca.bc.gov</groupId>
 	<artifactId>nr-spar-backend</artifactId>
-	<version>0.18.1</version>
+	<version>0.18.3</version>
 	<name>nr-spar-backend</name>
 	<description>Starting backend API project</description>
 
@@ -213,7 +213,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.9</version>
+				<version>0.8.10</version>
 				<configuration>
 					<skip>${jacoco.skip}</skip>
 					<excludes>
@@ -380,7 +380,7 @@
 					<dependency>
 						<groupId>com.puppycrawl.tools</groupId>
 						<artifactId>checkstyle</artifactId>
-						<version>10.9.3</version>
+						<version>10.10.0</version>
 					</dependency>
 				</dependencies>
 				<configuration>
