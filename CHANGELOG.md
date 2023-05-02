@@ -1,3 +1,7 @@
+## [0.18.4](https://github.com/bcgov/nr-spar-backend/compare/v0.18.3...v0.18.4) (2023-05-02)
+
+
+
 ## [0.18.3](https://github.com/bcgov/nr-spar-backend/compare/v0.18.2...v0.18.3) (2023-05-02)
 
 
@@ -21,10 +25,6 @@
 ### Features
 
 * remove hardcoded activities ([#99](https://github.com/bcgov/nr-spar-backend/issues/99)) ([05f5cd8](https://github.com/bcgov/nr-spar-backend/commit/05f5cd8b93a307d08487db58470edf6f55e85f10))
-
-
-
-## [0.17.4](https://github.com/bcgov/nr-spar-backend/compare/v0.17.3...v0.17.4) (2023-04-24)
 
 
 
