@@ -16,7 +16,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 /** The method used for the collection of a lot of seeds. */
@@ -24,7 +23,6 @@ import lombok.Setter;
 @Table(name = "seedlot_collection_method")
 @IdClass(SeedlotCollectionMethodId.class)
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
-@RequiredArgsConstructor
 @Getter
 @Setter
 public class SeedlotCollectionMethod {
@@ -38,7 +36,6 @@ public class SeedlotCollectionMethod {
 
   @Id
   @Column(name = "cone_collection_method_code", length = 30, nullable = false)
-  @NonNull
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private String coneCollectionMethodCode;
@@ -51,6 +48,7 @@ public class SeedlotCollectionMethod {
 
   @Column(name = "revision_count", nullable = false)
   @Version
+  @Setter(AccessLevel.NONE)
   private int revisionCount;
 
   public SeedlotCollectionMethod(

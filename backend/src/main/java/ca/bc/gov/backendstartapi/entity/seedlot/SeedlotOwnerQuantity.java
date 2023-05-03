@@ -70,5 +70,6 @@ public class SeedlotOwnerQuantity {
 
   @Column(name = "revision_count", nullable = false)
   @Version
+  @Setter(AccessLevel.NONE)
   private int revisionCount;
 }

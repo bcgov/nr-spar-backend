@@ -206,6 +206,7 @@ public class Seedlot implements Serializable {
 
   @Column(name = "revision_count", nullable = false)
   @Version
+  @Setter(AccessLevel.NONE)
   private int revisionCount;
   // endregion
 }
