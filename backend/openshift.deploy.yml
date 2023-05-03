@@ -48,6 +48,34 @@ parameters:
     description: Current SPAR backend API build version
     required: true
     value: nightly
+  # Parameters for logging sidecar
+  - name: LOGGING_CPU_LIMIT
+    description: Limit Peak CPU per pod (in millicores ex. 1000m)
+    displayName: CPU Limit
+    value: 100m
+  - name: LOGGING_CPU_REQUEST
+    description: Requested CPU per pod (in millicores ex. 500m)
+    displayName: CPU Request
+    value: 10m
+  - name: LOGGING_MEMORY_LIMIT
+    description: Limit Peak Memory per pod (in gigabytes Gi or megabytes Mi ex. 2Gi)
+    displayName: Memory Limit
+    value: 64Mi
+  - name: LOGGING_MEMORY_REQUEST
+    description: Requested Memory per pod (in gigabytes Gi or megabytes Mi ex. 500Mi)
+    displayName: Memory Request
+    value: 16Mi
+  # Parameters for file caching
+  - name: FILE_CACHE_VOLUME_CAPACITY
+    description: Volume space available for File Cache
+    displayName: File Cache Volume Capacity (use M or G, not Mi or Gi)
+    required: false
+    value: 2G
+  - name: FILE_CACHE_PERSISTENT_VOLUME_CLASS
+    description: The storage class of the volume
+    displayName: Persistent Volume Class name
+    required: false
+    value: netapp-file-standard
 objects:
   - apiVersion: v1
     kind: ImageStream
@@ -94,9 +122,12 @@ objects:
             deploymentconfig: ${NAME}-${ZONE}-${COMPONENT}
         spec:
           containers:
-            - image: ${NAME}-${ZONE}-${COMPONENT}:${IMAGE_TAG}
+            - name: ${NAME}
+              image: ${NAME}-${ZONE}-${COMPONENT}:${IMAGE_TAG}
               imagePullPolicy: Always
-              name: ${NAME}
+              volumeMounts:
+                - name: log-storage
+                  mountPath: /logs
               env:
                 - name: NR_SPAR_BACKEND_VERSION
                   value: ${BUILD}
@@ -167,6 +198,85 @@ objects:
                 initialDelaySeconds: 150
                 periodSeconds: 30
                 timeoutSeconds: 10
+            - name: fluent-bit
+              image: docker.io/fluent/fluent-bit:1.8
+              imagePullPolicy: Always
+              livenessProbe:
+                httpGet:
+                  path: /
+                  port: 2020
+                  scheme: HTTP
+                initialDelaySeconds: 10
+                timeoutSeconds: 1
+                failureThreshold: 3
+              ports:
+                - containerPort: 2020
+                  name: metrics
+                  protocol: TCP
+                - containerPort: 80
+                  name: http-plugin
+                  protocol: TCP
+              readinessProbe:
+                httpGet:
+                  path: /
+                  port: 2020
+                  scheme: HTTP
+                initialDelaySeconds: 10
+                timeoutSeconds: 1
+                failureThreshold: 3
+              resources:
+                requests:
+                  cpu: "${LOGGING_CPU_REQUEST}"
+                  memory: "${LOGGING_MEMORY_REQUEST}"
+                limits:
+                  cpu: "${LOGGING_CPU_LIMIT}"
+                  memory: "${LOGGING_MEMORY_LIMIT}"
+              env:
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      key: username
+                      name: "${APP_NAME}-aws-kinesis-secret"
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      key: password
+                      name: "${APP_NAME}-aws-kinesis-secret"
+              volumeMounts:
+                # mount log file location
+                - name: log-storage
+                  mountPath: /logs
+                # mount fluent-bit config file
+                - name: fluent-bit-config
+                  mountPath: /fluent-bit/etc/
+                # TLS cert for connecting to fluentd (enable for TLS)
+                # - mountPath: /fluent-bit/ssl
+                #   name: fluent-bit-tls
+          volumes:
+            - name: file-cache-data
+              persistentVolumeClaim:
+                claimName: file-cache-data-${ZONE}
+            - name: log-storage
+              emptyDir: {}
+            # fluent-bit config file
+            - name: fluent-bit-config
+              configMap:
+                name: fluent-bit-config
+            # fluent-bit TLS (enable for TLS)
+            # - name: fluent-bit-tls
+            #   secret:
+            #     secretName: fluent-bit-tls
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: file-cache-data-${ZONE}
+    spec:
+      accessModes:
+        - ReadWriteMany
+      storageClassName: ${FILE_CACHE_PERSISTENT_VOLUME_CLASS}
+      resources:
+        requests:
+          storage: "${FILE_CACHE_VOLUME_CAPACITY}"
   - apiVersion: v1
     kind: Service
     metadata:
