@@ -3,6 +3,7 @@
 ![Branches](.github/badges/branches.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bcgov_nr-spar-backend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=bcgov_nr-spar-backend)
 
+
 # Natural Resources SPAR Back-End API
 
 This repository holds a set of policies, standards, guides, and pipelines to
