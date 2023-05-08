@@ -115,75 +115,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  # Generate release notes and update new version
-  release:
-    name: Release Notes
-    runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.changelog.outputs.version }}
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.PAT }}
-          fetch-depth: 0
-
-      - uses: actions/cache@v3
-        with:
-          path: |
-            ~/.m2
-          key: ${{ runner.os }}-maven-test-${{ hashFiles('**/backend/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-test-
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Conventional Changelog Update
-        continue-on-error: true
-        uses: TriPSs/conventional-changelog-action@v3
-        id: changelog
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          output-file: 'CHANGELOG.md'
-          skip-version-file: 'true'
-          skip-commit: 'true'
-          git-push: 'false'
-          skip-on-empty: 'false'
-
-      - name: Set new version
-        run: |
-          echo "::set-output name=version::${{ steps.changelog.outputs.version }}"
-          mvn versions:set -DnewVersion='${{ steps.changelog.outputs.version }}' -f backend/pom.xml -DskipTests -Dtests.skip=true -Dskip.unit.tests=true
-
-      - name: Update POM
-        run: mvn versions:commit --file backend/pom.xml
-
-      - name: Commit pom and changelog
-        uses: EndBug/add-and-commit@v9
-        with:
-          author_name: Ci Bot
-          author_email: cibot@users.noreply.github.com
-          message: 'doc: updating pom to ${{ steps.changelog.outputs.version }} [ci skip]'
-          add: '["backend/pom.xml","CHANGELOG.md"]'
-
-      - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
-        with:
-          tag_name: ${{ steps.changelog.outputs.tag }}
-          release_name: ${{ steps.changelog.outputs.tag }}
-          body: ${{ steps.changelog.outputs.clean_changelog }}
-
   deploy-test:
     name: TEST Deployment
     needs:
       - codeql
       - sonarcloud
-      - release
     environment: test
     runs-on: ubuntu-22.04
     strategy:
@@ -199,7 +135,7 @@ jobs:
           - name: backend
             file: backend/openshift.deploy.yml
             overwrite: true
-            parameters: -p MIN_REPLICAS=1 -p MAX_REPLICAS=2 -p BUILD=test-${{ needs.release.outputs.version }}
+            parameters: -p MIN_REPLICAS=1 -p MAX_REPLICAS=2 -p BUILD=test
     steps:
       - uses: bcgov-nr/action-deployer-openshift@v1.0.3
         with:
@@ -271,7 +207,7 @@ jobs:
           - name: backend
             file: backend/openshift.deploy.yml
             overwrite: true
-            parameters: -p BUILD=prod-${{ needs.release.outputs.version }}
+            parameters: -p BUILD=prod
     steps:
       - uses: bcgov-nr/action-deployer-openshift@v1.0.3
         with:
